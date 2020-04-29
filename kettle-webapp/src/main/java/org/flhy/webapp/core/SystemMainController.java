@@ -80,6 +80,35 @@ public class SystemMainController{
 		return  json;
 	}*/
 
+
+
+	final String [] arrs = {"Excel输入",
+			"文本文件输入",
+			"删除",
+			"数据同步",
+			"更新",
+			"列转行",
+			"排序记录",
+			"根据java代码过滤记录",
+			"JavaScript代码",
+			"multiway merge join",
+			"排序合并",
+			"记录集连接"};
+
+
+
+	public Boolean getBaseCategory(String categoryName){
+		Boolean bool = false;
+		for(String str :arrs){
+			if(str.equals(categoryName)){
+				bool = true;
+				return bool;
+			}
+		}
+		return bool;
+
+	}
+
 	@ResponseBody
 	@RequestMapping(method=RequestMethod.POST, value="/steps")
 		protected void steps() throws ServletException, IOException {
@@ -109,12 +138,20 @@ public class SystemMainController{
 			if(!contains)
 				continue;
 
+	/*		Boolean bool  = this.getBaseCategory(baseCategory);
+			if(){
+
+			}*/
+
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("id", "category" + i++);
+
+
 			jsonObject.put("text", baseCategory);
 			jsonObject.put("icon", SvgImageUrl.getUrl(BasePropertyHandler.getProperty( "Folder_image" )));
 			jsonObject.put("cls", "nav-node");
 			JSONArray children = new JSONArray();
+
 
 
 			for (PluginInterface p : sortedCat) {
@@ -122,8 +159,8 @@ public class SystemMainController{
 					continue;
 
 				String pluginName = p.getName();
+
 				String pluginDescription = p.getDescription();
-				
 				JSONObject child = new JSONObject();
 				child.put("id", "step" + i++);
 				child.put("text", PluginFactory.containBean(p.getIds()[0]) ? pluginName : "<font color='red'>" + pluginName + "</font>");
@@ -207,10 +244,16 @@ public class SystemMainController{
 			}
 			if(!contains)
 				continue;
+			String pluginName = "";
+			if(JobEntryPluginType.GENERAL_CATEGORY.equals(baseCategory)){
+				pluginName = "基础设置";
+			}else{
+				pluginName = baseCategory;
+			}
 
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("id", "category" + i++);
-			jsonObject.put("text", baseCategory);
+			jsonObject.put("text", pluginName);
 			jsonObject.put("icon", SvgImageUrl.getUrl(BasePropertyHandler.getProperty( "Folder_image" )));
 			jsonObject.put("cls", "nav-node");
 			JSONArray children = new JSONArray();
@@ -218,8 +261,17 @@ public class SystemMainController{
 			if ( baseCategory.equalsIgnoreCase( JobEntryPluginType.GENERAL_CATEGORY ) ) {
 				JobEntryCopy startEntry = JobMeta.createStartEntry();
 				JSONObject child = new JSONObject();
+				pluginName = startEntry.getName();
+				if(JobMeta.STRING_SPECIAL_START.equals(pluginName)){
+					pluginName = "开始";
+				}else if(JobMeta.STRING_SPECIAL_DUMMY.equals(pluginName)){
+					pluginName = "虚拟作业";
+				}else if("成功".equals(pluginName)){
+					pluginName = "结束";
+				}
+
 				child.put("id", startEntry.getEntry().getPluginId());
-				child.put("text", startEntry.getName());
+				child.put("text", pluginName);
 				child.put("pluginId", startEntry.getEntry().getPluginId());
 				child.put("icon", SvgImageUrl.getUrl(BasePropertyHandler.getProperty( "STR_image" )));
 				child.put("dragIcon", SvgImageUrl.getUrl(BasePropertyHandler.getProperty( "STR_image" )));
@@ -230,8 +282,17 @@ public class SystemMainController{
 				
 				JobEntryCopy dummyEntry = JobMeta.createDummyEntry();
 				child = new JSONObject();
+				pluginName = dummyEntry.getName();
+				if(JobMeta.STRING_SPECIAL_START.equals(pluginName)){
+					pluginName = "开始";
+				}else if(JobMeta.STRING_SPECIAL_DUMMY.equals(pluginName)){
+					pluginName = "虚拟作业";
+				}else if("成功".equals(pluginName)){
+					pluginName = "结束";
+				}
+
 				child.put("id", "step" + i++);
-				child.put("text", dummyEntry.getName());
+				child.put("text", pluginName);
 				child.put("pluginId", dummyEntry.getEntry().getPluginId());
 				child.put("icon", SvgImageUrl.getUrl(BasePropertyHandler.getProperty( "DUM_image" )));
 				child.put("dragIcon", SvgImageUrl.getUrl(BasePropertyHandler.getProperty( "DUM_image" )));
@@ -249,8 +310,21 @@ public class SystemMainController{
 			for (PluginInterface p : sortedCat) {
 				if(!PluginFactory.containBean(p.getIds()[0]))
 					continue;
-				String pluginName = p.getName();
+				pluginName = p.getName();
+
+				if("SQL".equals(pluginName)){
+					pluginName = "自定义SQL脚本";
+				}else if(JobMeta.STRING_SPECIAL_START.equals(pluginName)){
+					pluginName = "开始";
+				}else if(JobMeta.STRING_SPECIAL_DUMMY.equals(pluginName)){
+					pluginName = "虚拟作业";
+				}else if("成功".equals(pluginName)){
+					pluginName = "结束";
+				}
+
 				String pluginDescription = p.getDescription();
+
+
 
 				JSONObject child = new JSONObject();
 				child.put("id", "step" + i++);

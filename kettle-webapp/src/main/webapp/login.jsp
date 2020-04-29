@@ -14,7 +14,7 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title>数据接入系统--登录</title>
+  <title>重庆市政务数据资源接入系统</title>
   <link rel="stylesheet" type="text/css" href="<%=basePath%>/css/login.css">
   <link rel="stylesheet" type="text/css" href="<%=basePath%>/css/animate.css">
   <link rel="stylesheet" type="text/css" href="<%=basePath%>/css/common.css">
@@ -85,7 +85,7 @@
 <div class="login_content main_content">
   <span class="logo"></span>
   <div class="login_iframe">
-    <div class="header">登录数据接入系统</div>
+    <div class="header">登录系统</div>
     <a class="dropdown" href="javascript:void(0);" style="display: none;">
       <span class="dropdown-input"></span>
       <span class="dropdown-icon"><i></i></span>

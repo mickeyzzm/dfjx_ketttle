@@ -1,5 +1,5 @@
 TableOutputDialog = Ext.extend(KettleTabDialog, {
-	title: '表输出',
+	title: '目标数据表',
 	width: 600,
 	height: 420,
 	initComponent: function() {

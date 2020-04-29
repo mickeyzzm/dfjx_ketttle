@@ -1,5 +1,5 @@
 StringCutDialog = Ext.extend(KettleDialog, {
-	title: '剪切字符串',
+	title: '字符串截取',
 	width: 600,
 	height: 400,
 	initComponent: function() {
@@ -23,7 +23,7 @@ StringCutDialog = Ext.extend(KettleDialog, {
 		};
 		
 		this.fitItems = new KettleEditorGrid({
-			title: '要剪切的字段',
+			title: '要截取字段',
 			xtype: 'KettleEditorGrid',
 			menuAdd: function(menu) {
 				menu.insert(0, {

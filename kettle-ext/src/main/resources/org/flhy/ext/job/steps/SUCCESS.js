@@ -1,5 +1,5 @@
 JobEntrySuccessDialog = Ext.extend(KettleDialog, {
-	title: 'SUCCESS',
+	title: '结束',
 	width: 300,
 	height: 120,
 	initComponent: function() {

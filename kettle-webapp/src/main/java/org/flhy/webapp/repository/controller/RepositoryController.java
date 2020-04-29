@@ -140,6 +140,10 @@ public class RepositoryController {
 		boolean isSuccess=false;
 		String userId = ((UserGroupAttributeEntity)request.getSession().getAttribute("userInfo")).getUserName();
 		Repository repository = App.getInstance().getRepository();
+		if(repository == null){
+			repository.init(App.getInstance().meta);
+			repository.connect("root", "root123456ABCD!@#");
+		}
 		RepositoryDirectoryInterface directory = null;
 		TransMeta transMeta = null;
 		SqlSession sqlSession=CarteClient.sessionFactory.openSession();
@@ -187,8 +191,8 @@ public class RepositoryController {
 			e.printStackTrace();
 			if(e instanceof KettleException){
 				repository.disconnect();
-				repository.init( App.getInstance().meta);
-				repository.connect("admin", "admin");
+				repository.init(App.getInstance().meta);
+				repository.connect("root", "root123456ABCD!@#");
 			}
 			sqlSession.rollback();
 			sqlSession.close();

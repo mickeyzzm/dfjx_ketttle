@@ -1,7 +1,7 @@
 JobEntrySQLDialog = Ext.extend(KettleDialog, {
 	width: 600,
 	height: 400,
-	title: 'SQL',
+	title: '自定义SQL脚本',
 	initComponent: function() {
 		var me = this,  graph = getActiveGraph().getGraph(),  cell = graph.getSelectionCell();
 		var wSQL = new Ext.form.TextArea({
@@ -16,6 +16,7 @@ JobEntrySQLDialog = Ext.extend(KettleDialog, {
 		});
 		if(!Ext.isEmpty(cell.getAttribute('sql')))
 			wSQL.setValue(decodeURIComponent(cell.getAttribute('sql')));
+
 		
 		
 		var wConnection = new Ext.form.ComboBox({

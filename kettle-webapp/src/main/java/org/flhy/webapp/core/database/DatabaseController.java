@@ -715,7 +715,7 @@ public class DatabaseController {
             reposity.init(repositoryMeta);
 
             try {
-                reposity.connect("admin", password);
+                reposity.connect("root",password);
                 try {
                     reposity.dropRepositorySchema();
 

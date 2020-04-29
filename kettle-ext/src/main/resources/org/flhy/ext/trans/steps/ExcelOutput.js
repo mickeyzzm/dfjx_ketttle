@@ -2,7 +2,7 @@
 ExcelOutputDialog=Ext.extend(KettleTabDialog,{
     width: 700,
     height: 550,
-    title: 'Excel输出',
+    title: 'Excel目标数据',
     initComponent: function() {
         var me = this, cell = getActiveGraph().getGraph().getSelectionCell();
 

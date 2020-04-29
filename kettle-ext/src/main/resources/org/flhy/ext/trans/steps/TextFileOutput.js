@@ -1,7 +1,7 @@
 TextFileOutputDialog = Ext.extend(KettleTabDialog, {
 	width: 700,
 	height: 550,
-	title: '文本文件输出',
+	title: '文本文件目标数据',
 	initComponent: function() {
 		var me = this,  graph = getActiveGraph().getGraph(),  cell = graph.getSelectionCell();
 		

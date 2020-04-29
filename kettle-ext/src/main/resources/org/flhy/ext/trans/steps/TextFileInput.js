@@ -3,7 +3,7 @@ TextFileInputDialog = Ext.extend(KettleTabDialog, {
 	width: 700,
 	height: 600,
 	showPreview:true,
-	title: '文本文件输入',
+	title: '文本文件数据源',
 	initComponent: function() {
 		var me = this,  graph = getActiveGraph().getGraph(),  cell = graph.getSelectionCell();
 
