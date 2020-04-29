@@ -82,17 +82,17 @@ public class SystemMainController{
 
 
 
-	final String [] arrs = {"Excel输入",
-			"文本文件输入",
+	final String [] arrs = {"Excel数据源","文本文件输入",
+			"文本文件数据源","连接",
 			"删除",
 			"数据同步",
 			"更新",
 			"列转行",
 			"排序记录",
-			"根据java代码过滤记录",
+			"根据Java代码过滤记录",
 			"JavaScript代码",
-			"multiway merge join",
-			"排序合并",
+			"Multiway Merge Join",
+			"排序合并","合并记录","记录关联(笛卡尔输出)",
 			"记录集连接"};
 
 
@@ -137,15 +137,13 @@ public class SystemMainController{
 			}
 			if(!contains)
 				continue;
-
-	/*		Boolean bool  = this.getBaseCategory(baseCategory);
-			if(){
-
-			}*/
+			Boolean bool  = this.getBaseCategory(baseCategory);
+			if(bool){
+				continue;
+			}
 
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("id", "category" + i++);
-
 
 			jsonObject.put("text", baseCategory);
 			jsonObject.put("icon", SvgImageUrl.getUrl(BasePropertyHandler.getProperty( "Folder_image" )));
@@ -159,6 +157,10 @@ public class SystemMainController{
 					continue;
 
 				String pluginName = p.getName();
+				Boolean bools  = this.getBaseCategory(pluginName);
+				if(bools){
+					continue;
+				}
 
 				String pluginDescription = p.getDescription();
 				JSONObject child = new JSONObject();
@@ -244,11 +246,16 @@ public class SystemMainController{
 			}
 			if(!contains)
 				continue;
+
 			String pluginName = "";
 			if(JobEntryPluginType.GENERAL_CATEGORY.equals(baseCategory)){
 				pluginName = "基础设置";
 			}else{
 				pluginName = baseCategory;
+			}
+			Boolean bools  = this.getBaseCategory(pluginName);
+			if(bools){
+				continue;
 			}
 
 			JSONObject jsonObject = new JSONObject();
@@ -290,6 +297,10 @@ public class SystemMainController{
 				}else if("成功".equals(pluginName)){
 					pluginName = "结束";
 				}
+				Boolean bol  = this.getBaseCategory(pluginName);
+				if(bol){
+					continue;
+				}
 
 				child.put("id", "step" + i++);
 				child.put("text", pluginName);
@@ -320,6 +331,10 @@ public class SystemMainController{
 					pluginName = "虚拟作业";
 				}else if("成功".equals(pluginName)){
 					pluginName = "结束";
+				}
+				Boolean bool  = this.getBaseCategory(pluginName);
+				if(bool){
+					continue;
 				}
 
 				String pluginDescription = p.getDescription();
