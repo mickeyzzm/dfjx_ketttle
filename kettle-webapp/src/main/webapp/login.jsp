@@ -34,23 +34,12 @@
       /*$("#main").ajaxSubmit(function(message) {
        alert(message);
        });*/
-      var unm = document.getElementById('username').value ;
-      var pwd = document.getElementById('password').value ;
-      debugger
-      var str = "&username="+unm+"&password="+pwd;
-      var pd = encodeURIComponent(str);
-      alert(pd)
-
-
-
       $.ajax({
-        url:  path + 'user/doLogin.do?param='+pd,
+        url:  path + 'user/doLogin.do',
         type: 'post', dataType: 'text', cache: false, async: false,
-//        data:$('#main').serialize(),
-//        data: params,
+        data:$('#main').serialize(),
         success: function (data) {
           if(data == "success"){
-
             window.location.href = '<%=basePath%>index.jsp';
           }else{
             alert(data);
@@ -65,8 +54,6 @@
       document.getElementById('password').value = '';
       return false;
     }
-
-
 
     /**
      *取消/关闭DIV
@@ -133,7 +120,7 @@
           <td class="lui_login_input_td">
             <img src="/user/captcha.do">
             <div class="lui_login_input_div">
-              <input class="lui_login_input_password" type="text" name="captcha" id="captcha" value=""/>
+              <input class="lui_login_input_password" type="text" name="captcha" id="captcha" value="" placeholder="请输入验证码"/>
             </div>
           </td>
         </tr>

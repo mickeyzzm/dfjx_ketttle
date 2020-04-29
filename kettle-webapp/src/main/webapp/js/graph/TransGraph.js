@@ -1,4 +1,4 @@
-﻿EnterPreviewRowsDialog = Ext.extend(Ext.Window, {
+EnterPreviewRowsDialog = Ext.extend(Ext.Window, {
     title: '请选择需要预览的步骤',
     width: 400,
     height: 300,

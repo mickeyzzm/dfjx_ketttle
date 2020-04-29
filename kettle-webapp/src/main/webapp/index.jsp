@@ -9,7 +9,6 @@
 		<link rel='shortcut icon' href='${pageContext.request.contextPath}/img/f1_logo_small.ico' type=‘image/x-ico’ />
 	</head>
 	<body>
-	<script>alert(2333)</script><font color='red'>红色的</font>哈哈哈
 
 		<div id="loading-mask">
 			<input type="hidden" id="context-path" value="${pageContext.request.contextPath}" />
