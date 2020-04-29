@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	  	<title>KettleConsole</title>
+	  	<title>数据接入系统</title>
 	  	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/ext3/resources/css/ext-all.css" />
 	  	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/ui/css/public.css" />
 		<link rel='shortcut icon' href='${pageContext.request.contextPath}/img/f1_logo_small.ico' type=‘image/x-ico’ />

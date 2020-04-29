@@ -175,7 +175,7 @@ function repositryOpenTrans(secondGuidePanel,path,text){
 	try {
 		Ext.getBody().mask('正在加载，请稍后...', 'x-mask-loading');
 		Ext.Ajax.request({
-			url: GetUrl('http://localhost:8080/kettle-webapp/repository/open.do'),
+			url: GetUrl('repository/open.do'),
 			timeout: 120000,
 			params: {path: path, type: 'transformation'},
 			method: 'POST',

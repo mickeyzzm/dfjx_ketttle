@@ -2722,12 +2722,12 @@ INSERT INTO `r_step_type` VALUES ('95', 'IfNull', '替换NULL值', 'Sets a field
 INSERT INTO `r_step_type` VALUES ('96', 'TeraFast', 'Teradata Fastload 批量加载', 'The Teradata Fastload Bulk loader');
 INSERT INTO `r_step_type` VALUES ('97', 'FilterRows', '过滤记录', '使用简单的相等来过滤记录');
 INSERT INTO `r_step_type` VALUES ('98', 'GetSlaveSequence', 'Get ID from slave server', 'Retrieves unique IDs in blocks from a slave server.  The referenced sequence needs to be configured on the slave server in the XML configuration file.');
-INSERT INTO `r_step_type` VALUES ('99', 'GetRepositoryNames', '获取资源库配置', 'Lists detailed information about transformations and/or jobs in a repository');
+INSERT INTO `r_step_type` VALUES ('99', 'GetRepositoryNames', '获取资源库配置11', 'Lists detailed information about transformations and/or jobs in a repository');
 INSERT INTO `r_step_type` VALUES ('100', 'MongoDbInput', 'MongoDB Input', 'Reads from a Mongo DB collection');
 INSERT INTO `r_step_type` VALUES ('101', 'Denormaliser', '列转行', 'Denormalises rows by looking up key-value pairs and by assigning them to new fields in the输出 rows.{0}This method aggregates and needs the输入 rows to be sorted on the grouping fields');
 INSERT INTO `r_step_type` VALUES ('102', 'PaloCellInput', 'Palo Cell Input', 'Reads data from a defined Palo Cube ');
 INSERT INTO `r_step_type` VALUES ('103', 'XMLJoin', 'XML 连接', 'Joins a stream of XML-Tags into a target XML string');
-INSERT INTO `r_step_type` VALUES ('104', 'Dummy', '空操作 (什么也不做)', '这个步骤类型什么都不作.{0} 当你想测试或拆分数据流的时候有用.');
+INSERT INTO `r_step_type` VALUES ('104', 'Dummy', '空操作 (什么也不做)22', '这个步骤类型什么都不作.{0} 当你想测试或拆分数据流的时候有用.');
 INSERT INTO `r_step_type` VALUES ('105', 'ZipFile', 'Zip 文件', 'Zip a file.\nFilename will be extracted from incoming stream.');
 INSERT INTO `r_step_type` VALUES ('106', 'SecretKeyGenerator', '生成密钥', 'Generate secret key for algorithms such as DES, AES, TripleDES.');
 INSERT INTO `r_step_type` VALUES ('107', 'SetValueField', '设置字段值', 'Set value of a field with another value field');
