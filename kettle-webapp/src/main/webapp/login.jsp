@@ -120,7 +120,7 @@
           <td class="lui_login_input_td">
             <img src="/user/captcha.do">
             <div class="lui_login_input_div">
-              <input class="lui_login_input_password" type="text" name="captcha" id="captcha" value=""/>
+              <input class="lui_login_input_password" type="text" name="captcha" id="captcha" value="" placeholder="请输入验证码"/>
             </div>
           </td>
         </tr>
