@@ -130,6 +130,24 @@ function HourTextField(){
 }
 
 //时间间隔输入框
+function IntervalRepeatTextField(){
+    intervalTime=new Ext.form.TextField({
+        id:"intervalminute",
+        name: "intervalminute",
+        fieldLabel: "时间间隔(单位/分钟)",
+        width:50,
+        value:0,
+        regex:/^([0-9]{1,4})$/,
+        validator:function(val){
+            return val > 0 && val < 1440;
+        },
+        invalidText:"循环执行的时间间隔,有效值1-1439",
+        validateOnBlur:true
+    });
+    return intervalTime;
+}
+
+//时间间隔输入框
 function IntevalMinuteTextField(){
     intervalTime=new Ext.form.TextField({
         id:"intervalminute",
@@ -229,7 +247,8 @@ function getExecuteTypeCombox(flag,uri){
                 {
                     case 0:
                         //按指定的时间间隔执行
-                        formArray.push(IntevalMinuteTextField());
+                        //formArray.push(IntevalMinuteTextField());
+                        formArray.push(IntervalRepeatTextField());
                         chooseTypeName="间隔重复";
                         break;
                     case 1:

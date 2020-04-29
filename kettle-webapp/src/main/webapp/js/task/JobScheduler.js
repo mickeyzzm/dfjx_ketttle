@@ -290,7 +290,8 @@ function updateScheduler(){
                 //根据用户需要修改的定时任务类型生成表单 并且填充修改前的值
                 var typeChooseCombox=Ext.getCmp("typeChoose");
                 if(results.schedulertype==1){
-                    formElementArray.push(IntevalMinuteTextField());
+                    //formElementArray.push(IntevalMinuteTextField());
+                    formElementArray.push(IntervalRepeatTextField());
                 }else if(results.schedulertype==2){
                     formElementArray.push(MinuteTextField());
                     formElementArray.push(HourTextField());

@@ -385,14 +385,13 @@ GuidePanel = Ext.extend(Ext.Panel,{
 							{id:"slaveMonitor",text:"<font size = '2px' style='margin-left:9px;'>节点管理</font>",cls:"navl",leaf:true,icon:'ui/images/i_slaveManager.png'},
 							{id:"slaveMonitoring",text:"<font size = '2px' style='margin-left:9px;'>节点监控</font>",cls:"navl",leaf:true,icon:'ui/images/i_slaveCon.png'},
 						]
-					}/*,{
+					},{
 						text:"<font size = '3px' style='margin-left:7px'>用&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;户</font>",icon:'ui/images/i_user.png', cls:'nav-node',
 						children:[
 							{id:"userMonitor",text:"<font size = '2px' style='margin-left:9px;'>用户管理</font>",leaf:true,cls:"navl",icon:'ui/images/i_userManager_16.png'},
 							{id:"userGroupMonitor",text:"<font size = '2px' style='margin-left:9px;'>用户组管理</font>",leaf:true,cls:"navl",icon:'ui/images/i_userGroupManager.png'},
 						],id:"userIdTwo"
-					}*/
-				]
+					}				]
 			}),
 			enableDD:true,
 			ddGroup:'TreePanelDDGroup',
