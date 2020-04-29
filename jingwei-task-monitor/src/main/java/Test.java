@@ -5,5 +5,9 @@ public class Test {
     public static void main(String[] args) {
 //        Encr.decryptPassword
         System.out.println(KettleEncr.encryptPassword("sjjr@2020A"));
+
+
+        System.out.println(KettleEncr.decryptPasswd("2be98afc86aa7818ea10b8e228ec0fffb"));
+
     }
 }

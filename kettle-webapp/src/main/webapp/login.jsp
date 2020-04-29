@@ -34,12 +34,23 @@
       /*$("#main").ajaxSubmit(function(message) {
        alert(message);
        });*/
+      var unm = document.getElementById('username').value ;
+      var pwd = document.getElementById('password').value ;
+      debugger
+      var str = "&username="+unm+"&password="+pwd;
+      var pd = encodeURIComponent(str);
+      alert(pd)
+
+
+
       $.ajax({
-        url:  path + 'user/doLogin.do',
+        url:  path + 'user/doLogin.do?param='+pd,
         type: 'post', dataType: 'text', cache: false, async: false,
-        data:$('#main').serialize(),
+//        data:$('#main').serialize(),
+//        data: params,
         success: function (data) {
           if(data == "success"){
+
             window.location.href = '<%=basePath%>index.jsp';
           }else{
             alert(data);
@@ -54,6 +65,8 @@
       document.getElementById('password').value = '';
       return false;
     }
+
+
 
     /**
      *取消/关闭DIV

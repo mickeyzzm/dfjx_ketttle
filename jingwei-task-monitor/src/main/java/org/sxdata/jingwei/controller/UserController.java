@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URLDecoder;
 import java.util.List;
 import java.util.Locale;
 
@@ -182,9 +183,13 @@ public class UserController {
     //登陆
     @RequestMapping(value="/doLogin")
     @ResponseBody
-    protected void doLogin(HttpServletResponse response,HttpServletRequest request,@RequestParam String username,@RequestParam String password) throws Exception{
-
+    protected void doLogin(HttpServletResponse response,HttpServletRequest request,@RequestParam String param) throws Exception{
         try{
+            String pm = request.getParameter("param");
+            pm = URLDecoder.decode(pm, "utf-8");
+            String [] arrs = pm.split("&");
+            String username = arrs[0];
+            String password = arrs[1];
             UserEntity loginUser=(UserEntity)request.getSession().getAttribute("login");
             String result="success";
             if(null==loginUser){
