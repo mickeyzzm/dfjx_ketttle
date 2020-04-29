@@ -130,6 +130,14 @@
           </td>
         </tr>
         <tr>
+          <td class="lui_login_input_td">
+            <img src="/user/captcha.do">
+            <div class="lui_login_input_div">
+              <input class="lui_login_input_password" type="text" name="captcha" id="captcha" value=""/>
+            </div>
+          </td>
+        </tr>
+        <tr>
           <td class="lui_login_button_td" colspan="2">
             <a href="javascript:document.getElementsByName('btn_submit')[0].click();">
               <div class="lui_login_button_div_l">

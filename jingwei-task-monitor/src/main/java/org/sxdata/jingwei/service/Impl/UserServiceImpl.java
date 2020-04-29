@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService{
             userId+=1;
         else
             userId=0;
-        user.setUserId("");
+        user.setUserId(userId.toString());
         userDao.addUser(user);
         userGroupDao.addUserGroupAttribute(attribute);
         return true;

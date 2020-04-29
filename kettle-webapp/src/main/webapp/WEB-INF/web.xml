@@ -70,7 +70,7 @@
 		</init-param>
 		<init-param>
 			<param-name>excludedPages</param-name>
-			<param-value>/user/doLogin.do,/user/beforeLogin.do</param-value><!-- 匹配不做拦截的请求声明-->
+			<param-value>/user/doLogin.do,/user/beforeLogin.do,/user/captcha.do</param-value><!-- 匹配不做拦截的请求声明-->
 		</init-param>
 	</filter>
 	<filter-mapping>
