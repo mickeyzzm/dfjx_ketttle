@@ -1,10 +1,14 @@
 package org.sxdata.jingwei.controller;
 
+import com.google.code.kaptcha.Constants;
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
+import com.google.code.kaptcha.Producer;
 import org.pentaho.di.i18n.LanguageChoice;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -13,8 +17,11 @@ import org.sxdata.jingwei.entity.UserGroupAttributeEntity;
 import org.sxdata.jingwei.service.UserService;
 import org.sxdata.jingwei.util.TaskUtil.KettleEncr;
 
+import javax.imageio.ImageIO;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -186,7 +193,19 @@ public class UserController {
     //登陆
     @RequestMapping(value="/doLogin")
     @ResponseBody
-    protected void doLogin(HttpServletResponse response,HttpServletRequest request,@RequestParam String username,@RequestParam String password) throws Exception{
+    protected void doLogin(HttpServletResponse response,HttpServletRequest request,
+                           @RequestParam String username,
+                           @RequestParam String password,
+                           @RequestParam String captcha) throws Exception{
+        String code = (String)request.getSession().getAttribute(Constants.KAPTCHA_SESSION_KEY);
+        if (StringUtils.isEmpty(code) || StringUtils.isEmpty(captcha) || !code.equals(captcha)) {
+            PrintWriter out=response.getWriter();
+            out.write("验证码无效");
+            out.flush();
+            out.close();
+
+            return;
+        }
 
         try{
             UserEntity loginUser=(UserEntity)request.getSession().getAttribute("login");
@@ -269,5 +288,24 @@ public class UserController {
             e.printStackTrace();
             throw new Exception(e.getMessage());
         }
+    }
+
+
+    @Autowired
+    private Producer producer;
+
+    @GetMapping(value="/captcha")
+    public void captcha(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        response.setHeader("Cache-Control", "no-store, no-cache");
+        response.setContentType("image/jpeg");
+
+        //生成文字验证码
+        String text = producer.createText();
+        //生成图片验证码
+        BufferedImage image = producer.createImage(text);
+        //保存到shiro session
+        request.getSession().setAttribute(Constants.KAPTCHA_SESSION_KEY, text);
+        ServletOutputStream out = response.getOutputStream();
+        ImageIO.write(image, "jpg", out);
     }
 }
