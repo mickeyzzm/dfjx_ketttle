@@ -33,6 +33,10 @@ public class UserController {
     @RequestMapping(value="/allotUserGroup")
     @ResponseBody
     protected void allotUserGroup(HttpServletResponse response,HttpServletRequest request) throws Exception{
+        Integer type = ((UserGroupAttributeEntity)request.getSession().getAttribute("userInfo")).getUserType();
+        if (type != null && type == 2) {
+            throw new Exception("你不是管理员");
+        }
         try {
             UserGroupAttributeEntity attr=new UserGroupAttributeEntity();
             Integer userType=Integer.valueOf(request.getParameter("rdaUserType"));
