@@ -17,8 +17,8 @@ public class CommonServiceImpl implements CommonService{
     protected CommonDao cDao;
 
     @Override
-    public List<DatabaseConnEntity> getDatabases() {
-        return cDao.getDababasesConn();
+    public List<DatabaseConnEntity> getDatabases(String loginUser) {
+        return cDao.getDababasesConn(loginUser);
     }
 
     @Override
@@ -27,5 +27,10 @@ public class CommonServiceImpl implements CommonService{
         cDao.deleteDatabaseMeta(id);
         cDao.deleteJobDatabase(id);
         cDao.deleteTransDatabase(id);
+    }
+
+    @Override
+    public void updateDatabaseUserName(DatabaseConnEntity dbConn) {
+        cDao.updateDatabaseUserName(dbConn);
     }
 }

@@ -270,7 +270,7 @@ public class SystemMainController{
 				JSONObject child = new JSONObject();
 				pluginName = startEntry.getName();
 				if(JobMeta.STRING_SPECIAL_START.equals(pluginName)){
-					pluginName = "开始";
+//					pluginName = "开始";
 				}else if(JobMeta.STRING_SPECIAL_DUMMY.equals(pluginName)){
 					pluginName = "虚拟作业";
 				}else if("成功".equals(pluginName)){
@@ -291,7 +291,7 @@ public class SystemMainController{
 				child = new JSONObject();
 				pluginName = dummyEntry.getName();
 				if(JobMeta.STRING_SPECIAL_START.equals(pluginName)){
-					pluginName = "开始";
+//					pluginName = "开始";
 				}else if(JobMeta.STRING_SPECIAL_DUMMY.equals(pluginName)){
 					pluginName = "虚拟作业";
 				}else if("成功".equals(pluginName)){
@@ -326,7 +326,7 @@ public class SystemMainController{
 				if("SQL".equals(pluginName)){
 					pluginName = "自定义SQL脚本";
 				}else if(JobMeta.STRING_SPECIAL_START.equals(pluginName)){
-					pluginName = "开始";
+//					pluginName = "开始";
 				}else if(JobMeta.STRING_SPECIAL_DUMMY.equals(pluginName)){
 					pluginName = "虚拟作业";
 				}else if("成功".equals(pluginName)){

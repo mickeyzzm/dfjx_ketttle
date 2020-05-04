@@ -28,8 +28,7 @@ public class SystemLoadListener implements ServletContextListener {
 			KettleEnvironment.init();
 			
 			CarteTaskManager.startThread(1);
-			
-			PropsUI.init( "KettleWebConsole", Props.TYPE_PROPERTIES_KITCHEN );
+			PropsUI.init( "重庆市政务数据资源接入系统", Props.TYPE_PROPERTIES_KITCHEN );
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

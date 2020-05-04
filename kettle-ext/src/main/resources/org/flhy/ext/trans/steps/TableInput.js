@@ -1,5 +1,5 @@
 TableInputDialog = Ext.extend(KettleDialog, {
-	title: '表输入',
+	title: '源数据表',
 	width: 600,
 	height: 500,
 	bodyStyle: 'padding: 5px;',
@@ -87,9 +87,9 @@ TableInputDialog = Ext.extend(KettleDialog, {
 								databaseDialog.initTransDatabase(null);
 							});
 						}
-					}, {
+					}, /*{
 						xtype: 'button', text: '向导...'
-					}, {
+					},*/ {
 						xtype: 'button', text: '获取SQL查询语句..', handler: function() {
 							me.selectTable(wConnection, wSQL);
 						}

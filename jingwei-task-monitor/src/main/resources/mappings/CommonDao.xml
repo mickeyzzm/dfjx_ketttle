@@ -1,7 +1,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.sxdata.jingwei.dao.CommonDao">
 
-    <select id="getDababasesConn" resultType="org.sxdata.jingwei.entity.DatabaseConnEntity">
+    <select id="getDababasesConn" parameterType="java.lang.String" resultType="org.sxdata.jingwei.entity.DatabaseConnEntity">
         select
             d.`NAME` as name,
             d.HOST_NAME as hostName,
@@ -11,6 +11,11 @@
             ID_DATABASE as databaseId
         from r_database d INNER JOIN r_database_type t
         on d.ID_DATABASE_TYPE=t.ID_DATABASE_TYPE
+        <where>
+            <if test='_parameter!=null and _parameter!=""'>
+                d.Login_user=#{_parameter}
+            </if>
+        </where>
     </select>
 
     <delete id="deleteDatabaseMeta" parameterType="java.lang.Integer">
@@ -28,4 +33,12 @@
     <delete id="deleteTransDatabase" parameterType="java.lang.Integer">
         DELETE FROM r_step_database WHERE ID_DATABASE=#{id}
     </delete>
+
+
+    <update id="updateDatabaseUserName" parameterType="org.sxdata.jingwei.entity.DatabaseConnEntity">
+        update r_database set LOGIN_USER =#{loginUser} WHERE NAME=#{name} AND HOST_NAME=#{hostName} AND DATABASE_NAME =#{databaseName}
+    </update>
+
+
+
 </mapper>

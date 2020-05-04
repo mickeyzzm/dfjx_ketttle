@@ -65,6 +65,7 @@ import org.pentaho.di.trans.debug.StepDebugMeta;
 import org.pentaho.di.trans.debug.TransDebugMeta;
 import org.pentaho.di.trans.step.StepMeta;
 import org.pentaho.di.trans.step.StepMetaInterface;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.parsing.QualifierEntry;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -72,6 +73,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.sxdata.jingwei.entity.DatabaseConnEntity;
+import org.sxdata.jingwei.entity.UserEntity;
+import org.sxdata.jingwei.service.CommonService;
 import org.sxdata.jingwei.util.TaskUtil.KettleEncr;
 import org.w3c.dom.Element;
 
@@ -80,6 +84,9 @@ import com.mxgraph.util.mxUtils;
 @Controller
 @RequestMapping(value = "/trans")
 public class TransGraphController {
+
+    @Autowired
+    protected CommonService cService;
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/engineXml")
@@ -105,13 +112,17 @@ public class TransGraphController {
         JsonUtils.response(jsonObject);
     }
 
+
+    @RequestMapping(value = "/save")
     @ResponseBody
-    @RequestMapping(method = RequestMethod.POST, value = "/save")
-    protected void save(@RequestParam String graphXml) throws Exception {
+    protected void save(@RequestParam String graphXml,@RequestParam String databaseInfo,HttpServletRequest request) throws Exception {
+        UserEntity loginUser =(UserEntity) request.getSession().getAttribute("login");
+        String userName = loginUser.getLogin();
         Repository repository = null;
         GraphCodec codec = (GraphCodec) PluginFactory.getBean(GraphCodec.TRANS_CODEC);
+        String xml = StringEscapeHelper.decode(graphXml);
         //System.out.println(StringEscapeHelper.decode(graphXml));
-        AbstractMeta transMeta = codec.decode(StringEscapeHelper.decode(graphXml));
+        AbstractMeta transMeta = codec.decode(xml);
         repository = App.getInstance().getRepository();
         ObjectId existingId = repository.getTransformationID(transMeta.getName(), transMeta.getRepositoryDirectory());
         if (transMeta.getCreatedDate() == null)
@@ -134,18 +145,22 @@ public class TransGraphController {
         } else {
             versionComment = "no comment";
         }
-        //transMeta.getSlaveServers().get(0).setPassword(transMeta.getSlaveServers().get(0).getPassword());
-        //要在加密前重新解密(解决转换点击运行后节点异常的问题)
-        /*
-         *
-        if (null != transMeta.getSlaveServers() && transMeta.getSlaveServers().size()>0) {
-            for (int i = 0; i < transMeta.getSlaveServers().size(); i++) {
-                SlaveServer slaveServer = transMeta.getSlaveServers().get(i);
-                slaveServer.setPassword(KettleEncr.decryptPasswd(slaveServer.getPassword()));
-            }
-        }
-        */
+
         repository.save(transMeta, versionComment, null);
+
+        JSONObject jsonObject = JSONObject.fromObject(databaseInfo);
+        DatabaseMeta database = DatabaseCodec.decode(jsonObject);
+        String name = database.getName();
+        String hostname = database.getHostname();
+        String dbname = database.getDatabaseName();
+
+        DatabaseConnEntity dbConn = new DatabaseConnEntity();
+        dbConn.setDatabaseName(dbname);
+        dbConn.setHostName(hostname);
+        dbConn.setName(name);
+        dbConn.setLoginUser(userName);
+        cService.updateDatabaseUserName(dbConn);
+
         JsonUtils.success("转换保存成功！");
     }
 

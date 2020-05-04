@@ -9,8 +9,15 @@ import java.util.List;
  * Created by cRAZY on 2017/6/1.
  */
 public interface CommonService {
-    public List<DatabaseConnEntity> getDatabases();
+    public List<DatabaseConnEntity> getDatabases(String userName);
 
     public void deleteDatabaseConn(Integer id);
+
+
+    public void updateDatabaseUserName(DatabaseConnEntity dbConn);
+
+
+
+
 }
 

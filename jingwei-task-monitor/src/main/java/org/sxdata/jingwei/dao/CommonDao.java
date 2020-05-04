@@ -11,7 +11,7 @@ import java.util.List;
  */
 @Repository
 public interface CommonDao {
-    public List<DatabaseConnEntity> getDababasesConn();
+    public List<DatabaseConnEntity> getDababasesConn(String loginUser);
 
     public void deleteDatabaseAttr(Integer id);
 
@@ -20,4 +20,6 @@ public interface CommonDao {
     public void deleteJobDatabase(Integer id);
 
     public void deleteTransDatabase(Integer id);
+
+    public void updateDatabaseUserName(DatabaseConnEntity dbConn);
 }

@@ -10,6 +10,7 @@ public class DatabaseConnEntity {
     private String databaseName;
     private String databaseType;
     private Integer databaseId;
+    private String loginUser;
 
     public Integer getDatabaseId() {
         return databaseId;
@@ -57,5 +58,13 @@ public class DatabaseConnEntity {
 
     public void setDatabaseType(String databaseType) {
         this.databaseType = databaseType;
+    }
+
+    public String getLoginUser() {
+        return loginUser;
+    }
+
+    public void setLoginUser(String loginUser) {
+        this.loginUser = loginUser;
     }
 }

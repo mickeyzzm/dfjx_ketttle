@@ -169,10 +169,11 @@
 		});
 		var bOk = new Ext.Button({
 			text: '确定', handler: function() {
+				var db = Ext.encode(me.getValue());
 				Ext.Ajax.request({
 					url: GetUrl('database/check.do'),
 					method: 'POST',
-					params: {databaseInfo: Ext.encode(me.getValue())},
+					params: {databaseInfo: db},
 					success: function(response) {
 						var json = Ext.decode(response.responseText);
 						if(!json.success) {
@@ -180,9 +181,10 @@
 						} else {
 							me.fireEvent('create', me);
 							Ext.getBody().mask('正在保存，请稍后...', 'x-mask-loading');
+
 							Ext.Ajax.request({
 								url: GetUrl('trans/save.do'),
-								params: {graphXml: encodeURIComponent(activeGraph.toXml())},
+								params: {graphXml: encodeURIComponent(activeGraph.toXml()),databaseInfo:db},
 								method: 'POST',
 								success: function(response) {
 									try{

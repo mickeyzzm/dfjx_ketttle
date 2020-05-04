@@ -147,7 +147,9 @@ public class JobGraphController {
 		Repository repository = null;
 		GraphCodec codec = (GraphCodec) PluginFactory.getBean(GraphCodec.JOB_CODEC);
 		System.out.println(StringEscapeHelper.decode(graphXml));
-		JobMeta jobMeta = (JobMeta) codec.decode(StringEscapeHelper.decode(graphXml));
+		String xml = StringEscapeHelper.decode(graphXml);
+		JobMeta jobMeta = (JobMeta) codec.decode(xml);
+//		JobMeta jobMeta = (JobMeta) codec.decode(StringEscapeHelper.decode(graphXml));
 		repository = App.getInstance().getRepository();
 		ObjectId existingId = repository.getJobId(jobMeta.getName(), jobMeta.getRepositoryDirectory());
 		//repository.getTransformationID( jobMeta.getName(), jobMeta.getRepositoryDirectory());
