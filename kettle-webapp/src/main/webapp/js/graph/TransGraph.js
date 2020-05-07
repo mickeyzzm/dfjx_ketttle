@@ -511,7 +511,7 @@ TransGraph = Ext.extend(BaseGraph, {
         Ext.getBody().mask('正在保存，请稍后...', 'x-mask-loading');
         Ext.Ajax.request({
             url: GetUrl('trans/save.do'),
-            params: {graphXml: encodeURIComponent(this.toXml())},
+            params: {graphXml: encodeURIComponent(this.toXml()),databaseInfo:''},
             method: 'POST',
             success: function(response) {
                 try{
@@ -554,7 +554,7 @@ TransGraph = Ext.extend(BaseGraph, {
             Ext.getBody().mask('正在保存，请稍后...', 'x-mask-loading');
             Ext.Ajax.request({
                 url: GetUrl('trans/save.do'),
-                params: {graphXml: encodeURIComponent(graphXml)},
+                params: {graphXml: encodeURIComponent(graphXml),databaseInfo:''},
                 method: 'POST',
                 success: function(response) {
                     var resp=response;

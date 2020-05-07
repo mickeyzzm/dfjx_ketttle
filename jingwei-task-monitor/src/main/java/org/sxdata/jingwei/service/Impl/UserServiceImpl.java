@@ -33,7 +33,7 @@ import java.util.*;
 public class UserServiceImpl implements UserService{
     @Autowired
     private   UserDao userDao;
-    @Autowired
+   @Autowired
     private UserGroupDao userGroupDao;
 
     @Override

@@ -4,6 +4,7 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Toolkit;
 import java.awt.color.ColorSpace;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -148,6 +149,15 @@ public class TransGraphController {
 
         repository.save(transMeta, versionComment, null);
 
+        if(null != databaseInfo && !"".equals(databaseInfo)){
+            updateDatabaseUserName(databaseInfo,userName);
+        }
+
+        JsonUtils.success("转换保存成功！");
+    }
+
+
+    public void updateDatabaseUserName(String databaseInfo,String userName) throws Exception{
         JSONObject jsonObject = JSONObject.fromObject(databaseInfo);
         DatabaseMeta database = DatabaseCodec.decode(jsonObject);
         String name = database.getName();
@@ -160,8 +170,6 @@ public class TransGraphController {
         dbConn.setName(name);
         dbConn.setLoginUser(userName);
         cService.updateDatabaseUserName(dbConn);
-
-        JsonUtils.success("转换保存成功！");
     }
 
     /**
