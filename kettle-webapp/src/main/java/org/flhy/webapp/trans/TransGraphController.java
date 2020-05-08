@@ -126,10 +126,21 @@ public class TransGraphController {
         AbstractMeta transMeta = codec.decode(xml);
         repository = App.getInstance().getRepository();
         ObjectId existingId = repository.getTransformationID(transMeta.getName(), transMeta.getRepositoryDirectory());
-        if (transMeta.getCreatedDate() == null)
+        if (transMeta.getCreatedDate() == null){
             transMeta.setCreatedDate(new Date());
-        if (transMeta.getObjectId() == null)
+        }
+
+        if (transMeta.getObjectId() == null) {
             transMeta.setObjectId(existingId);
+        }
+
+        if (StringUtils.isEmpty(transMeta.getCreatedUser()) ){
+            transMeta.setCreatedUser(loginUser.getUserId());
+            transMeta.setModifiedUser(loginUser.getUserId());
+        }else{
+            transMeta.setModifiedUser(loginUser.getUserId());
+        }
+
         transMeta.setModifiedDate(new Date());
 
         boolean versioningEnabled = true;
@@ -148,7 +159,6 @@ public class TransGraphController {
         }
 
         repository.save(transMeta, versionComment, null);
-
         if(null != databaseInfo && !"".equals(databaseInfo)){
             updateDatabaseUserName(databaseInfo,userName);
         }

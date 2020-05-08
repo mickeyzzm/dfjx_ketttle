@@ -7,11 +7,13 @@
             j.name as name,
             j.ID_DIRECTORY as directoryId,
             j.ID_JOB as jobId,
-            j.CREATED_USER as createUser,
+            ifnull(usr.NAME,j.CREATED_USER) as createUser,
             j.CREATED_DATE as createDate,
-            j.MODIFIED_USER as modifiedUser,
+            ifnull(usr_m.NAME,j.MODIFIED_USER) as modifiedUser,
             j.MODIFIED_DATE as modifiedDate
             from (SELECT * FROM r_job ORDER BY CREATED_DATE DESC) j
+            left join r_user usr on j.CREATED_USER = usr.ID_USER
+            left join r_user usr_m on j.MODIFIED_USER = usr_m.ID_USER
             WHERE 1=1
         <if test='param3!=null and param3!=""'  >
             AND j.`NAME` IN

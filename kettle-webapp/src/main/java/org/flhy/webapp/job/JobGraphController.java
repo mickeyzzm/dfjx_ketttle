@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.flhy.ext.App;
@@ -43,10 +44,12 @@ import org.pentaho.di.repository.ObjectId;
 import org.pentaho.di.repository.Repository;
 import org.pentaho.di.repository.RepositorySecurityProvider;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.sxdata.jingwei.entity.UserEntity;
 import org.w3c.dom.Element;
 
 import com.enterprisedt.net.ftp.FTPClient;
@@ -143,9 +146,10 @@ public class JobGraphController {
 	 */
 	@ResponseBody
 	@RequestMapping(method=RequestMethod.POST, value="/save")
-	protected void save(@RequestParam String graphXml) throws Exception{
+	protected void save(@RequestParam String graphXml, HttpServletRequest request) throws Exception{
 		Repository repository = null;
 		GraphCodec codec = (GraphCodec) PluginFactory.getBean(GraphCodec.JOB_CODEC);
+		UserEntity loginUser =(UserEntity) request.getSession().getAttribute("login");
 		System.out.println(StringEscapeHelper.decode(graphXml));
 		String xml = StringEscapeHelper.decode(graphXml);
 		JobMeta jobMeta = (JobMeta) codec.decode(xml);
@@ -153,10 +157,21 @@ public class JobGraphController {
 		repository = App.getInstance().getRepository();
 		ObjectId existingId = repository.getJobId(jobMeta.getName(), jobMeta.getRepositoryDirectory());
 		//repository.getTransformationID( jobMeta.getName(), jobMeta.getRepositoryDirectory());
-		if(jobMeta.getCreatedDate() == null)
+		if(jobMeta.getCreatedDate() == null) {
 			jobMeta.setCreatedDate(new Date());
-		if(jobMeta.getObjectId() == null)
+		}
+		if(jobMeta.getObjectId() == null) {
 			jobMeta.setObjectId(existingId);
+		}
+
+		if (jobMeta.getCreatedUser()==null || jobMeta.getCreatedUser().equals("-") ){
+			jobMeta.setCreatedUser(loginUser.getUserId());
+			jobMeta.setModifiedUser(loginUser.getUserId());
+		}else{
+			jobMeta.setModifiedUser(loginUser.getUserId());
+		}
+
+
 		jobMeta.setModifiedDate(new Date());
 		boolean versioningEnabled = true;
 		boolean versionCommentsEnabled = true;
