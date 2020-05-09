@@ -146,6 +146,7 @@ public class RepositoryController {
 		boolean isSuccess=false;
 		String userId = ((UserGroupAttributeEntity)request.getSession().getAttribute("userInfo")).getUserName();
 		Repository repository = App.getInstance().getRepository();
+		System.out.println(username+"----------------------"+password);
 		if(repository == null){
 			repository.init(App.getInstance().meta);
 			repository.connect(username, password);
@@ -198,7 +199,7 @@ public class RepositoryController {
 			if(e instanceof KettleException){
 				repository.disconnect();
 				repository.init(App.getInstance().meta);
-				repository.connect("root", "root123456ABCD!@#");
+				repository.connect(username, password);
 			}
 			sqlSession.rollback();
 			sqlSession.close();
@@ -264,7 +265,7 @@ public class RepositoryController {
 			if(e instanceof KettleException){
 				repository.disconnect();
 				repository.init( App.getInstance().meta);
-				repository.connect("admin", "admin");
+				repository.connect(username, password);
 			}
 			sqlSession.rollback();
 			sqlSession.close();
