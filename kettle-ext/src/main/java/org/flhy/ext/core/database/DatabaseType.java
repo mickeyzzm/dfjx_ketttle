@@ -69,9 +69,12 @@ public class DatabaseType implements PluginTypeListener {
 
 	    for ( int value : acc ) {
 	    	LinkedHashMap jsonObject = new LinkedHashMap();
-	    	jsonObject.put("value", value);
-	    	jsonObject.put("text", DatabaseMeta.getAccessTypeDescLong( value ));
-	    	list.add(jsonObject);
+	    	if(value != 1){
+				jsonObject.put("value", value);
+				jsonObject.put("text", DatabaseMeta.getAccessTypeDescLong( value ));
+				list.add(jsonObject);
+			}
+
 	    }
 	    
 	    return list;

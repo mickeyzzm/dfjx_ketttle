@@ -146,7 +146,6 @@ public class RepositoryController {
 		boolean isSuccess=false;
 		String userId = ((UserGroupAttributeEntity)request.getSession().getAttribute("userInfo")).getUserName();
 		Repository repository = App.getInstance().getRepository();
-		System.out.println(username+"----------------------"+password);
 		if(repository == null){
 			repository.init(App.getInstance().meta);
 			repository.connect(username, password);
