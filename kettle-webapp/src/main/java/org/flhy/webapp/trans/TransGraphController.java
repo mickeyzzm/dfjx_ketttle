@@ -134,7 +134,7 @@ public class TransGraphController {
             transMeta.setObjectId(existingId);
         }
 
-        if (StringUtils.isEmpty(transMeta.getCreatedUser()) ){
+        if (StringUtils.isEmpty(transMeta.getCreatedUser())){
             transMeta.setCreatedUser(loginUser.getUserId());
             transMeta.setModifiedUser(loginUser.getUserId());
         }else{

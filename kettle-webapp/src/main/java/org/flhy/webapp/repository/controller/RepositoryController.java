@@ -56,6 +56,7 @@ import org.pentaho.di.repository.kdr.KettleDatabaseRepositoryMeta;
 import org.pentaho.di.trans.TransMeta;
 import org.pentaho.di.ui.core.PropsUI;
 import org.pentaho.di.ui.repository.kdr.KettleDatabaseRepositoryDialog;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -78,6 +79,11 @@ import javax.servlet.http.HttpSession;
 @Controller
 @RequestMapping(value = "/repository")
 public class RepositoryController {
+
+	@Value("${jdbc.username}")
+	private String username;
+	@Value("${jdbc.password}")
+	private String password;
 
 	/**
 	 * 该方法返回所有的资源库信息
@@ -142,7 +148,7 @@ public class RepositoryController {
 		Repository repository = App.getInstance().getRepository();
 		if(repository == null){
 			repository.init(App.getInstance().meta);
-			repository.connect("root", "root123456ABCD!@#");
+			repository.connect(username, password);
 		}
 		RepositoryDirectoryInterface directory = null;
 		TransMeta transMeta = null;
