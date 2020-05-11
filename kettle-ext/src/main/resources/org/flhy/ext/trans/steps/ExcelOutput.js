@@ -70,7 +70,7 @@ ExcelOutputDialog=Ext.extend(KettleTabDialog,{
         //tab-content-template
         var wUsetemplatefiles=new Ext.form.Checkbox({boxLabel:'使用模板?',checked:cell.getAttribute('enabled')=="Y"});
         var wTemplateFile=new Ext.form.TextField({ fieldLabel: '选择模板',disabled:true,inputType:'file',anchor: '-10'/*,value:cell.getAttribute('filename')*/});
-        var wAppendTemplate=new Ext.form.Checkbox({boxLabel:'追加模板?',disabled:true,checked:cell.getAttribute('append')=="Y"});
+        var wAppendTemplate=new Ext.form.Checkbox({boxLabel:'追加模板?',disabled:true,checked:cell.getAttribute('templateAppend')=="Y"});
 
 
         //tab-Custom-HeaderFont
@@ -422,7 +422,7 @@ ExcelOutputDialog=Ext.extend(KettleTabDialog,{
                 tempdirectory:wTempFileDir.getValue(),
                 enabled:wUsetemplatefiles.getValue()? "Y" : "N",
                 filename:wTemplateFile.getValue(),
-                append:wAppendTemplate.getValue()? "Y" : "N",
+                templateAppend:wAppendTemplate.getValue()? "Y" : "N",
                 header_font_name:wHeaderFontName.getValue(),
                 header_font_size:wHeaderFontSize.getValue(),
                 header_font_bold:wHeaderFontBold.getValue()? "Y" : "N",
