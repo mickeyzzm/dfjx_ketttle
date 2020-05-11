@@ -338,6 +338,69 @@ GuidePanel = Ext.extend(Ext.Panel,{
 		loginUserType=document.getElementById("userTypeHidden").value;
 		belongToUserGroup=document.getElementById("belongToUserGroup").value;
 
+		var menuModel = {
+			id:'task',
+			cls:'nav-node',
+			icon:'ui/images/i_model.png',
+			text : "<font size = '3px' style='margin-left:7px'>模&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型</font>",
+			children:[
+				{id:"newTrans",text:"<font size = '2px' style='margin-left:9px;'>新建转换</font>",cls:"navl",leaf:true,icon:'ui/images/r_transformation.png'},
+				{id:"newJob",text:"<font size = '2px' style='margin-left:9px;'>新建作业</font>",cls:"navl",leaf:true,icon:'ui/images/r_job.png'}
+			]
+		};
+		var menuPlatform = {
+			text : "<font size = '3px' style='margin-left:7px'>平&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;台</font>",icon:'ui/images/i_platform.png', cls:'nav-node',
+			children:[
+				{id:"platformMonitor",text:"<font size = '2px' style='margin-left:9px;'>平台概况</font>",cls:"navl",leaf:true,icon:'ui/images/i_platform.png'},
+			],id:"moduleIdTwo"
+		};
+
+		var menuTask = {
+			text : "<font size = '3px' style='margin-left:7px'>任&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;务</font>",icon:'ui/images/i_task.png', cls:'nav-node',
+			children:[
+				{id:"jobMonitor",text:"<font size = '2px' style='margin-left:9px;'>作业管理</font>",cls:"navl",leaf:true,icon:'ui/images/i_jobManager.png'},
+				{id:"transMonitor",text:"<font size = '2px' style='margin-left:9px;'>转换管理</font>",cls:"navl",leaf:true,icon:'ui/images/i_transManager.png'},
+				{id:"taskGroupMonitor",text:"<font size = '2px' style='margin-left:9px;'>任务组管理</font>",cls:"navl",leaf:true,icon:'ui/images/i_taskGroupManager.png'},
+				{id:"taskMonitoring",text:"<font size = '2px' style='margin-left:9px;'>任务监控</font>",cls:"navl",leaf:true,icon:'ui/images/i_slaveCon.png'}
+			],id:"taskIdTwo"
+		};
+
+		var menuSchedule = {
+			text : "<font size = '3px' style='margin-left:7px'>定&nbsp;&nbsp;时&nbsp;&nbsp;调&nbsp;&nbsp;度</font>",icon:'ui/images/i_scheduler.png', cls:'nav-node',
+			children:[
+				{id:"schedulerMonitor",text:"<font size = '2px' style='margin-left:9px;'>定时调度管理</font>",cls:"navl",leaf:true,icon:'ui/images/i_timerManager_24.png'},
+			]
+		};
+
+		var menuLog = {
+			text : "<font size = '3px' style='margin-left:7px'>日&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;志</font>",icon:'ui/images/i_log.png', cls:'nav-node',
+			children:[
+				{id:"taskLog",text:"<font size = '2px' style='margin-left:9px;'>任务历史日志</font>",cls:"navl",leaf:true,icon:'ui/images/i_tasklog.png'},
+			]
+		};
+
+		var menuNode = {
+			text : "<font size = '3px' style='margin-left:7px'>节&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点</font>",icon:'ui/images/i_slave.png', cls:'nav-node',
+			children:[
+				{id:"slaveMonitor",text:"<font size = '2px' style='margin-left:9px;'>节点管理</font>",cls:"navl",leaf:true,icon:'ui/images/i_slaveManager.png'},
+				{id:"slaveMonitoring",text:"<font size = '2px' style='margin-left:9px;'>节点监控</font>",cls:"navl",leaf:true,icon:'ui/images/i_slaveCon.png'},
+			]
+		};
+
+		var menuUser = {
+			text:"<font size = '3px' style='margin-left:7px'>用&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;户</font>",icon:'ui/images/i_user.png', cls:'nav-node',
+			children:[
+				{id:"userMonitor",text:"<font size = '2px' style='margin-left:9px;'>用户管理</font>",leaf:true,cls:"navl",icon:'ui/images/i_userManager_16.png'},
+				{id:"userGroupMonitor",text:"<font size = '2px' style='margin-left:9px;'>用户组管理</font>",leaf:true,cls:"navl",icon:'ui/images/i_userGroupManager.png'},
+			],id:"userIdTwo"
+		};
+
+		var allMenus = [menuPlatform,menuModel,menuTask,menuSchedule,menuLog];
+
+		if( loginUserName === 'admin' ){
+			allMenus.push(menuNode, menuUser);
+		}
+
 		fristGuidePanel = new Ext.tree.TreePanel({
 			useArrows: true,
 			region: 'west',
@@ -346,52 +409,7 @@ GuidePanel = Ext.extend(Ext.Panel,{
 			loader : new Ext.tree.TreeLoader(),
 			root : new Ext.tree.AsyncTreeNode({
 				id:'fristGuidePanel',
-				children:[
-					{
-						id:'task',
-						cls:'nav-node',
-						icon:'ui/images/i_model.png',
-						text : "<font size = '3px' style='margin-left:7px'>模&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;型</font>",
-						children:[
-							{id:"newTrans",text:"<font size = '2px' style='margin-left:9px;'>新建转换</font>",cls:"navl",leaf:true,icon:'ui/images/r_transformation.png'},
-							{id:"newJob",text:"<font size = '2px' style='margin-left:9px;'>新建作业</font>",cls:"navl",leaf:true,icon:'ui/images/r_job.png'}
-						]
-					},{
-                        text : "<font size = '3px' style='margin-left:7px'>平&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;台</font>",icon:'ui/images/i_platform.png', cls:'nav-node',
-                        children:[
-                            {id:"platformMonitor",text:"<font size = '2px' style='margin-left:9px;'>平台概况</font>",cls:"navl",leaf:true,icon:'ui/images/i_platform.png'},
-                        ],id:"moduleIdTwo"
-                    },{
-						text : "<font size = '3px' style='margin-left:7px'>任&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;务</font>",icon:'ui/images/i_task.png', cls:'nav-node',
-						children:[
-							{id:"jobMonitor",text:"<font size = '2px' style='margin-left:9px;'>作业管理</font>",cls:"navl",leaf:true,icon:'ui/images/i_jobManager.png'},
-							{id:"transMonitor",text:"<font size = '2px' style='margin-left:9px;'>转换管理</font>",cls:"navl",leaf:true,icon:'ui/images/i_transManager.png'},
-							{id:"taskGroupMonitor",text:"<font size = '2px' style='margin-left:9px;'>任务组管理</font>",cls:"navl",leaf:true,icon:'ui/images/i_taskGroupManager.png'},
-							{id:"taskMonitoring",text:"<font size = '2px' style='margin-left:9px;'>任务监控</font>",cls:"navl",leaf:true,icon:'ui/images/i_slaveCon.png'}
-						],id:"taskIdTwo"
-					},{
-                        text : "<font size = '3px' style='margin-left:7px'>定&nbsp;&nbsp;时&nbsp;&nbsp;调&nbsp;&nbsp;度</font>",icon:'ui/images/i_scheduler.png', cls:'nav-node',
-                        children:[
-                            {id:"schedulerMonitor",text:"<font size = '2px' style='margin-left:9px;'>定时调度管理</font>",cls:"navl",leaf:true,icon:'ui/images/i_timerManager_24.png'},
-                        ]
-                    },{
-						text : "<font size = '3px' style='margin-left:7px'>日&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;志</font>",icon:'ui/images/i_log.png', cls:'nav-node',
-						children:[
-							{id:"taskLog",text:"<font size = '2px' style='margin-left:9px;'>任务历史日志</font>",cls:"navl",leaf:true,icon:'ui/images/i_tasklog.png'},
-						]
-					},{
-						text : "<font size = '3px' style='margin-left:7px'>节&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点</font>",icon:'ui/images/i_slave.png', cls:'nav-node',
-						children:[
-							{id:"slaveMonitor",text:"<font size = '2px' style='margin-left:9px;'>节点管理</font>",cls:"navl",leaf:true,icon:'ui/images/i_slaveManager.png'},
-							{id:"slaveMonitoring",text:"<font size = '2px' style='margin-left:9px;'>节点监控</font>",cls:"navl",leaf:true,icon:'ui/images/i_slaveCon.png'},
-						]
-					},{
-						text:"<font size = '3px' style='margin-left:7px'>用&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;户</font>",icon:'ui/images/i_user.png', cls:'nav-node',
-						children:[
-							{id:"userMonitor",text:"<font size = '2px' style='margin-left:9px;'>用户管理</font>",leaf:true,cls:"navl",icon:'ui/images/i_userManager_16.png'},
-							{id:"userGroupMonitor",text:"<font size = '2px' style='margin-left:9px;'>用户组管理</font>",leaf:true,cls:"navl",icon:'ui/images/i_userGroupManager.png'},
-						],id:"userIdTwo"
-					}				]
+				children: allMenus
 			}),
 			enableDD:true,
 			ddGroup:'TreePanelDDGroup',
@@ -620,6 +638,8 @@ GuidePanel = Ext.extend(Ext.Panel,{
 		this.items = [fristGuidePanel, secondGuidePanel];
 		GuidePanel.superclass.initComponent.call(this);
 
+		/** 默认显示平台概况 */
+		showModuleView(secondGuidePanel);
 	}
 });
 //  TransGuide = Ext.extend(Ext.Panel, {
