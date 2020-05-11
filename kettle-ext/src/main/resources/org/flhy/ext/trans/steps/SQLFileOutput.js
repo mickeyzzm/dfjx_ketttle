@@ -151,10 +151,26 @@ SQLFileOutputDialog = Ext.extend(KettleTabDialog, {
 					anchor: '-10',
 					items: [wFilename,{
     					xtype: 'button',
-    					text: '浏览...'
+    					text: '浏览...',
+						handler: function() {
+							var dialog = new FileExplorerWindow({extension : 1});
+							dialog.on('ok', function(path) {
+								wFilename.setValue(path);
+								dialog.close();
+							});
+							dialog.show();
+						}
     				},{
     					xtype: 'button',
-    					text: '显示文件夹'
+    					text: '显示文件夹',
+						handler: function() {
+							var dialog = new FileExplorerWindow({extension : 0});
+							dialog.on('ok', function(path) {
+								wFilename.setValue(path);
+								dialog.close();
+							});
+							dialog.show();
+						}
     				}]
 				}, wCreateParentFolder, wDoNotOpenNewFileInit, wExtension, wAddStepnr, wAddDate, wAddTime, wAppend, wSplitEvery, wAddToResult]
 			}]
