@@ -3,10 +3,12 @@ package org.sxdata.jingwei.controller;
 import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.sxdata.jingwei.entity.UserGroupAttributeEntity;
 import org.sxdata.jingwei.service.HistoryLogService;
+import org.sxdata.jingwei.util.CommonUtil.StringDateUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -47,7 +49,11 @@ public class LogController {
                 statu=(String)json.get("statu");
                 type=(String)json.get("type");
                 startTime=(String)json.get("startDate");
+
                 taskName=(String)json.get("taskName");
+                if(StringUtils.isEmpty(startTime)){
+                    startTime = StringDateUtil.getSystemTime();
+                }
                 startTime+=" 00:00:00";
             }
             String result=logService.getAllHistoryLog(start,limit,statu,type,startTime,taskName,userGroupName);

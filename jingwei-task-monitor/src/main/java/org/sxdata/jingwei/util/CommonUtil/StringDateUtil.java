@@ -198,4 +198,11 @@ public class StringDateUtil {
         }
         return max;
     }
+
+
+
+    public static String getSystemTime() {
+        return new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()));
+    }
+
 }

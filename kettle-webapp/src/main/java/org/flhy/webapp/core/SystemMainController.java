@@ -95,8 +95,6 @@ public class SystemMainController{
 			"排序合并","合并记录","记录关联(笛卡尔输出)",
 			"记录集连接"};
 
-
-
 	public Boolean getBaseCategory(String categoryName){
 		Boolean bool = false;
 		for(String str :arrs){
