@@ -382,7 +382,7 @@ function failureResponse(response) {
 					   modal: true,
 					   layout: 'fit',
 					   items: new Ext.form.TextArea({
-						   	value: decodeURIComponent(response.responseText),
+						   	value: decodeURIComponent(response.responseText.replace(/Kettle/g, "")),
 							readOnly : true
 					   }),
 					   bbar: ['->', {
