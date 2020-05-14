@@ -82,11 +82,14 @@ public class SystemMainController{
 
 
 
-	final String [] arrs = {"Excel数据源","文本文件输入",
-			"文本文件数据源","连接",
-			"删除",
+	final String [] arrs = {
+//			"Excel数据源",
+			"文本文件输入",
+//			"文本文件数据源",
+			"连接",
+//			"删除",
 			"数据同步",
-			"更新",
+//			"更新",
 			"列转行",
 			"排序记录",
 			"根据Java代码过滤记录",
