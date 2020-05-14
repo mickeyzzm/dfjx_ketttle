@@ -146,7 +146,7 @@ TransExecutor = Ext.extend(Ext.util.Observable, {
             method: 'POST',
             success: function(response) {
                 var result = Ext.decode(response.responseText);
-
+                result.log = result.log.replace(/Kettle/g, "");
                 me.fireEvent('result', result);
                 if(!result.finished) {
                     setTimeout(function() { me.loadResult(); }, 100);
