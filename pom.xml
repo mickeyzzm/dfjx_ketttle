@@ -58,6 +58,13 @@
 			<artifactId>kettle-core</artifactId>
 			<version>7.1.0.0-12</version>
 		</dependency>
+		<!--<dependency>
+			<groupId>pentaho-kettle</groupId>
+			<artifactId>kettle-core</artifactId>
+			<version>7.1.0.0-12</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/kettle-core-7.1.0.0-12.jar</systemPath>
+		</dependency>-->
 		<dependency>
 			<groupId>pentaho-kettle</groupId>
 			<artifactId>kettle-dbdialog</artifactId>
@@ -68,11 +75,28 @@
 			<artifactId>kettle-engine</artifactId>
 			<version>7.1.0.0-12</version>
 		</dependency>
+
+		<!--<dependency>
+			<groupId>pentaho-kettle</groupId>
+			<artifactId>kettle-engine</artifactId>
+			<version>7.1.0.0-12</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/kettle-engine-7.1.0.0-12.jar</systemPath>
+		</dependency>-->
 		<dependency>
 			<groupId>pentaho-kettle</groupId>
 			<artifactId>kettle-ui-swt</artifactId>
 			<version>7.1.0.0-12</version>
 		</dependency>
+
+		<!--<dependency>
+			<groupId>pentaho-kettle</groupId>
+			<artifactId>kettle-ui-swt</artifactId>
+			<version>7.1.0.0-12</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/kettle-ui-swt-7.1.0.0-12.jar</systemPath>
+		</dependency>-->
+
 		<dependency>
 			<groupId>pentaho</groupId>
 			<artifactId>metastore</artifactId>

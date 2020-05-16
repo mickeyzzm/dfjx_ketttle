@@ -19,7 +19,6 @@ BaseGraph = Ext.extend(Ext.Panel, {
 			var container = comp.body.dom;
 			this.initGraph(container);
 			this.installDragDrop(container);
-			
 			if(this.readOnly === false) {
 				this.installPopupMenu(container);
 				this.installKeyHandler();

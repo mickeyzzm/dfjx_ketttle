@@ -36,6 +36,9 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    private Producer producer;
+
     //分配用户组
     @RequestMapping(value="/allotUserGroup")
     @ResponseBody
@@ -291,8 +294,7 @@ public class UserController {
     }
 
 
-    @Autowired
-    private Producer producer;
+
 
     @GetMapping(value="/captcha")
     public void captcha(HttpServletRequest request, HttpServletResponse response) throws IOException {

@@ -84,7 +84,7 @@ public class SystemMainController{
 
 	final String [] arrs = {
 //			"Excel数据源",
-			"文本文件输入",
+//			"文本文件输入",
 //			"文本文件数据源",
 			"连接",
 //			"删除",
@@ -142,7 +142,6 @@ public class SystemMainController{
 			if(bool){
 				continue;
 			}
-
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("id", "category" + i++);
 
@@ -150,9 +149,6 @@ public class SystemMainController{
 			jsonObject.put("icon", SvgImageUrl.getUrl(BasePropertyHandler.getProperty( "Folder_image" )));
 			jsonObject.put("cls", "nav-node");
 			JSONArray children = new JSONArray();
-
-
-
 			for (PluginInterface p : sortedCat) {
 				if(!PluginFactory.containBean(p.getIds()[0]))
 					continue;
@@ -254,6 +250,7 @@ public class SystemMainController{
 			}else{
 				pluginName = baseCategory;
 			}
+			System.out.println("----------pluginName-------="+pluginName);
 			Boolean bools  = this.getBaseCategory(pluginName);
 			if(bools){
 				continue;
@@ -339,9 +336,6 @@ public class SystemMainController{
 				}
 
 				String pluginDescription = p.getDescription();
-
-
-
 				JSONObject child = new JSONObject();
 				child.put("id", "step" + i++);
 				child.put("text", PluginFactory.containBean(p.getIds()[0]) ? pluginName : "<font color='red'>" + pluginName + "</font>");

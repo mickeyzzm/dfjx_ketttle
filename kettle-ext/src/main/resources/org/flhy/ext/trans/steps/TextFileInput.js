@@ -5,15 +5,15 @@ TextFileInputDialog = Ext.extend(KettleTabDialog, {
 	showPreview:true,
 	title: '文本文件数据源',
 	initComponent: function() {
-		var me = this,  graph = getActiveGraph().getGraph(),  cell = graph.getSelectionCell();
+		var me = this,  graph = getActiveGraph().getGraph(), cell = graph.getSelectionCell();
 
-		var wFilename = new Ext.form.TextField({fieldLabel: '文件或目录',flex: 1, anchor: '-10',value: cell.getAttribute('fileName')});
+		var wFilename = new Ext.form.TextField({fieldLabel: '文件1或目录1',flex: 1, anchor: '-10',value: cell.getAttribute('fileName')});
 		var wFileMask = new Ext.form.TextField({fieldLabel: '规则表达式', flex: 1,anchor: '-10',value: cell.getAttribute('fileMask')});
 		var wExcludeFileMask = new Ext.form.TextField({fieldLabel: '正则表达式（排除）', anchor: '-10',flex: 1,value: cell.getAttribute('excludeFileMask')});
 
 		var wfindbutton = new Ext.Button({
 			text: '浏览...',
-			disabled:true,
+			disabled:false,
 			handler: function() {
 				var dialog = new FileExplorerWindow();
 				dialog.on('ok', function(path) {
@@ -24,7 +24,7 @@ TextFileInputDialog = Ext.extend(KettleTabDialog, {
 			}});
 		var waddfilebutton = new Ext.Button({
 			text: '增加',
-			disabled:true,
+			disabled:false,
 			handler: function() {
 				var store = fileNamegrid.getStore();
 				fileNamegrid.stopEditing();
@@ -99,7 +99,7 @@ TextFileInputDialog = Ext.extend(KettleTabDialog, {
 		var wAcceptingField = new Ext.form.TextField({fieldLabel: '步骤读取的文件名来自', flex: 1,anchor: '-10',value: cell.getAttribute('acceptingField') });
 		var wAcceptingStepName = new Ext.form.TextField({fieldLabel: '在输入里的字段被当做文件名', flex: 1,anchor: '-10',value: cell.getAttribute('acceptingStepName') });
 
-		var wFileType = new Ext.form.ComboBox({
+	/*	var wFileType1 = new Ext.form.ComboBox({
 			fieldLabel: '文件类型',
 			anchor: '-10',
 			displayField: 'name',
@@ -109,7 +109,8 @@ TextFileInputDialog = Ext.extend(KettleTabDialog, {
 			triggerAction: 'all',
 			selectOnFocus:true,
 			value: cell.getAttribute('fileType')
-		});
+		});*/
+		var wFileType = new Ext.form.TextField({fieldLabel: '文件类型',flex: 1, anchor: '-10', value: cell.getAttribute('fileType')});
 		var wSeparator = new Ext.form.TextField({fieldLabel: '分隔符',flex: 1, anchor: '-10', value: cell.getAttribute('separator')});
 		var wEnclosure = new Ext.form.TextField({fieldLabel: '文本限定符', flex: 1,anchor: '-10',value: cell.getAttribute('enclosure')});
 		var wBreakInEnclosureAllowed = new Ext.form.Checkbox({fieldLabel: '在文本里允许换行',anchor: '-10', checked: cell.getAttribute('breakInEnclosureAllowed') == 'Y'});

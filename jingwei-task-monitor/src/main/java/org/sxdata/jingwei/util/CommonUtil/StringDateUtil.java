@@ -200,9 +200,9 @@ public class StringDateUtil {
     }
 
 
-
     public static String getSystemTime() {
         return new SimpleDateFormat("yyyy-MM-dd").format(new Date(System.currentTimeMillis()));
     }
+
 
 }
