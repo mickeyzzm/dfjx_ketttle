@@ -2,7 +2,7 @@ ExcelInputDialog = Ext.extend(KettleTabDialog, {
 	width: 700,
 	height: 520,
 	showPreview:true,
-	title: 'Excel输入',
+	title: 'Excel数据源',
 	initComponent: function() {
 		var me = this,  graph = getActiveGraph().getGraph(),  cell = graph.getSelectionCell();
 

@@ -2649,7 +2649,7 @@ INSERT INTO `r_step_type` VALUES ('22', 'DataGrid', '自定义常量数据', 'En
 INSERT INTO `r_step_type` VALUES ('23', 'HadoopFileOutputPlugin', 'Hadoop File Output', 'Create files in an HDFS location ');
 INSERT INTO `r_step_type` VALUES ('24', 'XBaseInput', 'XBase输入', '从一个XBase类型的文件(DBF)读取记录');
 INSERT INTO `r_step_type` VALUES ('25', 'SyslogMessage', '发送信息至Syslog', 'Send message to Syslog server');
-INSERT INTO `r_step_type` VALUES ('26', 'ExcelInput', 'Excel输入', '从一个微软的Excel文件里读取数据. 兼容Excel 95, 97 and 2000.');
+INSERT INTO `r_step_type` VALUES ('26', 'ExcelInput', 'Excel数据源', '从一个微软的Excel文件里读取数据. 兼容Excel 95, 97 and 2000.');
 INSERT INTO `r_step_type` VALUES ('27', 'SapInput', 'SAP 输入', 'Read data from SAP ERP, optionally with parameters');
 INSERT INTO `r_step_type` VALUES ('28', 'InfobrightOutput', 'Infobright 批量加载', 'Load data to an Infobright database table');
 INSERT INTO `r_step_type` VALUES ('29', 'CassandraInput', 'Cassandra Input', 'Reads data from a Cassandra table');

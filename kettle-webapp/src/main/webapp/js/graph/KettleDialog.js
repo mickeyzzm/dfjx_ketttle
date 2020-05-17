@@ -223,7 +223,6 @@ KettleEditor = Ext.extend(Ext.Panel, {
         {
        		ddGroup: 'JsWriteGroup',  
             notifyDrop: function(ddSource, e, data) {
-       			alert("---")
             	var text = data.node.text;
             	
             	editor.replaceSelection(text, null, "paste");
