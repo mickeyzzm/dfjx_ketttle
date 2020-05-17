@@ -420,7 +420,7 @@ ExcelInputDialog = Ext.extend(KettleTabDialog, {
 						me.onSure();
 
 						getActiveGraph().inputOutputFields(cell.getAttribute('label'), true, function(st) {
-							store.loadData(st.toJson());
+							fieldStore.loadData(st.toJson());
 						});
 					}
 				});
