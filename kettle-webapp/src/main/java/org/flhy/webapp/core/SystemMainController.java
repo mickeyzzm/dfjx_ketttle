@@ -47,6 +47,7 @@ import org.pentaho.di.job.entries.simpleeval.JobEntrySimpleEval;
 import org.pentaho.di.job.entry.JobEntryCopy;
 import org.pentaho.di.laf.BasePropertyHandler;
 import org.pentaho.di.trans.step.StepPartitioningMeta;
+import org.pentaho.di.trans.steps.excelinput.SpreadSheetType;
 import org.pentaho.di.trans.steps.multimerge.MultiMergeJoinMeta;
 import org.pentaho.di.trans.steps.randomvalue.RandomValueMeta;
 import org.pentaho.di.trans.steps.randomvalue.RandomValueMetaFunction;
@@ -779,4 +780,18 @@ public class SystemMainController{
 		}
 		JsonUtils.response(jsonArray);
 	}
+	
+	@ResponseBody
+	@RequestMapping(method=RequestMethod.POST, value="/excelSheetType")
+	protected void excelSheetType() throws Exception{
+		JSONArray jsonArray = new JSONArray();
+		for(int i=0;i<SpreadSheetType.values().length;i++){
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("code", SpreadSheetType.values()[i].toString());
+			jsonObject.put("desc", SpreadSheetType.values()[i].getDescription());
+			jsonArray.add(jsonObject);
+		}
+		JsonUtils.response(jsonArray);
+	}
+	
 }
