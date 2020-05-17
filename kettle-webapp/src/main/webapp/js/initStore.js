@@ -226,4 +226,13 @@
 			method: 'POST'
 		})
 	}).load();
+	
+	new Ext.data.JsonStore({
+		storeId:'excelSheetTypeStore',
+		fields: ['code','desc'],
+		proxy: new Ext.data.HttpProxy({
+		url: GetUrl('system/excelSheetType.do'),
+			method: 'POST'
+		})
+	}).load();
 });

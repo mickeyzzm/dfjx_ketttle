@@ -55,6 +55,13 @@ DeleteDialog = Ext.extend(KettleDialog, {
 			return data;
 		};
 		
+		var tableFieldStore = getActiveGraph().tableFields();
+		tableFieldStore.on('beforeload', function (store, options) {
+			options.params.databaseName=wConnection.getValue();
+			options.params.schema=wSchema.getValue();
+			options.params.table=wTable.getValue();
+	    });
+		
 		this.fitItems = {
 			layout: 'border',
 			border: false,
@@ -132,7 +139,7 @@ DeleteDialog = Ext.extend(KettleDialog, {
 				        forceSelection: true,
 				        triggerAction: 'all',
 				        selectOnFocus:true,
-						store: getActiveGraph().tableFields(wConnection.getValue(), wSchema.getValue(), wTable.getValue()),
+						store: tableFieldStore,
 						listeners : {
 						     beforequery: function(qe){
 						    	 delete qe.combo.lastQuery;

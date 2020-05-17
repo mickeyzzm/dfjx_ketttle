@@ -51,6 +51,13 @@ InsertUpdateDialog = Ext.extend(KettleTabDialog, {
 			};
 		};
 		
+		var tableFieldStore = getActiveGraph().tableFields();
+		tableFieldStore.on('beforeload', function (store, options) {
+			options.params.databaseName=wConnection.getValue();
+			options.params.schema=wSchema.getValue();
+			options.params.table=wTable.getValue();
+	    });
+		
 		this.tabItems = [{
 			title: '基本配置',
 			xtype: 'KettleForm',
@@ -134,7 +141,7 @@ InsertUpdateDialog = Ext.extend(KettleTabDialog, {
 			        forceSelection: true,
 			        triggerAction: 'all',
 			        selectOnFocus:true,
-					store: getActiveGraph().tableFields(wConnection.getValue(), wSchema.getValue(), wTable.getValue()),
+					store: tableFieldStore,
 					listeners : {
 					     beforequery: function(qe){
 					    	 delete qe.combo.lastQuery;
@@ -223,7 +230,7 @@ InsertUpdateDialog = Ext.extend(KettleTabDialog, {
 			        forceSelection: true,
 			        triggerAction: 'all',
 			        selectOnFocus:true,
-					store: getActiveGraph().tableFields(wConnection.getValue(), wSchema.getValue(), wTable.getValue()),
+					store: tableFieldStore,
 					listeners : {
 					     beforequery: function(qe){
 					    	 delete qe.combo.lastQuery;
