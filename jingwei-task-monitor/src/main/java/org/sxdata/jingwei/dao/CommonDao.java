@@ -11,7 +11,7 @@ import java.util.List;
  */
 @Repository
 public interface CommonDao {
-    public List<DatabaseConnEntity> getDababasesConn(String loginUser);
+    public List<DatabaseConnEntity> getDababasesConn(String userGroupName);
 
     public void deleteDatabaseAttr(Integer id);
 

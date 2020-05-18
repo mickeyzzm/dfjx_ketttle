@@ -10,7 +10,7 @@ public class DatabaseConnEntity {
     private String databaseName;
     private String databaseType;
     private Integer databaseId;
-    private String loginUser;
+    private String userGroup;
 
     public Integer getDatabaseId() {
         return databaseId;
@@ -60,11 +60,12 @@ public class DatabaseConnEntity {
         this.databaseType = databaseType;
     }
 
-    public String getLoginUser() {
-        return loginUser;
+
+    public String getUserGroup() {
+        return userGroup;
     }
 
-    public void setLoginUser(String loginUser) {
-        this.loginUser = loginUser;
+    public void setUserGroup(String userGroup) {
+        this.userGroup = userGroup;
     }
 }

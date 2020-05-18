@@ -13,15 +13,16 @@
         from (SELECT * FROM r_transformation ORDER BY CREATED_DATE DESC) j
         left join r_user usr on j.CREATED_USER = usr.ID_USER
         left join r_user usr_m on j.MODIFIED_USER = usr_m.ID_USER
-        <if test='param3!=null and param3!=""'  >
-            AND j.`NAME` IN
+        where j.use_batchid='Y'
+        <if test='param3!=null and param3!="" and  param3 !="Pristin"' >
+            and j.`NAME` IN
             (
-                select DISTINCT TASK_NAME from d_task_group_member_attribute where TASK_GROUP_NAME in
-                (
-                    select TASK_GROUP_NAME from
-                    d_user_group_tasks_relation where USER_GROUP_NAME=#{2}
-                )
-                AND TYPE="trans"
+            select  TASK_NAME from d_task_group_member_attribute where TASK_GROUP_NAME in
+            (
+            select TASK_GROUP_NAME from
+            d_user_group_tasks_relation where USER_GROUP_NAME=#{2}
+            )
+            AND TYPE='trans'
             )
         </if>
          limit #{0},#{1}
@@ -40,9 +41,10 @@
         from  r_transformation j WHERE j.name=#{0}
     </select>
 
+
     <select id="getTotalSize" resultType="java.lang.Integer">
-        select count(1) from r_transformation j WHERE 1=1
-        <if test='_parameter!=null and _parameter!=""'  >
+        select count(1) from r_transformation j where j.use_batchid='Y'
+        <if test='_parameter!=null and _parameter!="" and _parameter!="Pristin"'  >
             AND j.`NAME` IN
             (
                 select DISTINCT TASK_NAME from d_task_group_member_attribute where TASK_GROUP_NAME in
@@ -50,7 +52,7 @@
                     select TASK_GROUP_NAME from
                     d_user_group_tasks_relation where USER_GROUP_NAME=#{0}
                 )
-                AND TYPE="trans"
+                AND TYPE='trans'
             )
         </if>
     </select>
@@ -66,16 +68,16 @@
         j.CREATED_DATE as createDate,
         j.MODIFIED_USER as modifiedUser,
         j.MODIFIED_DATE as modifiedDate
-        from  r_transformation j where 1=1
-        <if test='param5!=null and param5!=""'  >
+        from  r_transformation j where j.use_batchid='Y'
+        <if test='param5!=null and param5!="" and param5!="Pristin"' >
             AND j.`NAME` IN
             (
-                select DISTINCT TASK_NAME from d_task_group_member_attribute where TASK_GROUP_NAME in
+                select  TASK_NAME from d_task_group_member_attribute where TASK_GROUP_NAME in
                 (
                     select TASK_GROUP_NAME from
                     d_user_group_tasks_relation where USER_GROUP_NAME=#{4}
                 )
-                AND TYPE="trans"
+                AND TYPE='trans'
             )
         </if>
         <if test='param3!=null and param3!=""'  >
@@ -88,8 +90,8 @@
     </select>
 
     <select id="conditionFindTransCount" resultType="java.lang.Integer">
-        select count(1) from r_transformation j WHERE 1=1
-        <if test='param3!=null and param3!=""'  >
+        select count(1) from r_transformation j WHERE j.use_batchid='Y'
+        <if test='param3!=null and param3!="" and param3!="Pristin"'  >
             AND j.`NAME` IN
             (
                 select DISTINCT TASK_NAME from d_task_group_member_attribute where TASK_GROUP_NAME in
@@ -97,7 +99,7 @@
                     select TASK_GROUP_NAME from
                     d_user_group_tasks_relation where USER_GROUP_NAME=#{2}
                 )
-                AND TYPE="trans"
+             AND TYPE='trans'
             )
         </if>
         <if test='param1!=null and param1!=""'>

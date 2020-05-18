@@ -421,6 +421,7 @@ ExcelInputDialog = Ext.extend(KettleTabDialog, {
 						me.onSure();
 
 						getActiveGraph().inputOutputFields(cell.getAttribute('label'), true, function(st) {
+							alert(st.toJson())
 							fieldStore.loadData(st.toJson());
 						});
 					}

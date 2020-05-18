@@ -12,8 +12,8 @@
         from r_database d INNER JOIN r_database_type t
         on d.ID_DATABASE_TYPE=t.ID_DATABASE_TYPE
         <where>
-            <if test='_parameter!=null and _parameter!=""'>
-                d.Login_user=#{_parameter}
+            <if test='_parameter!=null and _parameter!="" and _parameter!="Pristin"'>
+                d.user_group=#{_parameter}
             </if>
         </where>
     </select>
@@ -36,7 +36,7 @@
 
 
     <update id="updateDatabaseUserName" parameterType="org.sxdata.jingwei.entity.DatabaseConnEntity">
-        update r_database set LOGIN_USER =#{loginUser} WHERE NAME=#{name} AND HOST_NAME=#{hostName} AND DATABASE_NAME =#{databaseName}
+        update r_database set USER_GROUP =#{userGroup} WHERE NAME=#{name} AND HOST_NAME=#{hostName} AND DATABASE_NAME =#{databaseName}
     </update>
 
 

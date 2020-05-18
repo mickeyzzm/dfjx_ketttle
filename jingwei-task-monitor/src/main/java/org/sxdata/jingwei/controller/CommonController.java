@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.sxdata.jingwei.entity.DatabaseConnEntity;
 import org.sxdata.jingwei.entity.SlaveEntity;
 import org.sxdata.jingwei.entity.UserEntity;
+import org.sxdata.jingwei.entity.UserGroupAttributeEntity;
 import org.sxdata.jingwei.service.CommonService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,10 +35,13 @@ public class CommonController {
     @RequestMapping(value="/getDatabases")
     @ResponseBody
     protected void getDatabases(HttpServletResponse response,HttpServletRequest request) throws Exception{
-        UserEntity loginUser =(UserEntity) request.getSession().getAttribute("login");
-        String userName = loginUser.getLogin();
+        UserGroupAttributeEntity attr = (UserGroupAttributeEntity) request.getSession().getAttribute("userInfo");
+        String userGroupName = "";
+        if (null != attr) {
+            userGroupName = attr.getUserGroupName();
+        }
         try{
-            List<DatabaseConnEntity> items=cService.getDatabases(userName);
+            List<DatabaseConnEntity> items=cService.getDatabases(userGroupName);
             String result= JSONArray.fromObject(items).toString();
             response.setContentType("text/html;charset=utf-8");
             PrintWriter out=response.getWriter();

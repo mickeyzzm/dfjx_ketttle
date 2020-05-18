@@ -206,7 +206,6 @@ public class UserController {
             out.write("验证码无效");
             out.flush();
             out.close();
-
             return;
         }
 

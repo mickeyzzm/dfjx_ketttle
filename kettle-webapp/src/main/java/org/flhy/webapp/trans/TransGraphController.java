@@ -76,6 +76,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.sxdata.jingwei.entity.DatabaseConnEntity;
 import org.sxdata.jingwei.entity.UserEntity;
+import org.sxdata.jingwei.entity.UserGroupAttributeEntity;
 import org.sxdata.jingwei.service.CommonService;
 import org.sxdata.jingwei.util.TaskUtil.KettleEncr;
 import org.w3c.dom.Element;
@@ -119,6 +120,11 @@ public class TransGraphController {
     protected void save(@RequestParam String graphXml,@RequestParam String databaseInfo,HttpServletRequest request) throws Exception {
         UserEntity loginUser =(UserEntity) request.getSession().getAttribute("login");
         String userName = loginUser.getLogin();
+        UserGroupAttributeEntity attr = (UserGroupAttributeEntity) request.getSession().getAttribute("userInfo");
+			String userGroupName = "";
+			if (null != attr) {
+				userGroupName = attr.getUserGroupName();
+			}
         Repository repository = null;
         GraphCodec codec = (GraphCodec) PluginFactory.getBean(GraphCodec.TRANS_CODEC);
         String xml = StringEscapeHelper.decode(graphXml);
@@ -160,14 +166,14 @@ public class TransGraphController {
 
         repository.save(transMeta, versionComment, null);
         if(null != databaseInfo && !"".equals(databaseInfo)){
-            updateDatabaseUserName(databaseInfo,userName);
+            updateDatabaseUserName(databaseInfo,userGroupName);
         }
 
         JsonUtils.success("转换保存成功！");
     }
 
 
-    public void updateDatabaseUserName(String databaseInfo,String userName) throws Exception{
+    public void updateDatabaseUserName(String databaseInfo,String userGroupName) throws Exception{
         JSONObject jsonObject = JSONObject.fromObject(databaseInfo);
         DatabaseMeta database = DatabaseCodec.decode(jsonObject);
         String name = database.getName();
@@ -178,7 +184,7 @@ public class TransGraphController {
         dbConn.setDatabaseName(dbname);
         dbConn.setHostName(hostname);
         dbConn.setName(name);
-        dbConn.setLoginUser(userName);
+        dbConn.setUserGroup(userGroupName);
         cService.updateDatabaseUserName(dbConn);
     }
 

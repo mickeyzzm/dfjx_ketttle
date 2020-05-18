@@ -17,8 +17,8 @@ public class CommonServiceImpl implements CommonService{
     protected CommonDao cDao;
 
     @Override
-    public List<DatabaseConnEntity> getDatabases(String loginUser) {
-        return cDao.getDababasesConn(loginUser);
+    public List<DatabaseConnEntity> getDatabases(String userGroupName) {
+        return cDao.getDababasesConn(userGroupName);
     }
 
     @Override
