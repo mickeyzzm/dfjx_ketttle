@@ -49,12 +49,12 @@ public class LogController {
                 statu=(String)json.get("statu");
                 type=(String)json.get("type");
                 startTime=(String)json.get("startDate");
-
                 taskName=(String)json.get("taskName");
                 if(StringUtils.isEmpty(startTime)){
-                    startTime = StringDateUtil.getSystemTime();
+                    startTime ="";
+                }else {
+                    startTime += " 00:00:00";
                 }
-                startTime+=" 00:00:00";
             }
             String result=logService.getAllHistoryLog(start,limit,statu,type,startTime,taskName,userGroupName);
             result=result.replaceAll("\n","<br/>");

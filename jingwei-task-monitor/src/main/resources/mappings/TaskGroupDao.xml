@@ -9,7 +9,7 @@
             d.CREATE_DATE as createDate
         from  (SELECT * FROM d_task_group ORDER BY CREATE_DATE DESC) d
         WHERE 1=1
-        <if test='param3!=null and param3!=""'>
+        <if test='param3!=null and param3!="" and param3!="Pristin"'>
             AND d.TASK_GROUP_NAME IN
             (
                 SELECT TASK_GROUP_NAME FROM d_user_group_tasks_relation WHERE

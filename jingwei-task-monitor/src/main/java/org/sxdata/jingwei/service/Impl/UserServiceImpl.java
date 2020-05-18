@@ -116,7 +116,7 @@ public class UserServiceImpl implements UserService{
         Integer count= userDao.getUserCount(userGroupName);
         users=userDao.getUsersLimit(start,limit,userGroupName,username,userTypeI);
         //如果不是是admin用户 把该用户组下面所有用户权限为1的用户移除
-        if(!StringDateUtil.isEmpty(userGroupName)){
+       /* if(!StringDateUtil.isEmpty(userGroupName)){
             List<UserEntity> adminUserArray=new ArrayList<>();
             for(int i=0;i<users.size();i++){
                 users.get(i).setPassword(KettleEncr.decryptPasswd(users.get(i).getPassword()));
@@ -133,7 +133,7 @@ public class UserServiceImpl implements UserService{
             for(UserEntity user:users){
                 user.setPassword(KettleEncr.decryptPasswd(user.getPassword()));
             }
-        }
+        }*/
 
         PageforBean bean=new PageforBean();
         bean.setRoot(users);

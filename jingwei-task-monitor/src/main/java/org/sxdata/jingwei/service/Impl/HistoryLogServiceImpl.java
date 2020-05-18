@@ -34,14 +34,10 @@ public class HistoryLogServiceImpl implements HistoryLogService{
 
     @Override
     public String getAllHistoryLog(int start, int limit,String statu,String type,String startDate,String taskName,String userGroupName) throws Exception{
-        //mod by chenl
-        if(StringUtils.isEmpty(startDate) || startDate.equalsIgnoreCase(" 00:00:00")){
-            startDate= DateUtils.formatDate(new Date() ,"yyyy-MM-dd");
-        }else{
+        if(!StringUtils.isEmpty(startDate)){
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Date dt = sdf.parse(startDate.substring(0,10));
-            Date addDt = org.apache.commons.lang.time.DateUtils.addDays(dt,2);
-            startDate = DateUtils.formatDate(addDt,"yyyy-MM-dd");
+            startDate = DateUtils.formatDate(dt,"yyyy-MM-dd");
         }
         List<ExecutionTraceEntity> traces=executionTraceDao.getAllLogByPage(start,limit,statu,type,startDate,taskName,userGroupName);
         for(ExecutionTraceEntity trace:traces){
