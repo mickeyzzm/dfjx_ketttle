@@ -406,6 +406,7 @@ ExcelInputDialog = Ext.extend(KettleTabDialog, {
 	},
 	
 	getFieldsTab: function(cell) {
+		var me = this;
 		var fieldStore = new Ext.data.JsonStore({
 			fields: ['name', 'type', 'length', 'precision', 'trim_type', 'repeat', 'format', 'currency', 'decimal', 'group'],
 			data: Ext.decode(cell.getAttribute('fields') || Ext.encode([]))
