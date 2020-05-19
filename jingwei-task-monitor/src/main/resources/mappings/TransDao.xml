@@ -10,7 +10,7 @@
         j.CREATED_DATE as createDate,
         ifnull(usr_m.NAME,j.MODIFIED_USER) as modifiedUser,
         j.MODIFIED_DATE as modifiedDate
-        from (SELECT * FROM r_transformation ORDER BY CREATED_DATE DESC) j
+        from (SELECT * FROM r_transformation) j
         left join r_user usr on j.CREATED_USER = usr.ID_USER
         left join r_user usr_m on j.MODIFIED_USER = usr_m.ID_USER
         where j.use_batchid='Y'
@@ -25,6 +25,7 @@
             AND TYPE='trans'
             )
         </if>
+         ORDER BY j.CREATED_DATE DESC
          limit #{0},#{1}
     </select>
 
@@ -86,6 +87,7 @@
         <if test='param4!=null and param4!=""'>
             and j.CREATED_DATE > #{3}
         </if>
+        ORDER BY j.CREATED_DATE DESC
         limit #{0},#{1}
     </select>
 

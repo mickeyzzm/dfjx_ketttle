@@ -4,10 +4,10 @@ import org.sxdata.jingwei.util.TaskUtil.KettleEncr;
 public class Test {
     public static void main(String[] args) {
 //        Encr.decryptPassword
-//        System.out.println(KettleEncr.encryptPassword("P@ssw0rd"));
+//        System.out.println(KettleEncr.encryptPassword("root123456ABCD!@#"));
 
 
-        System.out.println(KettleEncr.decryptPasswd("2be98afc86aa7f2e4cb79fb228fc3fd8f"));
+        System.out.println(KettleEncr.decryptPasswd("2beeac0a71e96c0d7ff4cf851fcb18bfa"));
 
     }
 }

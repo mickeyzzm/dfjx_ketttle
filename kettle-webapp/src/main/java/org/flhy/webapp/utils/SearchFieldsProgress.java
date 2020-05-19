@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import org.pentaho.di.core.exception.KettleStepException;
 import org.pentaho.di.core.row.RowMetaInterface;
 import org.pentaho.di.i18n.BaseMessages;
+import org.pentaho.di.trans.TransHopMeta;
 import org.pentaho.di.trans.TransMeta;
 import org.pentaho.di.trans.step.StepMeta;
 
@@ -21,6 +22,7 @@ public class SearchFieldsProgress {
 		this.stepInfo = stepMeta;
 		this.before = before;
 		this.fields = null;
+		new TransHopMeta(stepMeta,stepMeta);
 	}
 
 	public void run() throws InvocationTargetException, InterruptedException {

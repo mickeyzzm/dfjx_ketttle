@@ -19,7 +19,7 @@
         e.executionConfiguration as executionConfiguration,
         e.executionLog as executionLog,
          e.type as type
-      from (select * from task_execution_log ORDER BY endTime DESC) e WHERE 1=1
+      from (select * from task_execution_log ) e WHERE 1=1
         <if test='param7!=null and param7!="" and param7!="Pristin"'>
             and  e.jobName IN
             (
@@ -43,6 +43,7 @@
         <if test='param6!=null and param6!=""'>
             and e.jobName = #{5}
         </if>
+        e.ORDER BY endTime DESC
       limit #{0},#{1}
     </select>
 

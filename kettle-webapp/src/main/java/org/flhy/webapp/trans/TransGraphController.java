@@ -60,6 +60,7 @@ import org.pentaho.di.repository.Repository;
 import org.pentaho.di.repository.RepositorySecurityProvider;
 import org.pentaho.di.repository.kdr.KettleDatabaseRepository;
 import org.pentaho.di.trans.TransExecutionConfiguration;
+import org.pentaho.di.trans.TransHopMeta;
 import org.pentaho.di.trans.TransMeta;
 import org.pentaho.di.trans.TransPreviewFactory;
 import org.pentaho.di.trans.debug.StepDebugMeta;
@@ -681,6 +682,8 @@ public class TransGraphController {
         TransMeta transMeta = (TransMeta) codec.decode(graphXml);
 
         StepMeta stepMeta = getStep(transMeta, stepName);
+
+//        before =false;
         SearchFieldsProgress op = new SearchFieldsProgress(transMeta, stepMeta, before);
         op.run();
         RowMetaInterface rowMetaInterface = op.getFields();

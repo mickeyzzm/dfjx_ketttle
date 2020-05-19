@@ -110,8 +110,7 @@ public class UserServiceImpl implements UserService{
         else if(userType.equals("普通用户"))
             userTypeI=2;
 
-
-        //获取用户集合    总记录数
+        //获取用户集合总记录数
         List<UserEntity> users=new ArrayList<>();
         Integer count= userDao.getUserCount(userGroupName);
         users=userDao.getUsersLimit(start,limit,userGroupName,username,userTypeI);
@@ -147,7 +146,6 @@ public class UserServiceImpl implements UserService{
     }
 
     private String  checkJxUser(String url) {
-
         String rs = "-1";
         // 获得Http客户端(可以理解为:你得先有一个浏览器;注意:实际上HttpClient与浏览器是不一样的)
         HttpResponse response = null;
