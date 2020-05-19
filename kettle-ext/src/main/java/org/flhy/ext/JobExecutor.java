@@ -287,7 +287,7 @@ public class JobExecutor implements Runnable {
 		} finally {
 			finished = true;
 			SqlSession session=MybatisDaoSuppo.sessionFactory.openSession();
-			session.insert("org.sxdata.jingwei.dao.ExecutionTraceDao.addExecutionTrace",trace);
+			session.insert("org.seaboxdata.systemmng.dao.ExecutionTraceDao.addExecutionTrace",trace);
 			session.commit();
 			session.close();
 		}

@@ -342,7 +342,7 @@ public class TransExecutor implements Runnable {
 			finished = true;
 			SqlSession session= MybatisDaoSuppo.sessionFactory.openSession();
 			trace.setEndTime(new Date());
-			session.insert("org.sxdata.jingwei.dao.ExecutionTraceDao.addExecutionTrace",trace);
+			session.insert("org.seaboxdata.systemmng.dao.ExecutionTraceDao.addExecutionTrace",trace);
 			session.commit();
 			session.close();
 		}
