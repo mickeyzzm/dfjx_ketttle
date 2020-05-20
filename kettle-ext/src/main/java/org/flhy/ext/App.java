@@ -154,9 +154,7 @@ public class App implements ApplicationContextAware {
 		try {
 
 			String prefix = this.hostName + "_" + this.port + "_" + dbName;
-
 			DatabaseMeta dbMeta = new DatabaseMeta();
-
 			dbMeta.setName(prefix + "_Database");
 			dbMeta.setDBName(this.dbName);
 			dbMeta.setDatabaseType(this.jdbcType);
@@ -189,19 +187,7 @@ public class App implements ApplicationContextAware {
 			meta.setId("KettleDatabaseRepository");
 			meta.setConnection(dbMeta);
 			meta.setDescription(prefix + "_DatabaseRepository");
-
 			repository.init(meta);
-
-//			Properties prop = new Properties();
-//			//获取文件流
-//			InputStream ips = this.getClass().getClassLoader().getResourceAsStream("jxpro.properties");
-//			//加载文件流
-//			try {
-//				prop.load(ips);
-//			}catch(Exception ex){
-//				ex.printStackTrace();
-//			}
-
 			repository.connect(username, this.password);
 			this.repository = repository;
 		} catch (Exception e) {

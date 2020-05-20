@@ -17,7 +17,7 @@
 	   http://www.springframework.org/schema/tx
 	   http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
 
-    <context:component-scan base-package="org.flhy.webapp" />
+    <context:component-scan base-package="org.flhy.platform" />
 	
 	<bean id="config" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
 		<property name="location">
@@ -67,7 +67,7 @@
      </bean>
 
 	<import resource="classpath*:org/flhy/container-*.xml"/>
-	<import resource="classpath*:org/sxdata/jingwei/container-*.xml"/>
+	<import resource="classpath*:org/seaboxdata/systemmng/container-*.xml"/>
 	   
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
 		<property name="driverClassName" value="${jdbc.driver}" />
