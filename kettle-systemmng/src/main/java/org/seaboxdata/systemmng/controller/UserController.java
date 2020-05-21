@@ -112,7 +112,7 @@ public class UserController {
             UserGroupAttributeEntity attr=new UserGroupAttributeEntity();
             //接收参数
             String description=request.getParameter("userDescription");
-            Integer userId=Integer.valueOf(request.getParameter("userId"));
+            String userId=request.getParameter("userId");
             String username=request.getParameter("userLogin");
             //
             if(null!=request.getParameter("rdaSlavePower") && !request.getParameter("rdaSlavePower").equals("")){
@@ -127,7 +127,7 @@ public class UserController {
             //组装用户对象
             UserEntity user=new UserEntity();
             user.setDescription(description);
-            user.setUserId("userId");
+            user.setUserId(userId);
             //添加 - -返回结果
             userService.updateUser(user,attr);
             JSONObject json=new JSONObject();
