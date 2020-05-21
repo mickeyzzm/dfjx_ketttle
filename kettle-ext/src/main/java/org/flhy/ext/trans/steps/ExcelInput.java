@@ -1,12 +1,7 @@
 package org.flhy.ext.trans.steps;
 
-/**
- * Created by cRAZY on 2017/6/12.
- */
-import com.mxgraph.model.mxCell;
-import com.mxgraph.util.mxUtils;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
+import java.util.List;
+
 import org.flhy.ext.core.PropsUI;
 import org.flhy.ext.trans.step.AbstractStep;
 import org.pentaho.di.core.Const;
@@ -14,13 +9,21 @@ import org.pentaho.di.core.database.DatabaseMeta;
 import org.pentaho.di.trans.step.StepMetaInterface;
 import org.pentaho.di.trans.steps.excelinput.ExcelInputField;
 import org.pentaho.di.trans.steps.excelinput.ExcelInputMeta;
+import org.pentaho.di.trans.steps.excelinput.SpreadSheetType;
 import org.pentaho.metastore.api.IMetaStore;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import java.util.List;
+/**
+ * Created by cRAZY on 2017/6/12.
+ */
+import com.mxgraph.model.mxCell;
+import com.mxgraph.util.mxUtils;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 @Component("ExcelInput")
 @Scope("prototype")
@@ -29,28 +32,39 @@ public class ExcelInput extends AbstractStep{
     public void decode(StepMetaInterface stepMetaInterface, mxCell cell, List<DatabaseMeta> databases, IMetaStore metaStore) throws Exception {
         ExcelInputMeta excel=(ExcelInputMeta)stepMetaInterface;
         String e=cell.getAttribute("noempty");
+        
+        excel.setRowLimit(Const.toLong(cell.getAttribute("limit"), 0L));
+        excel.setEncoding(cell.getAttribute("encoding"));
+        excel.setSpreadSheetType( SpreadSheetType.valueOf(cell.getAttribute("spreadsheet_type")) );
+
+        excel.setFileField(cell.getAttribute("filefield"));
+        excel.setSheetField(cell.getAttribute("sheetfield"));
+        excel.setSheetRowNumberField(cell.getAttribute("sheetrownumfield"));
+        excel.setRowNumberField(cell.getAttribute("rownumfield"));
+
+        String addResultFile=cell.getAttribute("add_to_result_filenames");
+        excel.setAddResultFile(null == addResultFile || "Y".equalsIgnoreCase(addResultFile) ? true : false);
+        
         excel.setStartsWithHeader("Y".equalsIgnoreCase(cell.getAttribute("header")));
         excel.setIgnoreEmptyRows("Y".equalsIgnoreCase(e) || null == e);
         excel.setStopOnEmpty("Y".equalsIgnoreCase(cell.getAttribute("stoponempty")) || null == e);
-        excel.setSheetRowNumberField(cell.getAttribute("sheetrownumfield"));
-        excel.setRowNumberField(cell.getAttribute("rownumfield"));
-        excel.setRowLimit(Const.toLong(cell.getAttribute("limit"), 0L));
-        excel.setEncoding(cell.getAttribute("encoding"));
-        String addResultFile=cell.getAttribute("add_to_result_filenames");
-        excel.setAddResultFile(null == addResultFile || "Y".equalsIgnoreCase(addResultFile) ? true : false);
-        excel.setSheetField(cell.getAttribute("sheetfield"));
-        excel.setFileField(cell.getAttribute("filefield"));
+        
         excel.setAcceptingFilenames("Y".equalsIgnoreCase(cell.getAttribute("accept_filenames")));
         excel.setAcceptingField(cell.getAttribute("accept_field"));
         excel.setAcceptingStepName(cell.getAttribute("accept_stepname"));
+        //excel.searchInfoAndTargetSteps(steps);
 
         String file=cell.getAttribute("file");
-        String fields=cell.getAttribute("fields");
-        String sheets=cell.getAttribute("sheets");
-        JSONArray fieldsArray= JSONArray.fromObject(fields);
         JSONArray fileArray= JSONArray.fromObject(file);
-        JSONArray sheetsArray= JSONArray.fromObject(sheets);
 
+        String sheets=cell.getAttribute("sheets");
+        JSONArray sheetsArray= JSONArray.fromObject(sheets);
+        
+        String fields=cell.getAttribute("fields");
+        JSONArray fieldsArray= JSONArray.fromObject(fields);
+
+        excel.allocate(fileArray.size(), sheetsArray.size(), fieldsArray.size());
+        
         String[] fileName=new String[fileArray.size()];
         String[] fileMask=new String[fileArray.size()];
         String[] excludeFileMask=new String[fileArray.size()];
@@ -63,25 +77,36 @@ public class ExcelInput extends AbstractStep{
             excludeFileMask[i]=jsonObject.optString("exclude_filemask");
             fileRequired[i]=jsonObject.optString("file_required");
             includeSubFolders[i]=jsonObject.optString("include_subfolders");
-
         }
+        
         excel.setFileName(fileName);
         excel.setFileMask(fileMask);
         excel.setExcludeFileMask(excludeFileMask);
         excel.setFileRequired(fileRequired);
         excel.setIncludeSubFolders(includeSubFolders);
 
+        for (int i = 0; i < sheetsArray.size(); i++) {
+			JSONObject jsonObject = sheetsArray.getJSONObject(i);
+			excel.getSheetName()[i] = jsonObject.getString("name");
+			excel.getStartRow()[i] = Const.toInt(jsonObject.getString("startrow"), 0);
+			excel.getStartColumn()[i] = Const.toInt(jsonObject.getString("startcol"), 0);
+		}
+        
+        
         ExcelInputField[] inputFields=new ExcelInputField[fieldsArray.size()];
         for(int i=0;i<fieldsArray.size();i++){
             ExcelInputField field=new ExcelInputField();
             JSONObject jsonObject = fieldsArray.getJSONObject(i);
             field.setName(jsonObject.optString("name"));
             field.setType(jsonObject.optString("type"));
-            field.setLength(Const.toInt(jsonObject.optString("length"), -1));
-            field.setPrecision(Const.toInt(jsonObject.optString("precision"), -1));
+            
             String repeat=jsonObject.optString("repeat");
             field.setTrimType(ExcelOutput.getIndex(ExcelInputMeta.type_trim_code,jsonObject.optString("trim_type")));
             field.setRepeated(null==repeat?false:repeat.equalsIgnoreCase("Y"));
+            
+            field.setLength(Const.toInt(jsonObject.optString("length"), -1));
+            field.setPrecision(Const.toInt(jsonObject.optString("precision"), -1));
+           
             field.setFormat(jsonObject.optString("format"));
             field.setCurrencySymbol(jsonObject.optString("currency"));
             field.setDecimalSymbol(jsonObject.optString("decimal"));
@@ -91,6 +116,31 @@ public class ExcelInput extends AbstractStep{
         }
         excel.setField(inputFields);
 
+        // Error handling fields...
+        String strictTypes = cell.getAttribute("strict_types");
+		excel.setStrictTypes(null == strictTypes ? false : strictTypes.equalsIgnoreCase("Y"));
+		 String error_ignored = cell.getAttribute("error_ignored");
+        excel.setErrorIgnored(null == error_ignored ? false : error_ignored.equalsIgnoreCase("Y"));
+        
+        String error_line_skipped = cell.getAttribute("error_line_skipped");
+        excel.setErrorLineSkipped(null == error_line_skipped ? false : error_line_skipped.equalsIgnoreCase("Y"));
+
+        excel.setWarningFilesDestinationDirectory(cell.getAttribute("bad_line_files_destination_directory"));
+        excel.setBadLineFilesExtension(cell.getAttribute("bad_line_files_extension"));
+        excel.setErrorFilesDestinationDirectory(cell.getAttribute("error_line_files_destination_directory"));
+        excel.setErrorFilesExtension( cell.getAttribute("error_line_files_extension"));
+        excel.setLineNumberFilesDestinationDirectory(cell.getAttribute("line_number_files_destination_directory"));
+        excel.setLineNumberFilesExtension(cell.getAttribute("line_number_files_extension"));
+        
+        excel.setShortFileNameField(cell.getAttribute("shortFileFieldName"));
+        excel.setPathField(cell.getAttribute("pathFieldName"));
+        excel.setIsHiddenField(cell.getAttribute("hiddenFieldName"));
+        excel.setLastModificationDateField(cell.getAttribute("lastModificationTimeFieldName"));
+        excel.setUriField(cell.getAttribute("uriNameFieldName"));
+        excel.setRootUriField(cell.getAttribute("rootUriNameFieldName"));
+        excel.setExtensionField(cell.getAttribute("extensionFieldName"));
+        excel.setSizeField(cell.getAttribute("sizeFieldName"));
+        
         for(int i=0;i<sheetsArray.size();i++){
             JSONObject jsonObject = sheetsArray.getJSONObject(i);
         }

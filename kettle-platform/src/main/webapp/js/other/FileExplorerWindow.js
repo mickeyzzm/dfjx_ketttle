@@ -17,16 +17,25 @@
 			loader: loader,
 			rootVisible: false
 		});
-		
+
+		var local_extension = this.extension== 96 ? 64 : this.extension;
 		var store = new Ext.data.JsonStore({
-			fields: ['type', 'desc'],
-			baseParams: {extension: this.extension},
-			proxy: new Ext.data.HttpProxy({
-				url: GetUrl('system/filextension.do'),
-				method: 'POST'
-			})
+			autoLoad : true,
+			fields : [ 'type', 'desc' ],
+			baseParams : {
+				extension : this.extension
+			},
+			proxy : new Ext.data.HttpProxy({
+				url : GetUrl('system/filextension.do'),
+				method : 'POST'
+			}),
+			listeners : {
+				load : function() {
+					wExtension.setValue(local_extension);
+				}
+			} //在此加一个这个玩意，就可以了，呵呵，是在jsonstore中加的，注意
 		});
-		
+
 		var wExtension = new Ext.form.ComboBox({
 			flex: 1,
 			displayField: 'desc',

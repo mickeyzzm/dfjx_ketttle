@@ -2,13 +2,16 @@ package org.flhy.platform.core;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import org.springframework.util.LinkedCaseInsensitiveMap;
 
 public enum FileNodeType {
 
-	ALL(1, "所有文件", "*"), KJB(2, "作业文件", "kjb"), KTR(4, "转换文件", "ktr"), TXT(8, "文本文件", "txt"), CSV(16, "CSV文件", "csv");
+	ALL(1, "所有文件", "*"), KJB(2, "作业文件", "kjb"), KTR(4, "转换文件", "ktr"), TXT(8, "文本文件", "txt"), CSV(16, "CSV文件", "csv"), 
+	XLS(32, "Excel97~2003", "xls"), XLSX(64, "Excel", "xlsx"), ODS(128, "OpenDocument电子表格", "ods"), PNG(256, "PNG图片", "png");
+
 
 	private int type;
 	private String typeDesc;
@@ -28,19 +31,13 @@ public enum FileNodeType {
 		if((FileNodeType.ALL.type & type) > 0)
 			return true;
 		
-		for(Field field : FileNodeType.class.getDeclaredFields()) {
-			if(field.getType().equals(FileNodeType.class)) {
-				FileNodeType fnt = (FileNodeType) field.get(null);
-				
-				if((fnt.type & type) == 0)
-					continue;
-				
-				
-				return fnt.extension.equalsIgnoreCase(extension);
-			}
+		HashSet<String> subfix = new HashSet<String>();
+		for(FileNodeType fnt : FileNodeType.values()) {
+			if((fnt.type & type) != 0)
+				subfix.add(fnt.extension);
 		}
 		
-		return false;
+		return subfix.contains(extension);
 	}
 	
 	public static String getExtension(String fileName) {
