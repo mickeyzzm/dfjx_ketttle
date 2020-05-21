@@ -139,30 +139,45 @@ function showTaskGroupPanel(secondGuidePanel){
 
 //删除功能  删除任务组并且移除任务组中的所有任务
 function deleteTaskGroupAndAttributes(){
-    var taskGroupName=Ext.getCmp("taskGroupPanel").getSelectionModel().getSelected().get("taskGroupName");//被选中的任务路径
-    //删除前先判断任务组前是否包含了任务
-    Ext.Ajax.request({
-        url:"/taskGroup/selectTaskGroup.do",
-        success:function(response,config){
-            var result=response.responseText;
-            if(result=="[]"){
-                //删除任务组
-                Ext.Ajax.request({
-                    url:"/taskGroup/deleteTaskGroup.do",
-                    success:function(response,config){
-                        Ext.MessageBox.alert("result","删除成功!");
-                        showTaskGroupPanel(Ext.getCmp("secondGuidePanel"));
-                    },
-                    failure:failureResponse,
-                    params:{name:taskGroupName}
-                })
-            }else{
-                Ext.MessageBox.alert("该任务组下存在任务,请至任务组详情功能中移除!");
-            }
-        },
-        failure:failureResponse,
-        params:{taskGroupName:taskGroupName}
-    })
+	Ext.Msg.confirm('提示信息','确认要删除这条信息吗？',function(op){
+		if(op == 'yes'){
+
+		    var taskGroupName=Ext.getCmp("taskGroupPanel").getSelectionModel().getSelected().get("taskGroupName");//被选中的任务路径
+		    //删除前先判断任务组前是否包含了任务
+		    Ext.Ajax.request({
+		        url:"/taskGroup/selectTaskGroup.do",
+		        success:function(response,config){
+		            var result=response.responseText;
+		            if(result=="[]"){
+		                //删除任务组
+		                Ext.Ajax.request({
+		                    url:"/taskGroup/deleteTaskGroup.do",
+		                    success:function(response,config){
+		                    	Ext.Msg.show({  
+		    		        	    title:'提示信息',  
+		    		        	    msg: '删除成功！',  
+		    		        	    buttons: Ext.Msg.OK,  
+		    		        	    icon: Ext.Msg.INFO     //注意此处为INFO  
+		    		        	}); 
+		                        showTaskGroupPanel(Ext.getCmp("secondGuidePanel"));
+		                    },
+		                    failure:failureResponse,
+		                    params:{name:taskGroupName}
+		                })
+		            }else{
+		            	Ext.Msg.show({  
+    		        	    title:'提示信息',  
+    		        	    msg: '该任务组下存在任务,请至任务组详情功能中移除!',  
+    		        	    buttons: Ext.Msg.OK,  
+    		        	    icon: Ext.Msg.INFO     //注意此处为INFO  
+    		        	}); 
+		            }
+		        },
+		        failure:failureResponse,
+		        params:{taskGroupName:taskGroupName}
+		    });
+		}
+	});
 }
 
 //查看功能  查看前先获取唯一选中行的任务组名
@@ -179,7 +194,12 @@ function beforeSelectTaskGroupDetail(){
         }
     }
     if(flag!=1){
-        Ext.MessageBox.alert("请选择需要查看的任务组(只能选中一条)");
+    	Ext.Msg.show({  
+    	    title:'提示信息',  
+    	    msg: '请选择需要查看的任务组(只能选中一条)！',  
+    	    buttons: Ext.Msg.OK,  
+    	    icon: Ext.Msg.INFO     //注意此处为INFO  
+    	}); 
         return;
     }else{
         showSelectTaskGroupWindow(taskGroupPanel,taskGroupName);
@@ -191,7 +211,7 @@ function showSelectTaskGroupWindow(taskGroupPanel,taskGroupName){
     var taskGroupAttributesPanel=showSelectTaskGroupPanel(taskGroupName);
     var taskGroupAttributesWindow=new Ext.Window({
         id:"taskGroupAttributesWindow",
-        title:taskGroupName,
+        title:'组名【<font color="red">'+ taskGroupName +'</font>】',
         bodyStyle:"background-color:white",
         width:610,
         modal:true,
