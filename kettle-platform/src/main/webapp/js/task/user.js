@@ -798,19 +798,29 @@ function allotUserGroup(){
 
 //删除用户
 function deleteUser(){
-    var usersPanel=Ext.getCmp("usersPanel");
-    var username=usersPanel.getSelectionModel().getSelected().get("login");
-    var userId=usersPanel.getSelectionModel().getSelected().get("userId");
-    Ext.Ajax.request({
-        url:"/user/deleteUser.do",
-        success:function(response,config){
-            Ext.MessageBox.alert("success");
-            var secondGuidePanel=Ext.getCmp("secondGuidePanel");
-            showUserPanel(secondGuidePanel);
-        },
-        failure:failureResponse,
-        params:{username:username,userId:userId}
-    })
+	Ext.Msg.confirm('提示信息','确认要删除这条信息吗？',function(op){
+		if(op == 'yes'){
+			var usersPanel=Ext.getCmp("usersPanel");
+		    var username=usersPanel.getSelectionModel().getSelected().get("login");
+		    var userId=usersPanel.getSelectionModel().getSelected().get("userId");
+		    Ext.Ajax.request({
+		        url:"/user/deleteUser.do",
+		        success:function(response,config){
+		        	Ext.Msg.show({  
+		        	    title:'提示信息',  
+		        	    msg: '删除成功！',  
+		        	    buttons: Ext.Msg.OK,  
+		        	    icon: Ext.Msg.INFO     //注意此处为INFO  
+		        	});  
+		        	//Ext.MessageBox.alert("提示框","删除成功！"); 
+		            var secondGuidePanel=Ext.getCmp("secondGuidePanel");
+		            showUserPanel(secondGuidePanel);
+		        },
+		        failure:failureResponse,
+		        params:{username:username,userId:userId}
+		    })
+		}
+	});
 }
 
 //修改密码
