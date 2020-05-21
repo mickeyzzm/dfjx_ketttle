@@ -514,10 +514,15 @@ function assignedTaskGroup(jobId,jobName,jobPath,taskGroupPanelByAssigned){
         Ext.Ajax.request({
             url:"/taskGroup/assignedTaskGroup.do",
             success:function(response,config){
-                Ext.MessageBox.alert("任务组分配成功!");
                 var secondGuidePanel=Ext.getCmp("secondGuidePanel");
                 Ext.getCmp("taskGroupAssignedWindow").close();
                 generateJobPanel(secondGuidePanel);
+                Ext.Msg.show({  
+	        	    title:'提示信息',  
+	        	    msg: '任务组分配成功！',  
+	        	    buttons: Ext.Msg.OK,  
+	        	    icon: Ext.Msg.INFO     //注意此处为INFO  
+	        	}); 
             },
             failure:failureResponse,
             params:{taskId:jobId,taskName:jobName,taskPath:jobPath,type:"job",taskGroupNameArray:taskGroupNameArray}
