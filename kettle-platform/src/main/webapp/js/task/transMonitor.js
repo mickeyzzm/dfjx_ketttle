@@ -505,7 +505,6 @@ function assignedGroupTask(transId,transPath,transName,taskGroupPanelByAssigned,
         Ext.Ajax.request({
             url:"/taskGroup/assignedTaskGroup.do",
             success:function(response,config){
-                Ext.MessageBox.alert("任务组分配成功!");
                 Ext.getCmp("assignedWindow").close();
                 if(flag=="G")
                     document.getElementById("taskGroupAttrImg").onclick();
@@ -513,6 +512,12 @@ function assignedGroupTask(transId,transPath,transName,taskGroupPanelByAssigned,
                     var secondGuidePanel=Ext.getCmp("secondGuidePanel");
                     generateTrans(secondGuidePanel);
                 }
+                Ext.Msg.show({  
+	        	    title:'提示信息',  
+	        	    msg: '任务组分配成功 ！',  
+	        	    buttons: Ext.Msg.OK,  
+	        	    icon: Ext.Msg.INFO     //注意此处为INFO  
+	        	}); 
             },
             failure:function(response){
                 Ext.getCmp("assignedWindow").close();
@@ -521,7 +526,12 @@ function assignedGroupTask(transId,transPath,transName,taskGroupPanelByAssigned,
             params:{taskId:transId,taskName:transName,taskPath:transPath,type:"trans",taskGroupNameArray:taskGroupNameArray}
         })
     }else{
-        Ext.MessageBox.alert("必须为该转换分配一个任务组");
+    	 Ext.Msg.show({  
+     	    title:'提示信息',  
+     	    msg: '必须为该转换分配一个任务组！',  
+     	    buttons: Ext.Msg.OK,  
+     	    icon: Ext.Msg.INFO     //注意此处为INFO  
+     	}); 
     }
 }
 
