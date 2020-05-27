@@ -9,6 +9,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -418,19 +419,20 @@ public class SystemMainController{
 	@RequestMapping(method=RequestMethod.POST, value="/valueFormat")
 	protected void valueFormat(@RequestParam String valueType) throws IOException {
 		JSONArray jsonArray = new JSONArray();
-		if("all".equalsIgnoreCase(valueType)) {
+		int type = ValueMeta.getType(valueType);
+		if("all".equalsIgnoreCase(valueType) || type == ValueMetaInterface.TYPE_STRING) {
 			for(String format : Const.getConversionFormats()) {
 				JSONObject jsonObject = new JSONObject();
 				jsonObject.put("name", format);
 				jsonArray.add(jsonObject);
 			}
 		} else {
-			int type = ValueMeta.getType(valueType);
-			if(type == ValueMetaInterface.TYPE_INTEGER || type == ValueMetaInterface.TYPE_NUMBER) {
+			
+			if(type == ValueMetaInterface.TYPE_INTEGER || type == ValueMetaInterface.TYPE_NUMBER|| type == ValueMetaInterface.TYPE_BIGNUMBER) {
 				String[] fmt = Const.getNumberFormats();
 				for (String str : fmt) {
 					JSONObject jsonObject = new JSONObject();
-					jsonObject.put("id", ValueMeta.getType(str));
+					jsonObject.put("id", str);
 					jsonObject.put("name", str);
 					jsonArray.add(jsonObject);
 				}
@@ -438,7 +440,7 @@ public class SystemMainController{
 				String[] fmt = Const.getDateFormats();
 				for (String str : fmt) {
 					JSONObject jsonObject = new JSONObject();
-					jsonObject.put("id", ValueMeta.getType(str));
+					jsonObject.put("id", str);
 					jsonObject.put("name", str);
 					jsonArray.add(jsonObject);
 				}
@@ -700,6 +702,7 @@ public class SystemMainController{
 	protected @ResponseBody List fileexplorer(@RequestParam String path, @RequestParam int extension) throws Exception {
 		LinkedList directorys = new LinkedList();
 		LinkedList leafs = new LinkedList();
+		extension = extension == 512 ? 1536 : extension;
 		if(StringUtils.hasText(path)) {
 			File[] files = new File(path).listFiles();
 			if(files != null) {
@@ -783,6 +786,21 @@ public class SystemMainController{
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("code", SpreadSheetType.values()[i].toString());
 			jsonObject.put("desc", SpreadSheetType.values()[i].getDescription());
+			jsonArray.add(jsonObject);
+		}
+		JsonUtils.response(jsonArray);
+	}
+	
+	@ResponseBody
+	@RequestMapping(method=RequestMethod.POST, value="/dateFormatLocaleType")
+	protected void dateFormatLocaleType() throws Exception{
+		JSONArray jsonArray = new JSONArray();
+		
+		Locale[] locale = Locale.getAvailableLocales();
+		for ( int i = 0; i < locale.length; i++ ) {
+			JSONObject jsonObject = new JSONObject();
+			jsonObject.put("code", locale[i].toString());
+			jsonObject.put("desc", locale[i].toString());
 			jsonArray.add(jsonObject);
 		}
 		JsonUtils.response(jsonArray);

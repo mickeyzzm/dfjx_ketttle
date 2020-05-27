@@ -342,6 +342,7 @@ TransGraph = Ext.extend(BaseGraph, {
                     dialog.initData(defaultExecutionConfig);
                 });
             });
+            
             transExecutor.on('result', this.doResult, this);
 
 //			this.on('initgraph', function(graph) {
@@ -616,9 +617,7 @@ TransGraph = Ext.extend(BaseGraph, {
         });
     },
 
-    debug: function() {
-
-    },
+    debug: function() {},
 
     check: function() {
         var checkResultDialog = new CheckResultDialog();
@@ -1296,7 +1295,61 @@ TransGraph = Ext.extend(BaseGraph, {
 
         return store;
     },
+    //excelInput
+    excelInputFields: function(stepName, before, cb) {
+        var graph = this.getGraph();
+        var store = new Ext.data.JsonStore({
+            fields: ['name', 'type', 'length', 'precision', 'origin', 'storageType', 'conversionMask', 'currencySymbol', 'decimalSymbol', 'groupingSymbol', 'trimType', 'comments'],
+            proxy: new Ext.data.HttpProxy({
+                url: GetUrl('excelInput/excelInputFields.do'),
+                method: 'POST'
+            })
+        });
 
+        store.on('loadexception', function(misc, s, response) {
+            failureResponse(response);
+        });
+
+        store.on('load', function() {
+            if(Ext.isFunction(cb))
+                cb(store);
+        });
+
+        store.baseParams.stepName = encodeURIComponent(stepName);
+        store.baseParams.graphXml = this.toXml();
+        store.baseParams.before = before;
+        store.load();
+
+        return store;
+    },
+    //texFileInput
+    texFileInputFields: function(stepName, before, cb) {
+        var graph = this.getGraph();
+        var store = new Ext.data.JsonStore({
+            fields: ['name', 'type', 'format', 'position','length', 'precision', 'currency', 'decimal', 'group', 'trim_type', 'nullif','ifnull','repeat'],
+            proxy: new Ext.data.HttpProxy({
+                url: GetUrl('textFileInput/texFileInputFields.do'),
+                method: 'POST'
+            })
+        });
+
+        store.on('loadexception', function(misc, s, response) {
+            failureResponse(response);
+        });
+
+        store.on('load', function() {
+            if(Ext.isFunction(cb))
+                cb(store);
+        });
+
+        store.baseParams.stepName = encodeURIComponent(stepName);
+        store.baseParams.graphXml = this.toXml();
+        store.baseParams.before = before;
+        store.load();
+
+        return store;
+    },
+    
     nextSteps: function(stepName, cb) {
         var graph = this.getGraph();
         var store = new Ext.data.JsonStore({

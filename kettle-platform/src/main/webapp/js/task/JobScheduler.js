@@ -118,8 +118,8 @@
     secondGuidePanel.add(jobSchedulerGrid);
     secondGuidePanel.doLayout();
     if(loginUserTaskGroupPower!=1 && loginUserName!="admin"){
-        Ext.getCmp("updateSchedulerButton").hide();
-        Ext.getCmp("deleteSchedulerButton").hide();
+        //Ext.getCmp("updateSchedulerButton").hide();
+        //Ext.getCmp("deleteSchedulerButton").hide();
     }
 }
 

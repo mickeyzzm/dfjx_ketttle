@@ -6,7 +6,7 @@ SHELLDialog = Ext.extend(KettleTabDialog, {
 		var me = this,  graph = getActiveGraph().getGraph(),  cell = graph.getSelectionCell();
 		
 
-		var wInsertscript = new Ext.form.Checkbox({fieldLabel:'Insert Script',anchor:'-10',flex:1,checked:cell.getAttribute('insertScript')=='Y',
+		var wInsertscript = new Ext.form.Checkbox({fieldLabel:'插入脚本',anchor:'-10',flex:1,checked:cell.getAttribute('insertScript')=='Y',
 			listeners:{
 				'check':function(checked){
 					if(checked.checked){
@@ -14,17 +14,41 @@ SHELLDialog = Ext.extend(KettleTabDialog, {
 						wArgFromPrevious.setDisabled(true);
 						wExecPerRow.setDisabled(true);
 						grid.setDisabled(true);
+						wJs.setDisabled(false);
 					}else{
 
 						wFileName.setDisabled(false);
 						wArgFromPrevious.setDisabled(false);
 						wExecPerRow.setDisabled(false);
 						grid.setDisabled(false);
+						wJs.setDisabled(true);
+					}
+				},
+				'render':function(checked, eOpts){
+					if(checked.checked){
+						wFileName.setDisabled(true);
+						wArgFromPrevious.setDisabled(true);
+						wExecPerRow.setDisabled(true);
+						grid.setDisabled(true);
+						wJs.setDisabled(false);
+						
+					}else{
+
+						wFileName.setDisabled(false);
+						wArgFromPrevious.setDisabled(false);
+						wExecPerRow.setDisabled(false);
+						grid.setDisabled(false);
+						wJs.setDisabled(true);
 					}
 				}
 			}});
-		
-		var wFileName = new Ext.form.TextField({fieldLabel: '脚本文件名',anchor: '-10',flex: 1,value: cell.getAttribute('fileName')});
+
+		var wFileName = new Ext.form.TextField({
+			fieldLabel : '脚本文件名',
+			anchor : '-10',
+			flex : 1,
+			value : cell.getAttribute('fileName')
+		});
 		var wWokrDirectory = new Ext.form.TextField({fieldLabel:"工作路径",anchor:'-10',flex:1,value:cell.getAttribute("work_directory")});
 		var wSetLogfile = new Ext.form.Checkbox({fieldLabel: '指定日志文件',anchor: '-10', flex: 1,checked: cell.getAttribute('set_logfile') == 'Y',
 			listeners:{
@@ -35,12 +59,31 @@ SHELLDialog = Ext.extend(KettleTabDialog, {
 						wLogext.setDisabled(false);
 						wAddDate.setDisabled(false);
 						wAddTime.setDisabled(false);
+						wLoglevel.setDisabled(false);
 					}else{
 						wAppendLogfile.setDisabled(true);
 						wLogfile.setDisabled(true);
 						wLogext.setDisabled(true);
 						wAddDate.setDisabled(true);
 						wAddTime.setDisabled(true);
+						wLoglevel.setDisabled(true);
+					}
+				},
+				'render':function(checked, eOpts){
+					if(checked.checked){
+						wAppendLogfile.setDisabled(false);
+						wLogfile.setDisabled(false);
+						wLogext.setDisabled(false);
+						wAddDate.setDisabled(false);
+						wAddTime.setDisabled(false);
+						wLoglevel.setDisabled(false);
+					}else{
+						wAppendLogfile.setDisabled(true);
+						wLogfile.setDisabled(true);
+						wLogext.setDisabled(true);
+						wAddDate.setDisabled(true);
+						wAddTime.setDisabled(true);
+						wLoglevel.setDisabled(true);
 					}
 				}
 			}});
@@ -54,7 +97,7 @@ SHELLDialog = Ext.extend(KettleTabDialog, {
 		var loglevelStore =  Ext.StoreMgr.get('logLevelStore');
 		var wLoglevel = new Ext.form.ComboBox({fieldLabel:'日志级别',anchor:'',flex:1,store:loglevelStore,displayField: 'desc',valueField: 'code',editable: false,mode: 'local',triggerAction: 'all',value:cell.getAttribute('loglevel')});
 		var file = new Ext.form.TextField({fieldLabel: '文件上传',inputType: 'file', allowBlank: false,name: 'imgFile',});
-		var wJs = new Ext.form.TextArea({emptyText: '请输入js语句',value: decodeURIComponent(cell.getAttribute('script'))});
+		var wJs = new Ext.form.TextArea({emptyText: '请输入js语句',value: decodeURIComponent(cell.getAttribute('script') == undefined?'':cell.getAttribute('script'))});
 		
 		var wArgFromPrevious = new Ext.form.Checkbox({fieldLabel:'将上一个结果作为参数',anchor:'-10',flex:1,checked:cell.getAttribute('arg_from_previous')=='Y'});
 		var wExecPerRow = new Ext.form.Checkbox({fieldLabel:'对每个输入行执行一次',anchor:'-10',flex:1,checked:cell.getAttribute('exec_per_row')=='Y'});
@@ -117,18 +160,23 @@ SHELLDialog = Ext.extend(KettleTabDialog, {
 		}
 		this.tabItems = [{ 
 			xtype: 'KettleForm',
-			title: 'General',
+			title: '一般',
 			bodyStyle: 'padding: 10px 10px',
 			labelWidth: 130,
-			items: [wInsertscript,wFileName,{
-				xtype: 'button', text: '浏览...', handler: function() {
-					var dialog = new FileWindow();
-					dialog.on('ok', function(path) {
-						wFileName.setValue(path);
-						dialog.close();
-					});
-					dialog.show();
-				}
+			items: [wInsertscript,{
+				xtype: 'compositefield',
+				fieldLabel: '文件名称',
+				anchor: '-10',
+				items: [wFileName, {
+					xtype: 'button', text: '浏览...', handler: function() {
+						var dialog = new FileExplorerWindow({extension: 512});;
+						dialog.on('ok', function(path) {
+							wFileName.setValue(path);
+							dialog.close();
+						});
+						dialog.show();
+					}
+				}]
 			},wWokrDirectory,{
 				xtype: 'fieldset',
 				bodyStyle: 'padding: 10px 10px',
@@ -137,7 +185,7 @@ SHELLDialog = Ext.extend(KettleTabDialog, {
 				items: [wSetLogfile,wAppendLogfile,wLogfile,wLogext,wAddDate,wAddTime,wLoglevel]
 			},wArgFromPrevious,wExecPerRow,grid]
 		},{xtype: 'KettleForm',
-			title: 'Script',
+			title: '脚本',
 			bodyStyle: 'padding: 10px 10px',
 			layout: 'fit',
 			labelWidth: 1,

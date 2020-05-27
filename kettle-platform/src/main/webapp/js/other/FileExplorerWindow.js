@@ -8,6 +8,7 @@
 	extension: 0,
 	
 	initComponent: function() {
+		var me = this;
 		var loader = new Ext.tree.TreeLoader({
 			dataUrl: GetUrl('system/fileexplorer.do'),
 		});
@@ -15,10 +16,18 @@
 			region: 'center',
 			root: new Ext.tree.AsyncTreeNode({text: 'root'}),
 			loader: loader,
-			rootVisible: false
+			rootVisible: false,
+			listeners : {
+				'dblclick' : function(node, e) {
+					if(node.leaf)
+						me.fireEvent('ok', node.id);
+				}
+			}
 		});
 
-		var local_extension = this.extension== 96 ? 64 : this.extension;
+		var local_extension = this.extension;
+		local_extension = (local_extension == 96  ? 64  : this.extension);//xlsx
+		local_extension = (local_extension == 24  ?  8  : local_extension);//txt
 		var store = new Ext.data.JsonStore({
 			autoLoad : true,
 			fields : [ 'type', 'desc' ],
@@ -50,7 +59,7 @@
 		var ok = function() {
 			var node = tree.getSelectionModel().getSelectedNode();
 			if(node)
-				this.fireEvent('ok', node.id);
+				me.fireEvent('ok', node.id);
 		};
 		
 		this.items = [tree, {

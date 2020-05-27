@@ -187,9 +187,13 @@ TableOutputDialog = Ext.extend(KettleTabDialog, {
 			        selectOnFocus:true,
 					store: getActiveGraph().tableFields(wConnection.getValue(), wSchema.getValue(), wTable.getValue()),
 					listeners : {
-					     beforequery: function(qe){
-					    	 delete qe.combo.lastQuery;
-					     }
+					     beforequery: function(qe) {
+								qe.combo.store.baseParams.databaseName = wConnection.getValue();
+								qe.combo.store.baseParams.schema = wSchema.getValue();
+								qe.combo.store.baseParams.table = wTable.getValue();
+
+								delete qe.combo.lastQuery;
+							}
 					} 
 				})
 			},{

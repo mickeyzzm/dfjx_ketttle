@@ -235,4 +235,13 @@
 			method: 'POST'
 		})
 	}).load();
+	
+	new Ext.data.JsonStore({
+		storeId:'wDateFormatLocaleStore',
+		fields: ['code','desc'],
+		proxy: new Ext.data.HttpProxy({
+		url: GetUrl('system/dateFormatLocaleType.do'),
+			method: 'POST'
+		})
+	}).load();
 });

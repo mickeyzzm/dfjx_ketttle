@@ -32,6 +32,7 @@ import org.flhy.ext.utils.JsonUtils;
 import org.flhy.ext.utils.StringEscapeHelper;
 import org.flhy.ext.utils.SvgImageUrl;
 import org.flhy.platform.utils.GetSQLProgress;
+import org.flhy.platform.utils.SearchFieldsProgress;
 import org.flhy.platform.utils.TransPreviewProgress;
 import org.pentaho.di.base.AbstractMeta;
 import org.pentaho.di.core.CheckResultInterface;
@@ -679,28 +680,13 @@ public class TransGraphController {
         stepName = StringEscapeHelper.decode(stepName);
 
         GraphCodec codec = (GraphCodec) PluginFactory.getBean(GraphCodec.TRANS_CODEC);
-        TransMeta transMeta = (TransMeta) codec.decode(graphXml);
-
-        StepMeta currentStepMeta = transMeta.findStep( stepName );
-        ExcelInputMeta info=(ExcelInputMeta)currentStepMeta.getStepMetaInterface();
-        
-        //ExcelInputMeta info = new ExcelInputMeta();
-        //getInfo(transMeta, stepName, info);
-        
-        FileInputList fileList = info.getFileList( transMeta );
-        
-        RowMetaInterface rowMetaInterface = new RowMeta();
-        
-        for ( FileObject file : fileList.getFiles() ) {
-            try {
-              KWorkbook workbook = WorkbookFactory.getWorkbook( info.getSpreadSheetType(), KettleVFS.getFilename( file ), info.getEncoding() );
-              processingWorkbook( rowMetaInterface, info, workbook );
-              workbook.close();
-            } catch ( Exception e ) {
-            	e.printStackTrace();
-            }
-          }
-        
+		
+		TransMeta transMeta = (TransMeta) codec.decode(graphXml);
+		
+		StepMeta stepMeta = getStep(transMeta, stepName);
+		SearchFieldsProgress op = new SearchFieldsProgress( transMeta, stepMeta, before );
+		op.run();
+		RowMetaInterface rowMetaInterface = op.getFields();
 
         JSONArray jsonArray = new JSONArray();
         for (int i = 0; i < rowMetaInterface.size(); i++) {
@@ -723,180 +709,6 @@ public class TransGraphController {
         JsonUtils.response(jsonArray);
     }
 
-    public void processingWorkbook( RowMetaInterface fields, ExcelInputMeta info, KWorkbook workbook ) throws KettlePluginException {
-        int nrSheets = workbook.getNumberOfSheets();
-        for ( int j = 0; j < nrSheets; j++ ) {
-          KSheet sheet = workbook.getSheet( j );
-
-          // See if it's a selected sheet:
-          int sheetIndex;
-          if ( info.readAllSheets() ) {
-            sheetIndex = 0;
-          } else {
-            sheetIndex = Const.indexOfString( sheet.getName(), info.getSheetName() );
-          }
-          if ( sheetIndex >= 0 ) {
-            // We suppose it's the complete range we're looking for...
-            //
-            int rownr = 0;
-            int startcol = 0;
-
-            if ( info.readAllSheets() ) {
-              if ( info.getStartColumn().length == 1 ) {
-                startcol = info.getStartColumn()[0];
-              }
-              if ( info.getStartRow().length == 1 ) {
-                rownr = info.getStartRow()[0];
-              }
-            } else {
-              rownr = info.getStartRow()[sheetIndex];
-              startcol = info.getStartColumn()[sheetIndex];
-            }
-
-            boolean stop = false;
-            for ( int colnr = startcol; !stop; colnr++ ) {
-              try {
-                String fieldname = null;
-                int fieldtype = ValueMetaInterface.TYPE_NONE;
-
-                KCell cell = sheet.getCell( colnr, rownr );
-                if ( cell == null ) {
-                  stop = true;
-                } else {
-                  if ( cell.getType() != KCellType.EMPTY ) {
-                    // We found a field.
-                    fieldname = cell.getContents();
-                  }
-
-                  // System.out.println("Fieldname = "+fieldname);
-
-                  KCell below = sheet.getCell( colnr, rownr + 1 );
-
-                  if ( below != null ) {
-                    if ( below.getType() == KCellType.BOOLEAN ) {
-                      fieldtype = ValueMetaInterface.TYPE_BOOLEAN;
-                    } else if ( below.getType() == KCellType.DATE ) {
-                      fieldtype = ValueMetaInterface.TYPE_DATE;
-                    } else if ( below.getType() == KCellType.LABEL ) {
-                      fieldtype = ValueMetaInterface.TYPE_STRING;
-                    } else if ( below.getType() == KCellType.NUMBER ) {
-                      fieldtype = ValueMetaInterface.TYPE_NUMBER;
-                    } else {
-                      fieldtype = ValueMetaInterface.TYPE_STRING;
-                    }
-                  } else {
-                    fieldtype = ValueMetaInterface.TYPE_STRING;
-                  }
-
-                  if ( Utils.isEmpty( fieldname ) ) {
-                    stop = true;
-                  } else {
-                    if ( fieldtype != ValueMetaInterface.TYPE_NONE ) {
-                      ValueMetaInterface field = ValueMetaFactory.createValueMeta( fieldname, fieldtype );
-                      fields.addValueMeta( field );
-                    }
-                  }
-                }
-              } catch ( ArrayIndexOutOfBoundsException aioobe ) {
-                // System.out.println("index out of bounds at column "+colnr+" : "+aioobe.toString());
-                stop = true;
-              }
-            }
-          }
-        }
-      }
-    
-    private void getInfo( TransMeta transMeta,String stepName,  ExcelInputMeta meta ) {
-        StepMeta currentStepMeta = transMeta.findStep( stepName );
-        
-        ExcelInputMeta excel=(ExcelInputMeta)currentStepMeta.getStepMetaInterface();
-      //  stepName = wStepname.getText(); // return value
-
-        // copy info to Meta class (input)
-        meta.setRowLimit( Const.toLong( null, 0 ) );
-        meta.setEncoding("");
-        meta.setSpreadSheetType( SpreadSheetType.values()[1] );
-        meta.setFileField("");
-        meta.setSheetField("");
-        meta.setSheetRowNumberField("");
-        meta.setRowNumberField("");
-
-        meta.setAddResultFile(true);
-
-        meta.setStartsWithHeader(true);
-        meta.setIgnoreEmptyRows(true);
-        meta.setStopOnEmpty(false);
-
-        meta.setAcceptingFilenames(false);
-        meta.setAcceptingField("");
-        meta.setAcceptingStepName("");
-        meta.searchInfoAndTargetSteps( transMeta.findPreviousSteps( currentStepMeta ) );
-
-        int nrfiles = 1;
-        int nrsheets = 1;
-        int nrfields = 0;
-
-        meta.allocate( nrfiles, nrsheets, nrfields );
-
-        String[] str0 = new String[1];
-        str0[0] = "D:\\1111.xlsx";
-        String[] str = new String[0];
-        meta.setFileName(str0);
-        meta.setFileMask(str);
-        meta.setExcludeFileMask(str);
-        meta.setFileRequired(str);
-        meta.setIncludeSubFolders(str);
-
-        //CHECKSTYLE:Indentation:OFF
-        for ( int i = 0; i < nrsheets; i++ ) {
-//          TableItem item = wSheetnameList.getNonEmpty( i );
-          meta.getSheetName()[i] = "Sheet1";
-          meta.getStartRow()[i] = Const.toInt( "0", 0 );
-          meta.getStartColumn()[i] = Const.toInt( "0", 0 );
-        }
-
-        //CHECKSTYLE:Indentation:OFF
-		/*
-		 * for ( int i = 0; i < nrfields; i++ ) { TableItem item = wFields.getNonEmpty(
-		 * i ); meta.getField()[i] = new ExcelInputField();
-		 * 
-		 * meta.getField()[i].setName( item.getText( 1 ) ); meta.getField()[i].setType(
-		 * ValueMetaFactory.getIdForValueMeta( item.getText( 2 ) ) ); String slength =
-		 * item.getText( 3 ); String sprec = item.getText( 4 );
-		 * meta.getField()[i].setTrimType( ExcelInputMeta.getTrimTypeByDesc(
-		 * item.getText( 5 ) ) ); meta.getField()[i].setRepeated(
-		 * BaseMessages.getString( PKG, "System.Combo.Yes" ).equalsIgnoreCase(
-		 * item.getText( 6 ) ) );
-		 * 
-		 * meta.getField()[i].setLength( Const.toInt( slength, -1 ) );
-		 * meta.getField()[i].setPrecision( Const.toInt( sprec, -1 ) );
-		 * 
-		 * meta.getField()[i].setFormat( item.getText( 7 ) );
-		 * meta.getField()[i].setCurrencySymbol( item.getText( 8 ) );
-		 * meta.getField()[i].setDecimalSymbol( item.getText( 9 ) );
-		 * meta.getField()[i].setGroupSymbol( item.getText( 10 ) ); }
-		 */
-        // Error handling fields...
-        meta.setStrictTypes(false);
-        meta.setErrorIgnored(false);
-        meta.setErrorLineSkipped(false);
-
-        meta.setWarningFilesDestinationDirectory("");
-        meta.setBadLineFilesExtension("warning");
-        meta.setErrorFilesDestinationDirectory("");
-        meta.setErrorFilesExtension("error");
-        meta.setLineNumberFilesDestinationDirectory("");
-        meta.setLineNumberFilesExtension("line");
-        meta.setShortFileNameField("");
-        meta.setPathField("");
-        meta.setIsHiddenField("");
-        meta.setLastModificationDateField("");
-        meta.setUriField("");
-        meta.setRootUriField("");
-        meta.setExtensionField("");
-        meta.setSizeField("");
-      }	    
-    
     public StepMeta getStep(TransMeta transMeta, String label) {
         List<StepMeta> list = transMeta.getSteps();
         for (int i = 0; i < list.size(); i++) {

@@ -420,7 +420,7 @@ ExcelInputDialog = Ext.extend(KettleTabDialog, {
 					text: '获取来自头部数据的字段', scope: this, handler: function() {
 						me.onSure();
 
-						getActiveGraph().inputOutputFields(cell.getAttribute('label'), true, function(st) {
+						getActiveGraph().excelInputFields(cell.getAttribute('label'), true, function(st) {
 							fieldStore.loadData(st.toJson());
 						});
 					}

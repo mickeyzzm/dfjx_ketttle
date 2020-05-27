@@ -9,8 +9,18 @@ import org.springframework.util.LinkedCaseInsensitiveMap;
 
 public enum FileNodeType {
 
-	ALL(1, "所有文件", "*"), KJB(2, "作业文件", "kjb"), KTR(4, "转换文件", "ktr"), TXT(8, "文本文件", "txt"), CSV(16, "CSV文件", "csv"), 
-	XLS(32, "Excel97~2003", "xls"), XLSX(64, "Excel", "xlsx"), ODS(128, "OpenDocument电子表格", "ods"), PNG(256, "PNG图片", "png");
+	ALL(1, "所有文件", "*"), 
+	KJB(2, "作业文件", "kjb"), 
+	KTR(4, "转换文件", "ktr"), 
+	TXT(8, "文本文件", "txt"), 
+	CSV(16, "CSV文件", "csv"), 
+	XLS(32, "Excel97~2003", "xls"), 
+	XLSX(64, "Excel", "xlsx"), 
+	ODS(128, "OpenDocument电子表格", "ods"), 
+	PNG(256, "PNG图片", "png"),
+	SHELL(512, "Shell 脚本", "sh"),
+	BAT(1024, "BAT 脚本", "bat")
+	;
 
 
 	private int type;
