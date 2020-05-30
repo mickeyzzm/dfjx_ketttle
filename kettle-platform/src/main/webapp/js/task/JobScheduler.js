@@ -50,7 +50,7 @@
                 }
                 store.baseParams = {
                     typeId:typeId,
-                    hostName:hostName,
+                    //hostName:hostName,
                     jobName:jobName
                 }
             }
@@ -94,7 +94,7 @@
         closable:true,
         tbar:new Ext.Toolbar({
             buttons:[
-                typeSelect,"-",hostNameSelect,"-",JobNameField,
+                typeSelect,"-",/*hostNameSelect,"-"*/,JobNameField,
                 {
                     iconCls:"searchCls",
                     tooltip: '查询',

@@ -60,7 +60,7 @@ function showHistoryLogPanel(secondGuidePanel){
     store.load({params:{start:0,limit:10}});
 
     var search=getSearchParam();
-    var logTbar=getTbarForHistoryLog(search.statu,search.type,search.taskName);
+    var logTbar=getTbarForHistoryLog(search.statu,search.type,search.taskName,search.startDate);
     var grid=new Ext.grid.GridPanel({
         id:"historyLogPanel",
         title:"<font size = '3px' >历史日志</font>",
@@ -193,7 +193,7 @@ function showConfigInfo(){
 }
 
 //日志列表顶部的控件 用作查询
-function getTbarForHistoryLog(statu,type,taskName){
+function getTbarForHistoryLog(statu,type,taskName,startDate){
     var taskNameField=new Ext.form.TextField({
         id:"nameForLogSearch",
         fieldLabel: "任务名",
@@ -206,6 +206,7 @@ function getTbarForHistoryLog(statu,type,taskName){
         fieldLabel: "开始时间",
         width:100,
         format: "Y-m-d",
+        value : startDate,
         emptyText:"开始时间"
     });
     var searchButton=new Ext.Button({

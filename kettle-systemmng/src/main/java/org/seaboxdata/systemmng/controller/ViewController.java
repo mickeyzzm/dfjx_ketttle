@@ -48,16 +48,16 @@ public class ViewController {
 
             JSONObject runningJob=new JSONObject();
             runningJob.put("value",runningJobCount);
-            runningJob.put("name","");
+            runningJob.put("name","运行中作业数");
             JSONObject runningTrans=new JSONObject();
             runningTrans.put("value",runningTransCount);
-            runningTrans.put("name","");
+            runningTrans.put("name","运行中转换数");
             JSONObject slave=new JSONObject();
             slave.put("value",slaveCount);
-            slave.put("name","");
+            slave.put("name","节点数");
             JSONObject scheduler=new JSONObject();
             scheduler.put("value",schedulerCount);
-            scheduler.put("name","");
+            scheduler.put("name","定时作业数");
 
             result.put("runningJob",runningJob);
             result.put("runningTrans",runningTrans);

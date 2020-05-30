@@ -1,5 +1,5 @@
 <%--<%@ page language="java" contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>--%>
-<%@ page language="java" contentType="text/html;iso-8859-1" import="java.util.*" pageEncoding="utf-8"%>
+<%@ page language="java" contentType="text/html;" import="java.util.*" pageEncoding="utf-8"%>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -40,6 +40,7 @@
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/mxgraph2/js/mxClient3.js"></script>
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/ext3/adapter/ext/ext-base.js"></script>
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/ext3/ext-all-debug.js"></script>
+	    <script type="text/javascript" src="${pageContext.request.contextPath}/ext3/ext-lang-zh_CN.js"></script>
 	    
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/ext3/ux/CheckColumn.js"></script>
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/ext3/ux/ListBox.js"></script>

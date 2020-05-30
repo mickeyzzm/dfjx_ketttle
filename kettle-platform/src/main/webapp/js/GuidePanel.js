@@ -490,6 +490,21 @@ GuidePanel = Ext.extend(Ext.Panel,{
 				secondGuidePanel.removeAll(true);
 				Ext.Msg.prompt('系统提示', '请输入转换名称:', function(btn, text){
 				    if (btn == 'ok' && text != '') {
+				    	
+				    	var result = is_forbid(text);
+				    	
+				    	if(!result){
+				    		Ext.Msg.show({  
+				        	    title:'提示信息',  
+				        	    msg: '名称包含非法字符！',  
+				        	    buttons: Ext.Msg.OK,  
+				        	    icon: Ext.Msg.INFO 
+				        	});
+				    		
+				    		return ;
+				    	}
+				    	
+				    	
 						var taskGroupPanel=getAllTaskGroupBeforeCreate();
 						var addTaskGroupWindow=new Ext.Window({
 							title:"分配任务组",
@@ -642,6 +657,45 @@ GuidePanel = Ext.extend(Ext.Panel,{
 		showModuleView(secondGuidePanel);
 	}
 });
+
+
+//正则
+function trimTxt(txt){
+	return txt.replace(/(^\s*)|(\s*$)/g, "");
+}
+
+/**
+* 检查是否含有非法字符
+* @param temp_str
+* @returns {Boolean}
+*/
+function is_forbid(temp_str){
+	temp_str=trimTxt(temp_str);
+	temp_str = temp_str.replace('*',"@");
+	temp_str = temp_str.replace('--',"@");
+	temp_str = temp_str.replace('/',"@");
+	temp_str = temp_str.replace('+',"@");
+	temp_str = temp_str.replace('\'',"@");
+	temp_str = temp_str.replace('\\',"@");
+	temp_str = temp_str.replace('$',"@");
+	temp_str = temp_str.replace('^',"@");
+	temp_str = temp_str.replace('.',"@");
+	temp_str = temp_str.replace(';',"@");
+	temp_str = temp_str.replace('<',"@");
+	temp_str = temp_str.replace('>',"@");
+	temp_str = temp_str.replace('"',"@");
+	temp_str = temp_str.replace('=',"@");
+	temp_str = temp_str.replace('{',"@");
+	temp_str = temp_str.replace('}',"@");
+	var forbid_str=new String('@,%,~,&');
+	var forbid_array=new Array();
+	forbid_array=forbid_str.split(',');
+	for(i=0;i<forbid_array.length;i++){
+	    if(temp_str.search(new RegExp(forbid_array[i])) != -1)
+	    return false;
+	}
+	return true;
+}
 //  TransGuide = Ext.extend(Ext.Panel, {
 // //     activeTab: 0,
 // //     plain: true,

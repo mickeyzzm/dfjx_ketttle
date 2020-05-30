@@ -43,7 +43,7 @@
         <if test='param6!=null and param6!=""'>
             and e.jobName = #{5}
         </if>
-        e.ORDER BY endTime DESC
+        ORDER BY endTime DESC
       limit #{0},#{1}
     </select>
 
