@@ -289,7 +289,12 @@ function beforeUpdateTaskGroup(){
         }
     }
     if(flag!=1){
-        Ext.MessageBox.alert("请选择需要修改的任务组(只能选中一条)");
+        Ext.Msg.show({  
+    	    title:'提示信息',  
+    	    msg: '请选择需要修改的任务组(只能选中一条)',  
+    	    buttons: Ext.Msg.OK,  
+    	    icon: Ext.Msg.INFO     //注意此处为INFO  
+    	}); 
     }else{
         showUpdateWindow(taskGroupPanel,taskGroupId,taskGroupName,taskGroupDesc);
     }
@@ -347,14 +352,24 @@ function showUpdateWindow(taskGroupPanel,taskGroupId,taskGroupName,taskGroupDesc
                     var inputGroupName=taskGroupNameField.getValue();
                     var inputGroupDesc=taskGroupDescField.getValue();
                     if(inputGroupName==undefined || inputGroupName==""){
-                        Ext.MessageBox.alert("任务组名不能为空!");
+                        Ext.Msg.show({  
+    		        	    title:'提示信息',  
+    		        	    msg: '任务组名不能为空!',  
+    		        	    buttons: Ext.Msg.OK,  
+    		        	    icon: Ext.Msg.INFO     //注意此处为INFO  
+    		        	}); 
                         return;
                     }else{
                         Ext.Ajax.request({
                             url:"/taskGroup/decideGroupNameExist.do",
                             success:function(response,config){
                                 if(response.responseText=="Y" && inputGroupName!=taskGroupName){
-                                    Ext.MessageBox.alert("该任务组名已存在!");
+                                    Ext.Msg.show({  
+                		        	    title:'提示信息',  
+                		        	    msg: '该任务组名已存在!',  
+                		        	    buttons: Ext.Msg.OK,  
+                		        	    icon: Ext.Msg.INFO     //注意此处为INFO  
+                		        	}); 
                                     return;
                                 }else{
                                     updateTaskGroup(taskGroupId,inputGroupName,inputGroupDesc,updateTaskGroupWindow);
@@ -379,7 +394,12 @@ function updateTaskGroup(taskGroupId,inputGroupName,inputGroupDesc,updateTaskGro
     Ext.Ajax.request({
         url:"/taskGroup/updateTaskGroup.do",
         success:function(response,config){
-            Ext.MessageBox.alert("result","修改成功!");
+            Ext.Msg.show({  
+        	    title:'提示信息',  
+        	    msg: '修改成功!', 
+        	    buttons: Ext.Msg.OK,  
+        	    icon: Ext.Msg.INFO     //注意此处为INFO  
+        	}); 
             updateTaskGroupWindow.close();
             showTaskGroupPanel(Ext.getCmp("secondGuidePanel"));
         },
@@ -440,14 +460,25 @@ function addWindowByInfo(){
                 handler:function(){
                     var taskGroupNameValue=taskGroupName.getValue();
                     if(taskGroupNameValue==undefined || taskGroupNameValue==""){
-                        Ext.MessageBox.alert("任务组名不能为空!");
+                        Ext.Msg.show({  
+                    	    title:'提示信息',  
+                    	    msg: '任务组名不能为空!',  
+                    	    buttons: Ext.Msg.OK,  
+                    	    icon: Ext.Msg.INFO     //注意此处为INFO  
+                    	}); 
+                        
                         return;
                     }else{
                         Ext.Ajax.request({
                             url:"/taskGroup/decideGroupNameExist.do",
                             success:function(response,config){
                                 if(response.responseText=="Y"){
-                                    Ext.MessageBox.alert("该任务组名已存在!");
+                                    Ext.Msg.show({  
+                                	    title:'提示信息',  
+                                	    msg: '该任务组名已存在!',  
+                                	    buttons: Ext.Msg.OK,  
+                                	    icon: Ext.Msg.INFO     //注意此处为INFO  
+                                	}); 
                                 }else{
                                     addTaskGroupWindow.hide();
                                     var chooseTaskWindow=Ext.getCmp("chooseTaskWindow");
@@ -682,7 +713,12 @@ function addTaskGroupEnd(flag){
     Ext.Ajax.request({
         url:"/taskGroup/addTaskGroup.do",
         success:function(response,config){
-            Ext.MessageBox.alert("success");
+            Ext.Msg.show({  
+        	    title:'提示信息',  
+        	    msg: '添加成功!',  
+        	    buttons: Ext.Msg.OK,  
+        	    icon: Ext.Msg.INFO     //注意此处为INFO  
+        	}); 
             Ext.getCmp("addTaskGroupWindow").close();
             Ext.getCmp("chooseTaskWindow").close();
             var chooseUserGroupWindow=Ext.getCmp("chooseUserGroupWindow");
