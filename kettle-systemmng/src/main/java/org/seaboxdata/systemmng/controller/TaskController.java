@@ -355,10 +355,10 @@ public class TaskController {
 				+ "\"arguments\":[],\"safe_mode\":\"N\",\"log_level\":\"Basic\",\"clear_log\":\"Y\",\"gather_metrics\":\"Y\",\"log_file\":\"N\",\"log_file_append\":\"N\",\"show_subcomponents\":\"Y\""
 				+ ",\"create_parent_folder\":\"N\",\"remote_server\":\"192.168.1.201\",\"replay_date\":\"\"}";
 		JSONObject json = JSONObject.fromObject(config);
-		json.put("remote_server", minSlave.getHostName());
 		if (minSlave == null) {
 			throw new Exception("当前无可用的正常节点!");
 		} else {
+			json.put("remote_server", minSlave.getHostName());
 			if (flag.equals("job")) {
 				JobMeta jobMeta = RepositoryUtils.loadJobByPath(path);
 				org.flhy.ext.utils.JSONObject jsonObject = org.flhy.ext.utils.JSONObject.fromObject(json.toString());

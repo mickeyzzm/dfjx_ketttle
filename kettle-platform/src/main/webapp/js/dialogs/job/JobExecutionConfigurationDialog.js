@@ -12,7 +12,7 @@
 	initComponent: function() {
 		var  me = this;
 		var wExecLocal = new Ext.form.Radio({name: 'execMethod', fieldLabel: '本地执行'});
-		var wExecRemote = new Ext.form.Radio({name: 'execMethod', fieldLabel: '远程执行'});
+		var wExecRemote = new Ext.form.Radio({name: 'execMethod', fieldLabel: '远程执行', disabled: true});
 		var wRemoteHost = null;
 		if(this.runMode == 'normal') {
 			var proxy=new Ext.data.HttpProxy({url:"/slave/getSlaveSelect.do"});
@@ -288,8 +288,8 @@ JobExecutionConfigurationScheduler = Ext.extend(Ext.Window, {
 
 	initComponent: function() {
 		var  me = this;
-		var wExecLocal = new Ext.form.Radio({name: 'execMethod', fieldLabel: '本地执行'});
-		var wExecRemote = new Ext.form.Radio({name: 'execMethod', fieldLabel: '远程执行'});
+		var wExecLocal = new Ext.form.Radio({name: 'execMethod', fieldLabel: '本地执行', readOnly: true});
+		var wExecRemote = new Ext.form.Radio({name: 'execMethod', fieldLabel: '远程执行' , disabled: true});
 		var wRemoteHost = null;
 		if(this.runMode == 'normal') {
 			var proxy=new Ext.data.HttpProxy({url:"/slave/getSlaveSelect.do"});

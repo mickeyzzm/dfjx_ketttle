@@ -75,6 +75,11 @@ function generateTrans(secondGuidePanel){
     if(Ext.getCmp("transNameForSearch")!=undefined){
         inputTransName=Ext.getCmp("transNameForSearch").getValue();
     }
+    
+    var inputDate="";
+    if(Ext.getCmp("crtDateForSearch")!=undefined){
+    	inputDate=Ext.getCmp("crtDateForSearch").getValue();
+    }
     var nameField=new Ext.form.TextField({
         id: "transNameForSearch",
         fieldLabel: "转换名",
@@ -87,6 +92,7 @@ function generateTrans(secondGuidePanel){
         fieldLabel: "创建日期",
         width:100,
         format: "Y-m-d",
+        value:inputDate,
         emptyText:"创建时间"
     })
 

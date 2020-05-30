@@ -7,7 +7,7 @@ public class Test {
 //        System.out.println(KettleEncr.encryptPassword("root123456ABCD!@#"));
 
 
-        System.out.println(KettleEncr.decryptPasswd("2beeac0a71e96c0d7ff4cf851fcb18bfa"));
-
+        //System.out.println(KettleEncr.decryptPasswd("2beeac0a71e96c0d7ff4cf851fcb18bfa"));
+System.out.println(8&16);
     }
 }

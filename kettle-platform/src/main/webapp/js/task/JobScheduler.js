@@ -94,7 +94,7 @@
         closable:true,
         tbar:new Ext.Toolbar({
             buttons:[
-                typeSelect,"-",/*hostNameSelect,"-"*/,JobNameField,
+                typeSelect,"-",/*hostNameSelect,"-"*/JobNameField,
                 {
                     iconCls:"searchCls",
                     tooltip: '查询',
