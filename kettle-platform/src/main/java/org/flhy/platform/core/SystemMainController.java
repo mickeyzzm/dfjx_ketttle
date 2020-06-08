@@ -703,6 +703,7 @@ public class SystemMainController{
 		LinkedList directorys = new LinkedList();
 		LinkedList leafs = new LinkedList();
 		extension = extension == 512 ? 1536 : extension;
+		extension = extension == 1 ? 0 : extension;
 		if(StringUtils.hasText(path)) {
 			File[] files = new File(path).listFiles();
 			if(files != null) {

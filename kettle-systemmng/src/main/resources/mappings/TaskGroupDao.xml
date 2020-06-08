@@ -20,7 +20,7 @@
             AND d.TASK_GROUP_NAME  LIKE concat('%',#{3},'%')
         </if>
         <if test='param5!=null and param5!=""'>
-            AND d.CREATE_DATE>#{4}
+            AND date_format(d.CREATE_DATE, '%Y-%m-%d') = #{4}
         </if>
         ORDER BY d.CREATE_DATE DESC
         limit #{0},#{1}

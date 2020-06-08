@@ -94,9 +94,9 @@ public class TransServiceImpl implements TransService {
             //获取总记录数、该页的记录,并且封装成分页对象
             totalCount=transDao.getTotalSize(userGroupName);
         }else{
-            if(!createDate.isEmpty()){
-                createDate+=" 00:00:00";
-            }
+			/*
+			 * if(!createDate.isEmpty()){ createDate+=" 00:00:00"; }
+			 */
             trans=transDao.conditionFindTrans(start,limit,transName,createDate,userGroupName);
             for (TransformationEntity transformation:trans){
                 transformation.setCreateDate(format.parse(format.format(transformation.getCreateDate())));

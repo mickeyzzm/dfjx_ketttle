@@ -91,7 +91,7 @@ function showUserPanel(secondGuidePanel){
             }
         }
     })
-    store.load({params:{start:0,limit:10}});
+    store.load({params:{start:0,limit:15}});
     var inputUsername="";
     var chooseUsertype="";
     var chooseUsergroup="";
@@ -152,8 +152,8 @@ function showUserPanel(secondGuidePanel){
             store:store,
             pageSize:15,
             displayInfo:true,
-            displayMsg:"本页显示第{0}条到第{1}条的记录,一共{2}条",
-            emptyMsg:"没有记录"
+            //displayMsg:"本页显示第{0}条到第{1}条的记录,一共{2}条",
+            //emptyMsg:"没有记录"
         })
     });
     grid.getColumnModel().setHidden(2,true);

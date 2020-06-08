@@ -49,8 +49,11 @@ function showTaskGroupPanel(secondGuidePanel){
                 var choosedate="";
                 if(Ext.getCmp("taskGroupNameField"))
                     inputname=Ext.getCmp("taskGroupNameField").getValue();
-                if(Ext.getCmp("createDateByTG"))
-                    choosedate=Ext.getCmp("createDateByTG").getValue();
+                if(Ext.getCmp("createDateByTG")) {
+                	choosedate=Ext.getCmp("createDateByTG").getValue();
+                	choosedate = Ext.util.Format.date(choosedate, 'Y-m-d');
+                }
+
                 store.baseParams = {
                     taskGroupName:inputname,
                     createDate:choosedate
@@ -123,8 +126,8 @@ function showTaskGroupPanel(secondGuidePanel){
             store:store,
             pageSize:10,
             displayInfo:true,
-            displayMsg:"本页显示第{0}条到第{1}条的记录,一共{2}条",
-            emptyMsg:"没有记录"
+            //displayMsg:"本页显示第{0}条到第{1}条的记录,一共{2}条",
+            //emptyMsg:"没有记录"
         })
     });
     taskGroupPanel.getColumnModel().setHidden(2,true);

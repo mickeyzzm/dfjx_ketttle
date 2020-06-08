@@ -92,7 +92,7 @@ ExcelInputDialog = Ext.extend(KettleTabDialog, {
 
 		var fileNameStore  = new Ext.data.JsonStore({
 			idProperty: 'fileName',
-			fields: ['name', 'filemask', 'exclude_filemask', 'file_required', 'include_subfolders'],
+			fields: ['realName', 'name', 'filemask', 'exclude_filemask', 'file_required', 'include_subfolders'],
 			data: Ext.decode(cell.getAttribute('file') || Ext.encode([]))
 		});
 		var wFilenameList = this.wFilenameList = new KettleEditorGrid({
@@ -104,12 +104,115 @@ ExcelInputDialog = Ext.extend(KettleTabDialog, {
 				menu.insert(0, {
 					text: '添加文件', scope: this, handler: function() {
 						var sheetType = wSpreadSheetType.getValue(), extension = 32;
-						if('JXL' == sheetType) extension = 32;
+						if('JXL' == sheetType) extension = 32;//xls
 						else if('POI' == sheetType) extension = 96;	//xls,xlsx都行
-						else if('SAX_POI' == sheetType) extension = 64;
-						else if('ODS' == sheetType) extension = 128;
+						else if('SAX_POI' == sheetType) extension = 64;//xlsx
+						else if('ODS' == sheetType) extension = 128;//ods
 						
-						var dialog = new FileExplorerWindow({extension: extension});
+						var wfindbutton = new Ext.form.FileUploadField({
+					    	buttonText : '浏览...',
+					        id:'form_file1',
+					        fieldLabel: '文件名称',
+					        listeners: {
+					            'fileselected': function(fb, v){
+					            	// 文件名称长度判断
+						            var arrName = v.split('\\');
+						            var name = arrName[arrName.length-1];
+						            wfindbutton.setValue(name);
+					            }
+					        }
+					    });
+						
+						var form = new Ext.FormPanel({
+					        fileUpload: true,
+					        width: 500,
+					        frame: true,
+					        autoHeight: true,
+					        bodyStyle: 'padding: 10px 10px 0 10px;',
+					        labelWidth: 60,
+					        defaults: {
+					            anchor: '95%',
+					            allowBlank: false,
+					            msgTarget: 'side'
+					        },
+					        items: [wfindbutton],
+					        buttons: [{
+					            text: '上传',
+					            handler: function(){
+					                if(form.getForm().isValid()){
+					                	var value = Ext.getCmp('form_file1').getValue();
+					                	 // 文件类型判断
+							            var arrType = value.split('.');
+							            var docType = arrType[arrType.length-1].toLowerCase();
+							            
+							            // 文件类型判断
+							            var arrType = value.split('.');
+							            var docType = arrType[arrType.length-1].toLowerCase();
+							            if(extension == 32 && docType != 'xls' && docType != 'XLS'){
+							            	Ext.Msg.alert("操作提示：", "请上传Excel 97-2003 XLS (JXL)文件!");
+							            	form.getForm().reset();
+							            	return false;
+							            }
+							            
+							            if(extension == 96 && docType != 'xls' && docType != 'XLS'&& docType != 'xlsx' && docType != 'XLSX'){
+							            	Ext.Msg.alert("操作提示：", "请上传Excel 2007 XLSX (Apache POI)文件!");
+							            	form.getForm().reset();
+							            	return false;
+							            }
+							            
+							            if(extension == 64 && docType != 'ods' && docType != 'ODS'){
+							            	Ext.Msg.alert("操作提示：", "请上传Excel 2007 XLSX (Apache POI Streaming)文件!");
+							            	form.getForm().reset();
+							            	return false;
+							            }
+							            
+							            if(extension == 128 && docType != 'xlsx' && docType != 'XLSX'){
+							            	Ext.Msg.alert("操作提示：", "请上传Open Office ODS (ODFDOM)文件!");
+							            	form.getForm().reset();
+							            	return false;
+							            }
+							            
+							            var fd =new FormData();
+					                    fd.append('file',document.getElementById('form_file1-file').files[0]);
+					                    var req = new XMLHttpRequest()
+					                    req.onreadystatechange = function(){
+					                    	if (req.readyState === 4) {
+					                            var response  = JSON.parse(req.responseText)
+					                            if (response.status) {
+					                            	// 文件名称长度判断
+										            var arrName = value.split('\\');
+										            var name = arrName[arrName.length-1];
+										            var store = wFilenameList.getStore();
+													wFilenameList.stopEditing();
+													store.insert(0, new store.recordType({realName:name, name: response.result}));
+													wFilenameList.startEditing(0, 1);
+													win.destroy();
+					                            } else {
+					                            	Ext.Msg.alert('上传失败', response.message);
+					                            }
+					                    	}
+					                    }
+							            
+					                    req.open('post', GetUrl('fileUploadDown/fileUpload.do'), true)
+					                    req.send(fd);
+							            
+					                }
+					            }
+					        }]
+					    });
+						
+						var win = new Ext.Window({
+				            title: "上传文件",       //标题
+				            draggable: false,
+				            width: 500,                           //宽度
+				            layout: "fit",                        //窗口布局类型
+				            modal: true, //是否模态窗口，默认为false
+				            resizable: false,
+				            items: [form]
+				        });
+				        win.show();
+						
+						/*var dialog = new FileExplorerWindow({extension: extension});
 						dialog.on('ok', function(path) {
 							var store = wFilenameList.getStore();
 							wFilenameList.stopEditing();
@@ -117,14 +220,16 @@ ExcelInputDialog = Ext.extend(KettleTabDialog, {
 							wFilenameList.startEditing(0, 1);
 							dialog.close();
 						});
-						dialog.show();						
+						dialog.show();	*/					
 					}
 				});
 				
 				menu.insert(1, '-'); 
 			},
 			columns: [{
-				header: '文件/目录', dataIndex: 'name', width: 250, editor: new Ext.form.TextField()
+				header: '文件名称', dataIndex: 'realName', width: 250
+			},{
+				header: '文件/目录', dataIndex: 'name', width: 250, hidden: true
 			},{
 				header: '通配符', dataIndex: 'filemask', width: 60, editor: new Ext.form.TextField()
 			},{
@@ -302,13 +407,14 @@ ExcelInputDialog = Ext.extend(KettleTabDialog, {
 		var wbvWarningDestDir = new Ext.Button({ text: '变量(V)...', handler: function() {
 		}});
 		var wbbWarningDestDir = new Ext.Button({ text: '浏览(B)...', handler: function() {
-			var dialog = new FileExplorerWindow();
+			var dialog = new FileExplorerWindow({extension: 1});
 			dialog.on('ok', function(path) {
 				wWarningDestDir.setValue(path);
 				dialog.close();
 			});
 			dialog.show();
 		}});
+		 
 		/// end
 		
 		
@@ -318,7 +424,7 @@ ExcelInputDialog = Ext.extend(KettleTabDialog, {
 		var wbvErrorDestDir = new Ext.Button({ text: '变量(V)...', handler: function() {
 		}});
 		var wbbErrorDestDir = new Ext.Button({ text: '浏览(B)...', handler: function() {
-			var dialog = new FileExplorerWindow();
+			var dialog = new FileExplorerWindow({extension: 1});
 			dialog.on('ok', function(path) {
 				wErrorDestDir.setValue(path);
 				dialog.close();
@@ -332,7 +438,7 @@ ExcelInputDialog = Ext.extend(KettleTabDialog, {
 		var wbvLineNrDestDir = new Ext.Button({ text: '变量(V)...', handler: function() {
 		}});
 		var wbbLineNrDestDir = new Ext.Button({ text: '浏览(B)...', handler: function() {
-			var dialog = new FileExplorerWindow();
+			var dialog = new FileExplorerWindow({extension: 1});
 			dialog.on('ok', function(path) {
 				wLineNrDestDir.setValue(path);
 				dialog.close();

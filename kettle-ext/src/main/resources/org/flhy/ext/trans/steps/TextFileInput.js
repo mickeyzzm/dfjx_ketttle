@@ -11,7 +11,7 @@ TextFileInputDialog = Ext.extend(KettleTabDialog, {
 		var wFileMask = new Ext.form.TextField({fieldLabel: '规则表达式', flex: 1,anchor: '-10',value: cell.getAttribute('fileMask')});
 		var wExcludeFileMask = new Ext.form.TextField({fieldLabel: '正则表达式（排除）', anchor: '-10',flex: 1,value: cell.getAttribute('excludeFileMask')});
 
-		var wfindbutton = new Ext.Button({
+		/*var wfindbutton = new Ext.Button({
 			text: '浏览...',
 			disabled:false,
 			handler: function() {
@@ -21,28 +21,107 @@ TextFileInputDialog = Ext.extend(KettleTabDialog, {
 					dialog.close();
 				});
 				dialog.show();
-			}});
+			}});*/
+
+	    var wfindbutton = new Ext.form.FileUploadField({
+	        //renderTo: 'fi-button',
+	    	buttonText : '浏览...',
+	    	buttonOnly: true,
+	        id:'form_file',
+	        listeners: {
+	            'fileselected': function(fb, v){
+	            	// 文件名称长度判断
+		            var arrName = v.split('\\');
+		            var name = arrName[arrName.length-1];
+	            	wFilename.setValue(name);
+	            }
+	        }
+	    });
+		
 		var waddfilebutton = new Ext.Button({
 			text: '增加',
 			disabled:false,
 			handler: function() {
-				var store = fileNamegrid.getStore();
-				fileNamegrid.stopEditing();
-				
-				var record = fileNamegrid.getDefaultValue();
-				record.fileName = wFilename.getValue();
-				record.filemask = wFileMask.getValue();
-				record.excludeFileMask = wExcludeFileMask.getValue();
-				record.fileRequired = 'N';
-				record.includeSubFolders = 'N';
-				store.insert(0, new store.recordType(record));
-				
-				fileNamegrid.startEditing(0, 0);
+				var formFile = Ext.getCmp('form_file').getValue();
+            	if(formFile==''){
+                    Ext.Msg.alert("操作提示：", "请上传文件");
+                    return;
+                }
+            	
+            	// 文件类型判断
+	            var arrType = formFile.split('.');
+	            var docType = arrType[arrType.length-1].toLowerCase();
+	            if(docType != 'txt' && docType != 'csv'){
+	            	 Ext.Msg.alert("操作提示：", "请上传txt、csv文件!");
+	            	 return false;
+	            }
+            	
+            	var form = Ext.getCmp('my_form').getForm();
+                if (form.isValid()) {
+                	var fd =new FormData();
+                    fd.append('file',document.getElementById('form_file-file').files[0]);
+                	
+                    var req = new XMLHttpRequest()
+                    req.onreadystatechange = function(){
+                      if (req.readyState === 4) {
+                        var response  = JSON.parse(req.responseText)
+                        if (response.status) {
+                        	var store = fileNamegrid.getStore();
+            				fileNamegrid.stopEditing();
+            				
+            				var record = fileNamegrid.getDefaultValue();
+            				record.realFileName = wFilename.getValue();
+            				record.fileName = response.result;
+            				record.filemask = wFileMask.getValue();
+            				record.excludeFileMask = wExcludeFileMask.getValue();
+            				record.fileRequired = 'N';
+            				record.includeSubFolders = 'N';
+            				store.insert(0, new store.recordType(record));
+            				
+            				fileNamegrid.startEditing(0, 0);
+                        } else {
+                        	Ext.Msg.alert('上传失败', response.message);
+                        }
+                      }
+                    }
+                    req.open('post', GetUrl('fileUploadDown/fileUpload.do'), true)
+                    req.send(fd);
+                    
+                	/*Ext.Ajax.request({
+                	    url:GetUrl('FileUpServlet'),
+                	    method:'post',
+                	    rawData:fd,
+                	    headers: {
+                	        "Content-Type": null  
+                	    },
+                	    success:function (res,opts) {
+                	        alert('success');
+                	    },
+                	    failure:function (res,opts) {
+                	        alert('failure');
+                	    }
+                	});*/
+                	
+                	/*form.submit({
+                        method: 'post',
+                        enctype: "multipart/form-data",
+                        url: GetUrl('fileUploadDown/fileUpload.do'),
+                        waitMsg: '正在上传中...',
+                        success: function (fp, o) {
+                            Ext.Msg.alert('Success', '部署成功');
+                        },
+                        failure: function (form, action) {
+                            Ext.Msg.alert('部署失败', action.result.reason);
+                        }
+                    });*/
+                } else {
+                	alert(1)
+                }
 			}});
 
 		var fileNameStore  = new Ext.data.JsonStore({
 			idProperty: 'fileName',
-			fields: ['fileName', 'filemask', 'excludeFileMask', 'fileRequired', 'includeSubFolders'],
+			fields: ['realFileName', 'fileName', 'filemask', 'excludeFileMask', 'fileRequired', 'includeSubFolders'],
 			data: Ext.decode(cell.getAttribute('fileNameStore') || Ext.encode([]))
 		});
 		var fileNamegrid = new KettleEditorGrid({
@@ -60,7 +139,10 @@ TextFileInputDialog = Ext.extend(KettleTabDialog, {
 //				header: '#', dataIndex: '', width: 80, editor: new Ext.form.TextField()
 //			},
 				{
-					header: '文件/目录', dataIndex: 'fileName', width: 100, editor: new Ext.form.TextField()
+					header: '文件/目录', dataIndex: 'realFileName', width: 100
+				},
+				{
+					header: '文件/目录', dataIndex: 'fileName', width: 100, hidden: true
 				},{
 					header: '通配符', dataIndex: 'filemask', width: 100, editor: new Ext.form.TextField()
 				},{
@@ -810,14 +892,17 @@ TextFileInputDialog = Ext.extend(KettleTabDialog, {
 		this.tabItems = [{
 			xtype: 'KettleForm',
 			title: '文件',
+			id:'my_form',
 			autoScroll: true,
+			fileUpload: true,
 			bodyStyle: 'padding: 10px 0px',
 			labelWidth: 170,
 			items: [{
 				xtype: 'compositefield',
 				fieldLabel: '文件名称',
 				anchor: '-10',
-				items: [wFilename, waddfilebutton,wfindbutton]
+				items: [wFilename, wfindbutton, waddfilebutton]
+				//items: [wFilename, waddfilebutton, new FileUploadField({name: 'file', buttonText: '浏览...'})]
 			},wFileMask,wExcludeFileMask,fileNamegrid,{
 				xtype: 'fieldset',
 				title: '从上一步骤获取文件',

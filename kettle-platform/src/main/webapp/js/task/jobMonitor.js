@@ -61,6 +61,7 @@ function generateJobPanel(secondGuidePanel){
                 if(Ext.getCmp("jobNameForSearch")!=undefined){
                     jobName=Ext.getCmp("jobNameForSearch").getValue();
                     createDate=Ext.getCmp("createDateForSearch").getValue();
+                    createDate = Ext.util.Format.date(createDate, 'Y-m-d');
                 }
                 store.baseParams = {
                     name:jobName,
@@ -75,6 +76,12 @@ function generateJobPanel(secondGuidePanel){
     if(Ext.getCmp("jobNameForSearch")!=undefined){
         inputJobName=Ext.getCmp("jobNameForSearch").getValue();
     }
+    
+    var inputCreateDate="";
+    if(Ext.getCmp("createDateForSearch")!=undefined){
+    	inputCreateDate=Ext.getCmp("createDateForSearch").getValue();
+    }
+    
     var nameField=new Ext.form.TextField({
         id: "jobNameForSearch",
         fieldLabel: "作业名",
@@ -87,7 +94,8 @@ function generateJobPanel(secondGuidePanel){
         fieldLabel: "创建日期",
         emptyText:"请选择创建日期..",
         width: 120,
-        format: "Y-m-d"
+        format: "Y-m-d",
+        value: inputCreateDate
     })
 
     var grid=new Ext.grid.GridPanel({
@@ -115,8 +123,8 @@ function generateJobPanel(secondGuidePanel){
             store:store,
             pageSize:15,
             displayInfo:true,
-            displayMsg:"本页显示第{0}条到第{1}条的记录,一共{2}条",
-            emptyMsg:"没有记录"
+            //displayMsg:"本页显示第{0}条到第{1}条的记录,一共{2}条",
+            //emptyMsg:"没有记录"
         })
     });
     grid.getColumnModel().setHidden(2,true);
