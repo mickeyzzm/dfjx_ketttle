@@ -196,6 +196,8 @@ public class DatabaseCodec {
 	    if ( jsonObject.containsKey(MSSQLServerNativeDatabaseMeta.ATTRIBUTE_USE_INTEGRATED_SECURITY) ) {
 	    	boolean flag = jsonObject.optBoolean(MSSQLServerNativeDatabaseMeta.ATTRIBUTE_USE_INTEGRATED_SECURITY);
 	    	if(flag) databaseMeta.getAttributes().put(MSSQLServerNativeDatabaseMeta.ATTRIBUTE_USE_INTEGRATED_SECURITY, flag);
+	    } else {
+	    	databaseMeta.getAttributes().put(MSSQLServerNativeDatabaseMeta.ATTRIBUTE_USE_INTEGRATED_SECURITY, "false");
 	    }
 	    
 	    if(jsonObject.containsKey("port"))
