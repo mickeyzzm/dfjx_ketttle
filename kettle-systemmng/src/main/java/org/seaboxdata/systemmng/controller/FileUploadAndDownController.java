@@ -159,7 +159,7 @@ public class FileUploadAndDownController {
 						String fileName = file.getOriginalFilename();
 						String ext = fileName.substring(fileName.lastIndexOf(".") + 1);
 
-						savePath = savePath + replaceDataStr() + ext + "/";
+						savePath = savePath + /* replaceDataStr() + ext + */ "/";
 						File dirFile = new File(savePath);
 						if (!dirFile.exists()) {
 							dirFile.mkdirs();

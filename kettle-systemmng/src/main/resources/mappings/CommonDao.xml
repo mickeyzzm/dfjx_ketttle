@@ -18,6 +18,44 @@
         </where>
     </select>
 
+	<select id="getTaskGroupAttribute" parameterType="org.seaboxdata.systemmng.entity.TaskGroupAttributeEntity"
+		resultType="org.seaboxdata.systemmng.entity.TaskGroupAttributeEntity">
+		SELECT
+		    t.ID_TASK_GROUP_MEMBER_ATTRIBUTE as groupAttributeId,
+		    t.TASK_GROUP_NAME as taskGroupName,
+		    t.TYPE as type,
+		    t.ID_TASK as taskId,
+		    t.TASK_NAME as taskName,
+		    t.TASK_PATH as taskPath
+		FROM
+		    d_task_group_member_attribute t
+		WHERE
+		    t.TASK_GROUP_NAME = #{taskGroupName}
+		AND t.TYPE = #{type}
+		AND t.TASK_NAME = #{taskName}	
+	</select>
+
+	<select id="queryRepositoryByUserGroup" parameterType="org.seaboxdata.systemmng.entity.TaskGroupAttributeEntity"
+		resultType="java.util.Map">
+		SELECT
+		    t.USER_GROUP_NAME,
+		    t.TASK_GROUP_NAME,
+		    a.TASK_GROUP_NAME,
+		    a.ID_TASK,
+		    a.TASK_NAME
+		FROM
+		    d_user_group_tasks_relation t ,
+		    d_task_group_member_attribute a
+		WHERE
+		    t.TASK_GROUP_NAME = a.TASK_GROUP_NAME
+		<if test='taskGroupName!=null and taskGroupName!=""'>
+			AND t.USER_GROUP_NAME = #{taskGroupName}
+		</if>
+		AND a.TYPE = #{type}
+		AND a.TASK_NAME = #{taskName}
+		AND a.ID_TASK = #{taskId}
+	</select>
+
     <delete id="deleteDatabaseMeta" parameterType="java.lang.Integer">
       DELETE FROM r_database WHERE ID_DATABASE=#{id}
     </delete>
