@@ -15,6 +15,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.vfs2.FileObject;
 import org.flhy.ext.App;
 import org.flhy.ext.PluginFactory;
 import org.flhy.ext.TransDebugExecutor;
@@ -42,6 +43,8 @@ import org.pentaho.di.core.RowMetaAndData;
 import org.pentaho.di.core.SQLStatement;
 import org.pentaho.di.core.database.Database;
 import org.pentaho.di.core.database.DatabaseMeta;
+import org.pentaho.di.core.exception.KettlePluginException;
+import org.pentaho.di.core.fileinput.FileInputList;
 import org.pentaho.di.core.logging.DefaultLogLevel;
 import org.pentaho.di.core.logging.LoggingObjectInterface;
 import org.pentaho.di.core.logging.LoggingObjectType;
@@ -49,9 +52,17 @@ import org.pentaho.di.core.logging.SimpleLoggingObject;
 import org.pentaho.di.core.plugins.PluginInterface;
 import org.pentaho.di.core.plugins.PluginRegistry;
 import org.pentaho.di.core.plugins.StepPluginType;
+import org.pentaho.di.core.row.RowMeta;
 import org.pentaho.di.core.row.RowMetaInterface;
 import org.pentaho.di.core.row.ValueMeta;
 import org.pentaho.di.core.row.ValueMetaInterface;
+import org.pentaho.di.core.row.value.ValueMetaFactory;
+import org.pentaho.di.core.spreadsheet.KCell;
+import org.pentaho.di.core.spreadsheet.KCellType;
+import org.pentaho.di.core.spreadsheet.KSheet;
+import org.pentaho.di.core.spreadsheet.KWorkbook;
+import org.pentaho.di.core.util.Utils;
+import org.pentaho.di.core.vfs.KettleVFS;
 import org.pentaho.di.core.xml.XMLHandler;
 import org.pentaho.di.repository.ObjectId;
 import org.pentaho.di.repository.Repository;
@@ -63,9 +74,11 @@ import org.pentaho.di.trans.debug.StepDebugMeta;
 import org.pentaho.di.trans.debug.TransDebugMeta;
 import org.pentaho.di.trans.step.StepMeta;
 import org.pentaho.di.trans.step.StepMetaInterface;
+import org.pentaho.di.trans.steps.excelinput.ExcelInputMeta;
+import org.pentaho.di.trans.steps.excelinput.SpreadSheetType;
+import org.pentaho.di.trans.steps.excelinput.WorkbookFactory;
 import org.seaboxdata.systemmng.entity.DatabaseConnEntity;
 import org.seaboxdata.systemmng.entity.UserEntity;
-import org.seaboxdata.systemmng.entity.UserGroupAttributeEntity;
 import org.seaboxdata.systemmng.service.CommonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -115,12 +128,6 @@ public class TransGraphController {
     protected void save(@RequestParam String graphXml,@RequestParam String databaseInfo,HttpServletRequest request) throws Exception {
         UserEntity loginUser =(UserEntity) request.getSession().getAttribute("login");
         String userName = loginUser.getLogin();
-        UserGroupAttributeEntity attr = (UserGroupAttributeEntity) request.getSession().getAttribute("userInfo");
-        String userGroupName = "";
-        if (null != attr) {
-        	userGroupName = attr.getUserGroupName();
-        }
-        
         Repository repository = null;
         GraphCodec codec = (GraphCodec) PluginFactory.getBean(GraphCodec.TRANS_CODEC);
         String xml = StringEscapeHelper.decode(graphXml);
@@ -162,14 +169,14 @@ public class TransGraphController {
 
         repository.save(transMeta, versionComment, null);
         if(null != databaseInfo && !"".equals(databaseInfo)){
-            updateDatabaseUserName(databaseInfo,userGroupName);
+            updateDatabaseUserName(databaseInfo,userName);
         }
 
         JsonUtils.success("转换保存成功！");
     }
 
 
-    public void updateDatabaseUserName(String databaseInfo,String userGroupName) throws Exception{
+    public void updateDatabaseUserName(String databaseInfo,String userName) throws Exception{
         JSONObject jsonObject = JSONObject.fromObject(databaseInfo);
         DatabaseMeta database = DatabaseCodec.decode(jsonObject);
         String name = database.getName();
@@ -180,7 +187,6 @@ public class TransGraphController {
         dbConn.setDatabaseName(dbname);
         dbConn.setHostName(hostname);
         dbConn.setName(name);
-        dbConn.setUserGroup(userGroupName);
         cService.updateDatabaseUserName(dbConn);
     }
 

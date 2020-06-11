@@ -240,8 +240,8 @@ function slaveManager(secondGuidePanel){
             store:store,
             pageSize:10,
             displayInfo:true,
-            //displayMsg:"本页显示第{0}条到第{1}条的记录,一共{2}条",
-            //emptyMsg:"没有记录"
+            displayMsg:"本页显示第{0}条到第{1}条的记录,一共{2}条",
+            emptyMsg:"没有记录"
         })
     })
     if(loginUserName!="admin" && loginUserSlavePower!=1){

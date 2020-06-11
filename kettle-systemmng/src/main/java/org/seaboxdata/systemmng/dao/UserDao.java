@@ -21,7 +21,7 @@ public interface UserDao {
 
     public void addUser(UserEntity user);
 
-    public Integer getUserCount(String userGroupName,String username,Integer userType);
+    public Integer getUserCount(String userGroupName);
 
     public List<UserEntity> getAllUsers();
 

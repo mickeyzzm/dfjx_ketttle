@@ -1,10 +1,9 @@
 package org.seaboxdata.systemmng.service;
 
-import java.util.List;
-import java.util.Map;
-
 import org.seaboxdata.systemmng.entity.DatabaseConnEntity;
-import org.seaboxdata.systemmng.entity.TaskGroupAttributeEntity;
+import org.seaboxdata.systemmng.entity.SlaveEntity;
+
+import java.util.List;
 
 /**
  * Created by cRAZY on 2017/6/1.
@@ -17,10 +16,7 @@ public interface CommonService {
 
     public void updateDatabaseUserName(DatabaseConnEntity dbConn);
 
-    
-    public List<TaskGroupAttributeEntity> getTaskGroupAttribute(TaskGroupAttributeEntity attr);
 
-	public List<Map<String, Object>> queryRepositoryByUserGroup(TaskGroupAttributeEntity entity);
 
 
 }

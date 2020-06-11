@@ -118,9 +118,8 @@ public class JobServiceImpl implements JobService{
             }
             totalCount=jobDao.getTotalCount(userGroupName);
         }else{
-			/*
-			 * if(!createDate.isEmpty()) createDate+=" 00:00:00";
-			 */
+            if(!createDate.isEmpty())
+                createDate+=" 00:00:00";
             jobs=jobDao.conditionFindJobs(start, limit, name, createDate,userGroupName);
             for (JobEntity job:jobs){
                 job.setCreateDate(format.parse(format.format(job.getCreateDate())));

@@ -9,14 +9,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Map;
+import java.util.spi.TimeZoneNameProvider;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.ibatis.session.SqlSession;
@@ -59,12 +56,6 @@ import org.pentaho.di.repository.kdr.KettleDatabaseRepositoryMeta;
 import org.pentaho.di.trans.TransMeta;
 import org.pentaho.di.ui.core.PropsUI;
 import org.pentaho.di.ui.repository.kdr.KettleDatabaseRepositoryDialog;
-import org.seaboxdata.systemmng.entity.TaskGroupAttributeEntity;
-import org.seaboxdata.systemmng.entity.UserGroupAttributeEntity;
-import org.seaboxdata.systemmng.service.CommonService;
-import org.seaboxdata.systemmng.util.CommonUtil.StringDateUtil;
-import org.seaboxdata.systemmng.util.TaskUtil.CarteClient;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -74,8 +65,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.seaboxdata.systemmng.entity.TaskGroupAttributeEntity;
+import org.seaboxdata.systemmng.entity.UserGroupAttributeEntity;
+import org.seaboxdata.systemmng.util.CommonUtil.StringDateUtil;
+import org.seaboxdata.systemmng.util.TaskUtil.CarteClient;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping(value = "/repository")
@@ -86,9 +85,6 @@ public class RepositoryController {
 	@Value("${jdbc.password}")
 	private String password;
 
-    @Autowired
-    protected CommonService cService;	
-	
 	/**
 	 * 该方法返回所有的资源库信息
 	 * @throws KettleException 
@@ -161,27 +157,10 @@ public class RepositoryController {
 			directory = repository.findDirectory(dir);
 			if(directory == null)
 				directory = repository.getUserHomeDirectory();
-			
-			String msg = "";
-			for(String taskGroupName:taskGroupArray){
-				TaskGroupAttributeEntity attr=new TaskGroupAttributeEntity();
-				attr.setTaskGroupName(taskGroupName);
-				attr.setType("trans");
-				attr.setTaskName(transName);
-				List<TaskGroupAttributeEntity> listAttr = cService.getTaskGroupAttribute(attr);
-				if (listAttr.size() > 0) {
-					msg += "任务组【"+ taskGroupName +"】已维护转换名为:【"+ transName +"】的转换，请检查！</br>";
-				}
-			}
-			if(msg.length() > 0) {
-				JsonUtils.fail(msg + "请重新输入！");
+			if(repository.exists(transName, directory, RepositoryObjectType.TRANSFORMATION)) {
+				JsonUtils.fail("该转换已经存在，请重新输入！");
 				return;
 			}
-			/*
-			 * if(repository.exists(transName, directory,
-			 * RepositoryObjectType.TRANSFORMATION)) { JsonUtils.fail("该转换已经存在，请重新输入！");
-			 * return; }
-			 */
 			transMeta = new TransMeta();
 			transMeta.setRepository(App.getInstance().getRepository());
 			transMeta.setMetaStore(App.getInstance().getMetaStore());
@@ -244,26 +223,10 @@ public class RepositoryController {
              directory = repository.findDirectory(dir);
 			if(directory == null)
                 directory = repository.getUserHomeDirectory();
-			
-			String msg = "";
-			for(String taskGroupName:taskGroupArray){
-				TaskGroupAttributeEntity attr=new TaskGroupAttributeEntity();
-				attr.setTaskGroupName(taskGroupName);
-				attr.setType("job");
-				attr.setTaskName(jobName);
-				List<TaskGroupAttributeEntity> listAttr = cService.getTaskGroupAttribute(attr);
-				if (listAttr.size() > 0) {
-					msg += "任务组【"+ taskGroupName +"】已维护作业名为:【"+ jobName +"】的作业，请检查！</br>";
-				}
-			}
-			if(msg.length() > 0) {
-				JsonUtils.fail(msg + "请重新输入！");
-				return;
-			}
-			/*
-			 * if(repository.exists(jobName, directory, RepositoryObjectType.JOB)) {
-			 * JsonUtils.fail("该作业已经存在，请重新输入！"); return; }
-			 */
+            if(repository.exists(jobName, directory, RepositoryObjectType.JOB)) {
+                JsonUtils.fail("该作业已经存在，请重新输入！");
+                return;
+            }
 			JobMeta jobMeta = new JobMeta();
 			jobMeta.setRepository(App.getInstance().getRepository());
 			jobMeta.setMetaStore(App.getInstance().getMetaStore());
@@ -446,7 +409,7 @@ public class RepositoryController {
 	 * @throws IOException
 	 */
 	@RequestMapping(method=RequestMethod.POST, value="/explorer")
-	protected @ResponseBody List explorer(HttpServletRequest request, @RequestParam String path, @RequestParam int loadElement) throws KettleException, IOException {
+	protected @ResponseBody List explorer(@RequestParam String path, @RequestParam int loadElement) throws KettleException, IOException {
 		ArrayList list = new ArrayList();
 		
 		Repository repository = App.getInstance().getRepository();
@@ -456,21 +419,10 @@ public class RepositoryController {
 		else
 			dir = repository.getUserHomeDirectory();
 		
-		
 		List<RepositoryDirectoryInterface> directorys = dir.getChildren();
 		for(RepositoryDirectoryInterface child : directorys) {
 			list.add(RepositoryNode.initNode(child.getName(), child.getPath()));
 		}
-		
-		UserGroupAttributeEntity attr = (UserGroupAttributeEntity) request.getSession().getAttribute("userInfo");
-        String userGroupName = "";
-        if (null != attr) {
-            userGroupName = attr.getUserGroupName();
-        }
-        
-		TaskGroupAttributeEntity entity = new TaskGroupAttributeEntity();
-		
-		entity.setTaskGroupName(userGroupName);
 		
 		if(RepositoryNodeType.includeTrans(loadElement)) {
 			List<RepositoryElementMetaInterface> elements = repository.getTransformationObjects(dir.getObjectId(), false);
@@ -481,13 +433,7 @@ public class RepositoryController {
 						transPath = transPath + '/';
 					transPath = transPath + e.getName();
 					
-					entity.setType("trans");
-					entity.setTaskName(e.getName());
-					entity.setTaskId(Integer.parseInt(e.getObjectId().getId()));
-					List<Map<String, Object>> existsList = cService.queryRepositoryByUserGroup(entity);
-					if(existsList.size() > 0 ) {
-						list.add(RepositoryNode.initNode(e.getName(),  transPath, e.getObjectType()));
-					}
+					list.add(RepositoryNode.initNode(e.getName(),  transPath, e.getObjectType()));
 				}
 			}
 		}
@@ -501,14 +447,7 @@ public class RepositoryController {
 						transPath = transPath + '/';
 					transPath = transPath + e.getName();
 					
-					entity.setType("job");
-					entity.setTaskName(e.getName());
-					entity.setTaskId(Integer.parseInt(e.getObjectId().getId()));
-					List<Map<String, Object>> existsList = cService.queryRepositoryByUserGroup(entity);
-					if(existsList.size() > 0 ) {
-						list.add(RepositoryNode.initNode(e.getName(),  transPath, e.getObjectType()));
-					}
-					
+					list.add(RepositoryNode.initNode(e.getName(),  transPath, e.getObjectType()));
 				}
 			}
 		}

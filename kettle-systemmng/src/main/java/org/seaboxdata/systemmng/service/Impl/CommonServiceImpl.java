@@ -4,11 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.seaboxdata.systemmng.dao.CommonDao;
 import org.seaboxdata.systemmng.entity.DatabaseConnEntity;
-import org.seaboxdata.systemmng.entity.TaskGroupAttributeEntity;
 import org.seaboxdata.systemmng.service.CommonService;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by cRAZY on 2017/6/1.
@@ -35,14 +33,4 @@ public class CommonServiceImpl implements CommonService{
     public void updateDatabaseUserName(DatabaseConnEntity dbConn) {
         cDao.updateDatabaseUserName(dbConn);
     }
-
-	@Override
-	public List<TaskGroupAttributeEntity> getTaskGroupAttribute(TaskGroupAttributeEntity attr) {
-		return cDao.getTaskGroupAttribute(attr);
-	}
-
-	@Override
-	public List<Map<String, Object>> queryRepositoryByUserGroup(TaskGroupAttributeEntity entity) {
-		return cDao.queryRepositoryByUserGroup(entity);
-	}
 }

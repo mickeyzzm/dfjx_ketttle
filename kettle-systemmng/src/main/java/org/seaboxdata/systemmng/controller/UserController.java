@@ -5,6 +5,7 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import com.google.code.kaptcha.Producer;
 import org.pentaho.di.i18n.LanguageChoice;
+import org.seaboxdata.systemmng.auth.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -16,9 +17,12 @@ import org.seaboxdata.systemmng.entity.UserEntity;
 import org.seaboxdata.systemmng.entity.UserGroupAttributeEntity;
 import org.seaboxdata.systemmng.service.UserService;
 import org.seaboxdata.systemmng.util.TaskUtil.KettleEncr;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
@@ -38,6 +42,34 @@ public class UserController {
 
     @Autowired
     private Producer producer;
+    @Autowired
+    private AuthService authService;
+
+
+    @RequestMapping("/fromAuth")
+    public void loginAuth(HttpServletResponse response,HttpServletRequest request,@RequestParam("backUrl") String backUrl, @RequestParam(name = "access_token", required = false) String access_token, @RequestParam(name = "refresh_token", required = false) String refresh_token) throws IOException {
+        //HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
+        if(org.apache.commons.lang.StringUtils.isNotBlank(access_token)){
+            Cookie accessTokenCookie = new Cookie("access_token", access_token);
+            accessTokenCookie.setPath("/");
+//            accessTokenCookie.setDomain(tokenDomain);
+//            accessTokenCookie.setMaxAge(60 * 60 * 12 * 2 * 7);
+//            accessTokenCookie.setHttpOnly(true);
+            response.addCookie(accessTokenCookie);
+        }
+        if(org.apache.commons.lang.StringUtils.isNotBlank(refresh_token)){
+            Cookie refreshTokenCookie = new Cookie("refresh_token", refresh_token);
+            refreshTokenCookie.setPath("/");
+//            refreshTokenCookie.setDomain(tokenDomain);
+//            refreshTokenCookie.setMaxAge(60 * 60 * 12 * 2 * 7);
+//            refreshTokenCookie.setHttpOnly(true);
+            response.addCookie(refreshTokenCookie);
+        }
+//        response.sendRedirect("https://www.baidu.com");
+        response.sendRedirect(backUrl);
+    }
+
+
 
     //分配用户组
     @RequestMapping(value="/allotUserGroup")
@@ -254,7 +286,19 @@ public class UserController {
     protected void loginOut(HttpServletResponse response,HttpServletRequest request) throws Exception{
         try{
            request.getSession().invalidate();
-            response.sendRedirect(request.getContextPath() + "/login.jsp");
+            authService.loginOut(request);
+
+            Cookie accessTokenCookie = new Cookie("access_token", null);
+            accessTokenCookie.setPath("/");
+            accessTokenCookie.setMaxAge(0);
+            response.addCookie(accessTokenCookie);
+            Cookie refreshTokenCookie = new Cookie("refresh_token", null);
+            refreshTokenCookie.setPath("/");
+            refreshTokenCookie.setMaxAge(0);
+            response.addCookie(refreshTokenCookie);
+
+
+           response.sendRedirect(request.getContextPath() + "/index.jsp");
         }catch (Exception e){
             e.printStackTrace();
             throw new Exception(e.getMessage());
