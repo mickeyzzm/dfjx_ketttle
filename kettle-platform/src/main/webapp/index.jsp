@@ -21,6 +21,7 @@
 		    </div>
 		</div>
 
+		<input type="hidden" id="loginUserRealName"  value="${sessionScope.login.name}"/>
 		<input type="hidden" id="loginUsername"  value="${sessionScope.login.login}"/>
 		<input type="hidden" id="userTypeHidden" value="${sessionScope.userInfo.userType}" />
 		<input type="hidden" id="slavePowerHidden" value="${sessionScope.userInfo.slavePremissonType}" />

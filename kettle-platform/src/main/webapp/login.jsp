@@ -52,6 +52,8 @@
     {
       document.getElementById('username').value = '';
       document.getElementById('password').value = '';
+      document.getElementById('captcha').value = '';
+      $("#CreateCheckCode").click();
       return false;
     }
 
@@ -118,7 +120,7 @@
         </tr>
         <tr>
           <td class="lui_login_input_td">
-            <img src="/user/captcha.do">
+            <img id="CreateCheckCode" src="/user/captcha.do" onclick="this.src=this.src">
             <div class="lui_login_input_div">
               <input class="lui_login_input_password" type="text" name="captcha" id="captcha" value="" placeholder="请输入验证码"/>
             </div>

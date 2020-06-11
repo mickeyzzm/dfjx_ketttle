@@ -138,7 +138,7 @@ Ext.onReady(function() {
 //			collapsible:true
 //		});
 
-		var username=document.getElementById("loginUsername").value;
+		var username=document.getElementById("loginUserRealName").value;
 		var loginInfo=//"<div style='display:inline-block;height:100%'><img src='../ui/images/i_headerLogo.png' style='margin:14px 40px;'/></div>" +
 			"<div style='background: url(../img/logo_new.png) no-repeat; background-size: auto 100%; margin: 5px 30px; width: 320px; height: 80px;'></div>" +
 			" <div class='header-button-Cls header-public-display'>"+
