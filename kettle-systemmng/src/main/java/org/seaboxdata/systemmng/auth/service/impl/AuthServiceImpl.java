@@ -8,6 +8,11 @@ import org.seaboxdata.systemmng.auth.utils.RestTemplateUtils;
 import org.seaboxdata.systemmng.auth.utils.UrlEnum;
 import org.seaboxdata.systemmng.auth.vo.OauthUserDTO;
 import org.seaboxdata.systemmng.auth.vo.OnlineUser;
+import org.seaboxdata.systemmng.dao.UserDao;
+import org.seaboxdata.systemmng.dao.UserGroupDao;
+import org.seaboxdata.systemmng.entity.UserEntity;
+import org.seaboxdata.systemmng.entity.UserGroupAttributeEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -30,7 +35,11 @@ import java.util.*;
 
 @Service("authService")
 public class AuthServiceImpl implements AuthService {
-
+	
+	@Autowired
+    private UserDao userDao;
+	@Autowired
+    private UserGroupDao userGroupDao;
     /**
      * 鉴权模式
      */
@@ -58,13 +67,13 @@ public class AuthServiceImpl implements AuthService {
                 System.out.println("令牌一次失效");;
                 map = frontierAuthFreshToken(request, response);
             }*/
-            onlineUser = createOnlineUser(map);
+            onlineUser = createOnlineUser(map, request);
         }catch (Exception e) {
             onlineUser = null;
             System.out.println("令牌一次校验异常");
             try {
                 Map<String, Object> map = frontierAuthFreshToken(request, response);
-                onlineUser = createOnlineUser(map);
+                onlineUser = createOnlineUser(map, request);
             }catch (Exception e2){
                 System.out.println("令牌二次失效");
             }
@@ -180,7 +189,7 @@ public class AuthServiceImpl implements AuthService {
         return flag;
     }
 
-    private OnlineUser createOnlineUser(Map<String, Object> map){
+    private OnlineUser createOnlineUser(Map<String, Object> map, HttpServletRequest request){
         OnlineUser user = new OnlineUser();
 
         LinkedHashMap<String, LinkedHashMap<String, String>> principal = (LinkedHashMap)map.get("user_name");
@@ -212,6 +221,20 @@ public class AuthServiceImpl implements AuthService {
         user.setTenantId("".equals(tenantId) ? null : Long.valueOf(tenantId));
         user.setUsername("".equals(username) ? null : username);
 
+        List<UserEntity> users = userDao.getUserbyName(username);
+        if(users.size()==0){
+            throw new RuntimeException("该用户名不存在,请再次确认");
+        }else{
+            UserEntity u =users.get(0);
+            request.getSession().setAttribute("login", u);
+            UserGroupAttributeEntity attribute=userGroupDao.getInfoByUserName(username);
+            if(null==attribute){
+            	attribute=new UserGroupAttributeEntity();
+            }
+            attribute.setUserName(u.getUserId());
+            request.getSession().setAttribute("userInfo",attribute);
+        }
+        
         return user;
     }
 

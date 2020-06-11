@@ -80,7 +80,7 @@ public class AuthFilter implements Filter {
 		UserEntity userEntity = new UserEntity();
 		userEntity.setUserId(user.getUserId()+"");
 		userEntity.setLogin(user.getUsername());
-		request.getSession().setAttribute("login", userEntity);
+		//request.getSession().setAttribute("login", userEntity);
 		UserThreadLocal.set(user);
 		
 		chain.doFilter(servletRequest, servletResponse);

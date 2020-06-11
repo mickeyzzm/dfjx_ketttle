@@ -138,12 +138,13 @@ Ext.onReady(function() {
 //			collapsible:true
 //		});
 
-		var username=document.getElementById("loginUsername").value;
+		var username=document.getElementById("loginUserRealName").value;
 		var loginInfo=//"<div style='display:inline-block;height:100%'><img src='../ui/images/i_headerLogo.png' style='margin:14px 40px;'/></div>" +
 			"<div style='background: url(../img/logo_new.png) no-repeat; background-size: auto 100%; margin: 5px 30px; width: 320px; height: 80px;'></div>" +
-			" <div class='header-button-Cls header-public-display'>"+
+			" <div class='header-button-Cls header-public-display' style='text-align: center;'>"+
 			//"<span onclick='loginOut()' class='header-operation-Cls'>退出登录</span><span class='header-split-Cls'>|</span></div>"+
-			"<span onclick='loginOut()' class='header-operation-Cls'>退出登录</span><span class='header-split-Cls'>|</span><span onclick='updateThisPwd()' class='header-operation-Cls' id='updateThisPw'>修改密码</span></div>"+
+			"<span onclick='loginOut()' class='header-operation-Cls'>退出登录</span>"+
+			"</div>"+//<span class='header-split-Cls'>|</span><span onclick='updateThisPwd()' class='header-operation-Cls' id='updateThisPw'>修改密码</span>
 			"<div style='margin-bottom:5px;display: inline-block' class='header-loginInfo-Cls header-public-display'>欢迎您："+username+"</div>";
 		var navigationPanel = new Ext.Panel({
 			id: 'navigationPanel',

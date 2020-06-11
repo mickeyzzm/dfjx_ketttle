@@ -162,26 +162,20 @@ public class RepositoryController {
 			if(directory == null)
 				directory = repository.getUserHomeDirectory();
 			
-			String msg = "";
-			for(String taskGroupName:taskGroupArray){
-				TaskGroupAttributeEntity attr=new TaskGroupAttributeEntity();
-				attr.setTaskGroupName(taskGroupName);
-				attr.setType("trans");
-				attr.setTaskName(transName);
-				List<TaskGroupAttributeEntity> listAttr = cService.getTaskGroupAttribute(attr);
-				if (listAttr.size() > 0) {
-					msg += "任务组【"+ taskGroupName +"】已维护转换名为:【"+ transName +"】的转换，请检查！</br>";
-				}
-			}
-			if(msg.length() > 0) {
-				JsonUtils.fail(msg + "请重新输入！");
+			/*
+			 * String msg = ""; for(String taskGroupName:taskGroupArray){
+			 * TaskGroupAttributeEntity attr=new TaskGroupAttributeEntity();
+			 * attr.setTaskGroupName(taskGroupName); attr.setType("trans");
+			 * attr.setTaskName(transName); List<TaskGroupAttributeEntity> listAttr =
+			 * cService.getTaskGroupAttribute(attr); if (listAttr.size() > 0) { msg +=
+			 * "任务组【"+ taskGroupName +"】已维护转换名为:【"+ transName +"】的转换，请检查！</br>"; } }
+			 * if(msg.length() > 0) { JsonUtils.fail(msg + "请重新输入！"); return; }
+			 */			
+			if (repository.exists(transName, directory, RepositoryObjectType.TRANSFORMATION)) {
+				JsonUtils.fail("该转换已经存在，请重新输入！");
 				return;
 			}
-			/*
-			 * if(repository.exists(transName, directory,
-			 * RepositoryObjectType.TRANSFORMATION)) { JsonUtils.fail("该转换已经存在，请重新输入！");
-			 * return; }
-			 */
+			 
 			transMeta = new TransMeta();
 			transMeta.setRepository(App.getInstance().getRepository());
 			transMeta.setMetaStore(App.getInstance().getMetaStore());
@@ -246,24 +240,21 @@ public class RepositoryController {
                 directory = repository.getUserHomeDirectory();
 			
 			String msg = "";
-			for(String taskGroupName:taskGroupArray){
-				TaskGroupAttributeEntity attr=new TaskGroupAttributeEntity();
-				attr.setTaskGroupName(taskGroupName);
-				attr.setType("job");
-				attr.setTaskName(jobName);
-				List<TaskGroupAttributeEntity> listAttr = cService.getTaskGroupAttribute(attr);
-				if (listAttr.size() > 0) {
-					msg += "任务组【"+ taskGroupName +"】已维护作业名为:【"+ jobName +"】的作业，请检查！</br>";
-				}
-			}
-			if(msg.length() > 0) {
-				JsonUtils.fail(msg + "请重新输入！");
+			/*
+			 * for(String taskGroupName:taskGroupArray){ TaskGroupAttributeEntity attr=new
+			 * TaskGroupAttributeEntity(); attr.setTaskGroupName(taskGroupName);
+			 * attr.setType("job"); attr.setTaskName(jobName);
+			 * List<TaskGroupAttributeEntity> listAttr =
+			 * cService.getTaskGroupAttribute(attr); if (listAttr.size() > 0) { msg +=
+			 * "任务组【"+ taskGroupName +"】已维护作业名为:【"+ jobName +"】的作业，请检查！</br>"; } }
+			 * if(msg.length() > 0) { JsonUtils.fail(msg + "请重新输入！"); return; }
+			 */
+			
+			if (repository.exists(jobName, directory, RepositoryObjectType.JOB)) {
+				JsonUtils.fail("该作业已经存在，请重新输入！");
 				return;
 			}
-			/*
-			 * if(repository.exists(jobName, directory, RepositoryObjectType.JOB)) {
-			 * JsonUtils.fail("该作业已经存在，请重新输入！"); return; }
-			 */
+			 
 			JobMeta jobMeta = new JobMeta();
 			jobMeta.setRepository(App.getInstance().getRepository());
 			jobMeta.setMetaStore(App.getInstance().getMetaStore());
