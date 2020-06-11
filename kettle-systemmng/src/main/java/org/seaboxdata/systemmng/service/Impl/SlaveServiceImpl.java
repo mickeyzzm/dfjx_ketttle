@@ -280,6 +280,15 @@ public class SlaveServiceImpl implements SlaveService {
         }else{
             chooseDate=chooseDate.substring(0,10);
         }
+        
+        try {
+			StringDateUtil.stringToDate(chooseDate, "yyyy-MM-dd");
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			throw new RuntimeException("日期格式不正确!");
+		}
+        
         String minDate= chooseDate+" 00:00:00";
         String maxDate= chooseDate+" 23:59:59";
 
