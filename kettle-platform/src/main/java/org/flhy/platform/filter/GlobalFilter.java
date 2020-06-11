@@ -8,7 +8,6 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.flhy.ext.utils.JsonUtils;
@@ -26,8 +25,7 @@ public class GlobalFilter implements Filter {
 			HttpServletResponse response = (HttpServletResponse) res;
 			JsonUtils.putResponse(response);
 		}
-		System.out.println("------GlobalFilter---------url-----------------------" + ((HttpServletRequest) req).getRequestURL());
-
+		
 		fc.doFilter(req, res);
 	}
 

@@ -6,9 +6,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.flhy.ext.cluster.SlaveServerCodec;
 import org.flhy.ext.utils.JSONArray;
 import org.flhy.ext.utils.JSONObject;
 import org.pentaho.di.base.AbstractMeta;
