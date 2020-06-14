@@ -114,6 +114,9 @@ public class UserServiceImpl implements UserService{
         List<UserEntity> users=new ArrayList<>();
         Integer count= userDao.getUserCount(userGroupName,username,userTypeI);
         users=userDao.getUsersLimit(start,limit,userGroupName,username,userTypeI);
+        for (UserEntity userEntity : users) {
+        	userEntity.setPassword("*");
+		}
         //如果不是是admin用户 把该用户组下面所有用户权限为1的用户移除
        /* if(!StringDateUtil.isEmpty(userGroupName)){
             List<UserEntity> adminUserArray=new ArrayList<>();

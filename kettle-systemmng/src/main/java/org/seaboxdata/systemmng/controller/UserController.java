@@ -1,35 +1,35 @@
 package org.seaboxdata.systemmng.controller;
 
-import com.google.code.kaptcha.Constants;
-import net.sf.json.JSONArray;
-import net.sf.json.JSONObject;
-import com.google.code.kaptcha.Producer;
-import org.pentaho.di.i18n.LanguageChoice;
-import org.seaboxdata.systemmng.auth.service.AuthService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.seaboxdata.systemmng.entity.UserEntity;
-import org.seaboxdata.systemmng.entity.UserGroupAttributeEntity;
-import org.seaboxdata.systemmng.service.UserService;
-import org.seaboxdata.systemmng.util.TaskUtil.KettleEncr;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.List;
-import java.util.Locale;
+
+import org.seaboxdata.systemmng.auth.service.AuthService;
+import org.seaboxdata.systemmng.entity.UserEntity;
+import org.seaboxdata.systemmng.entity.UserGroupAttributeEntity;
+import org.seaboxdata.systemmng.service.UserService;
+import org.seaboxdata.systemmng.util.TaskUtil.KettleEncr;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.code.kaptcha.Constants;
+import com.google.code.kaptcha.Producer;
+
+import net.sf.json.JSONArray;
+import net.sf.json.JSONObject;
 
 /**
  * Created by cRAZY on 2017/3/28.
@@ -45,7 +45,9 @@ public class UserController {
     @Autowired
     private AuthService authService;
 
-
+    @Value("${openAuth}")  
+    private boolean openAuth;
+    
     @RequestMapping("/fromAuth")
     public void loginAuth(HttpServletResponse response,HttpServletRequest request,@RequestParam("backUrl") String backUrl, @RequestParam(name = "access_token", required = false) String access_token, @RequestParam(name = "refresh_token", required = false) String refresh_token) throws IOException {
         //HttpServletResponse response = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getResponse();
@@ -220,7 +222,7 @@ public class UserController {
             out.close();
         }catch (Exception e){
             e.printStackTrace();
-            throw new Exception(e.getMessage());
+            throw new Exception("添加用户失败!");
         }
     }
 
@@ -284,22 +286,24 @@ public class UserController {
     @RequestMapping(value="/loginOut")
     @ResponseBody
     protected void loginOut(HttpServletResponse response,HttpServletRequest request) throws Exception{
-        try{
-           request.getSession().invalidate();
-            authService.loginOut(request);
+		try {
+			request.getSession().invalidate();
+			
+			if(openAuth) {
+				authService.loginOut(request);
+				
+				Cookie accessTokenCookie = new Cookie("access_token", null);
+				accessTokenCookie.setPath("/");
+				accessTokenCookie.setMaxAge(0);
+				response.addCookie(accessTokenCookie);
+				Cookie refreshTokenCookie = new Cookie("refresh_token", null);
+				refreshTokenCookie.setPath("/");
+				refreshTokenCookie.setMaxAge(0);
+				response.addCookie(refreshTokenCookie);
+			}
 
-            Cookie accessTokenCookie = new Cookie("access_token", null);
-            accessTokenCookie.setPath("/");
-            accessTokenCookie.setMaxAge(0);
-            response.addCookie(accessTokenCookie);
-            Cookie refreshTokenCookie = new Cookie("refresh_token", null);
-            refreshTokenCookie.setPath("/");
-            refreshTokenCookie.setMaxAge(0);
-            response.addCookie(refreshTokenCookie);
-
-
-           response.sendRedirect(request.getContextPath() + "/index.jsp");
-        }catch (Exception e){
+			response.sendRedirect(request.getContextPath() + "/index.jsp");
+		}catch (Exception e){
             e.printStackTrace();
             throw new Exception(e.getMessage());
         }

@@ -25,7 +25,7 @@ import java.util.Set;
 public class AuthFilter implements Filter {
 
 	private String excludedPages;       
-	private String[] excludedPageArray;
+	private String[] excludedArray;
 	private static String gotoAuth = new PropertiesUtil("environment.properties").readProperty("gotoAuth");
 	private static String returnBack = new PropertiesUtil("environment.properties").readProperty("returnBack");
 
@@ -34,7 +34,7 @@ public class AuthFilter implements Filter {
 	public void init(FilterConfig fConfig) throws ServletException {     
 		excludedPages = fConfig.getInitParameter("excludedPages");     
 		if (StringUtils.isNotBlank(excludedPages)) {
-			excludedPageArray = excludedPages.split(",");     
+			excludedArray = excludedPages.split(",");     
 		}     
 		return;     
 	}     
@@ -48,7 +48,7 @@ public class AuthFilter implements Filter {
 		HttpServletResponse response = (HttpServletResponse)servletResponse;
 		String uri = request.getRequestURI();
 		String url = request.getRequestURL().toString();
-		for(String page : excludedPageArray){
+		for(String page : excludedArray){
 			if(uri.indexOf(page) > 0){
 				chain.doFilter(servletRequest, servletResponse);
 				return ;

@@ -20,8 +20,11 @@
     <context:component-scan base-package="org.flhy.platform" />
 	
 	<bean id="config" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="location">
-			<value>classpath:application.properties</value>
+		<property name="locations">
+			<list>
+				<value>classpath:application.properties</value>
+				<value>classpath:environment.properties</value>
+			</list>
 		</property>
 	</bean>
 

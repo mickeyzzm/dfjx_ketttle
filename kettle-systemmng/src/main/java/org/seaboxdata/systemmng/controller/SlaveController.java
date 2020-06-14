@@ -86,6 +86,10 @@ public class SlaveController {
                 userGroupName=attr.getUserGroupName();
             }
             List<SlaveEntity> result=slaveService.getAllSlave(userGroupName);
+            for (SlaveEntity slaveEntity : result) {
+            	slaveEntity.setUsername("*");
+            	slaveEntity.setPassword("*");
+			}
             response.setContentType("text/html;charset=utf-8");
             PrintWriter out=response.getWriter();
             out.write(JSONArray.fromObject(result).toString());
@@ -209,7 +213,7 @@ public class SlaveController {
             out.close();
         }catch (Exception e){
             e.printStackTrace();
-            throw new Exception(e.getMessage());
+            throw new Exception("节点体检错误！");
         }
     }
 
