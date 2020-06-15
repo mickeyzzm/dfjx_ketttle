@@ -19,6 +19,7 @@ import org.seaboxdata.systemmng.service.UserService;
 import org.seaboxdata.systemmng.util.CommonUtil.StringDateUtil;
 import org.seaboxdata.systemmng.util.TaskUtil.HttpClientUtil;
 import org.seaboxdata.systemmng.util.TaskUtil.KettleEncr;
+import org.seaboxdata.systemmng.util.TaskUtil.MD5Util;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -263,8 +264,8 @@ public class UserServiceImpl implements UserService{
             result="该用户名不存在,请再次确认";
         }else{
             UserEntity user=users.get(0);
-            String realPassword=KettleEncr.decryptPasswd(user.getPassword());
-            if(!realPassword.equals(password)){
+            String realPassword=user.getPassword();
+            if(!realPassword.equals(MD5Util.encode(password))){
                 result="密码输入错误,请再次确认";
             }else{
                 if(null==request.getSession().getAttribute("login")){
