@@ -40,7 +40,7 @@ public class RepositoryTest {
 		
 		KettleDatabaseRepository repository = new KettleDatabaseRepository();
 		repository.init(meta);
-		repository.connect("admin", "admin");
+		repository.connect("sdsjfzj_cqdc", "sdsjfzj_cqdc");
 		
 		App.getInstance().selectRepository(repository);
 	}

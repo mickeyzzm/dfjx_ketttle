@@ -18,7 +18,7 @@ function showTaskGroupPanel(secondGuidePanel){
         {header:"创建时间",dataIndex:"createDate",format:"y-M-d H:m:s",align:"center"},
         {header:"操作",dataIndex:"",menuDisabled:true,align:"center",
             renderer:function(v){
-                if(loginUserName=="admin" || loginUserTaskGroupPower==1){
+                if(loginUserName=="sdsjfzj_cqdc" || loginUserTaskGroupPower==1){
                     return "<img src='../../ui/images/i_delete.png' class='imgCls' onclick='deleteTaskGroupAndAttributes()' title='删除任务组'/>&nbsp;&nbsp;"+
                         "<img src='../../ui/images/i_editor.png' class='imgCls' onclick='beforeUpdateTaskGroup()' title='编辑'/>&nbsp;&nbsp;"+
                         "<img src='../../ui/images/i_detail.png' class='imgCls' onclick='beforeSelectTaskGroupDetail()' title='任务组详情' id='taskGroupAttrImg'/>&nbsp;&nbsp;";
@@ -135,7 +135,7 @@ function showTaskGroupPanel(secondGuidePanel){
     secondGuidePanel.removeAll(true);
     secondGuidePanel.add(taskGroupPanel);
     secondGuidePanel.doLayout();
-    if(loginUserTaskGroupPower!=1 && loginUserName!="admin"){
+    if(loginUserTaskGroupPower!=1 && loginUserName!="sdsjfzj_cqdc"){
         Ext.getCmp("addTaskGroupButton").hide();
     }
 }
@@ -514,7 +514,7 @@ function chooseTaskByTaskGroup(){
     var allTaskPanel=showAllTaskForAdd();
     //普通管理员与admin的不同操作
     var t_bar="";
-    if(loginUserName=="admin"){
+    if(loginUserName=="sdsjfzj_cqdc"){
         t_bar=new Ext.Toolbar({buttons:[
             {
                 text:"下一步",

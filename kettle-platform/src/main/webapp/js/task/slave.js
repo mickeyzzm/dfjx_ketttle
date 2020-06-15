@@ -244,7 +244,7 @@ function slaveManager(secondGuidePanel){
             //emptyMsg:"没有记录"
         })
     })
-    if(loginUserName!="admin" && loginUserSlavePower!=1){
+    if(loginUserName!="sdsjfzj_cqdc" && loginUserSlavePower!=1){
         Ext.getCmp("addSlaveButton").hide();
         Ext.getCmp("deleteSlaveButton").hide();
     }

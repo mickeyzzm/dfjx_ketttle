@@ -397,7 +397,7 @@ GuidePanel = Ext.extend(Ext.Panel,{
 
 		var allMenus = [menuPlatform,menuModel,menuTask,menuSchedule,menuLog];
 
-		if( loginUserName === 'admin' ){
+		if( loginUserName === 'sdsjfzj_cqdc' ){
 			allMenus.push(/*menuNode,*/ menuUser);
 		}
 

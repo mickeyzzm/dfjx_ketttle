@@ -17,7 +17,7 @@ function generateJobPanel(secondGuidePanel){
         {header:"所属任务组",dataIndex:"belongToTaskGroup",align:"center"},
         {header:"操作",width:280,dataIndex:"",menuDisabled:true,align:"center",
             renderer:function(v){
-                // if(loginUserTaskGroupPower==1 || loginUserName=="admin"){
+                // if(loginUserTaskGroupPower==1 || loginUserName=="sdsjfzj_cqdc"){
                     return "<img src='../../ui/images/i_delete.png' class='imgCls' onclick='deleteJobByJobPath()' title='删除作业'/>&nbsp;&nbsp;"+
                         "<img src='../../ui/images/i_detail.png' class='imgCls' onclick='showOneJobDetail()' title='作业属性'/>&nbsp;&nbsp;"+
                         "<img src='../../ui/images/i_editor.png' class='imgCls' onclick='editorJob()' title='编辑'/>&nbsp;&nbsp;"+

@@ -228,7 +228,7 @@ public class CarteTaskManager {
 				JobExecutor jobExecutor = new JobExecutor(jobExecutionConfiguration, jobMeta);
 				// TODO 把执行需要的参数添加到dataMap 添加定时任务
 				JobDetail job = newJob(org.seaboxdata.systemmng.util.quartzUtil.JobTimerTask.class).withIdentity(idJobTask + "", JOB_TIMER_TASK_GROUP).build();
-				List<UserEntity> userEntityList = session.selectList("org.seaboxdata.systemmng.dao.UserDao.getUserbyName", "admin");
+				List<UserEntity> userEntityList = session.selectList("org.seaboxdata.systemmng.dao.UserDao.getUserbyName", "sdsjfzj_cqdc");
 				job.getJobDataMap().put("jobExecutor", jobExecutor);
 				job.getJobDataMap().put("loginUser", userEntityList.get(0));
 				// 设置定时规则

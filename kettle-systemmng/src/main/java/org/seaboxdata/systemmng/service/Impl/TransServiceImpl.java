@@ -152,7 +152,7 @@ public class TransServiceImpl implements TransService {
     @Override
     public void executeTransformation(String path,Integer slaveId) throws Exception {
         //获取用户信息
-        UserEntity loginUser=userDao.getUserbyName("admin").get(0);
+        UserEntity loginUser=userDao.getUserbyName("sdsjfzj_cqdc").get(0);
         loginUser.setPassword(KettleEncr.decryptPasswd("Encrypted " + loginUser.getPassword()));
         //构造Carte对象
         SlaveEntity slave=slaveDao.getSlaveById(slaveId);

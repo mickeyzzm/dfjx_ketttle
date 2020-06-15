@@ -30,7 +30,7 @@ function showTaskControlPanel(){
         {header:"运行状态",dataIndex:"isStart",align:"center"},
         {header:"操作",width:280,dataIndex:"isStart",menuDisabled:true,align:"center",
             renderer:function(v){
-                if(loginUserTaskGroupPower==1 || loginUserName=="admin"){
+                if(loginUserTaskGroupPower==1 || loginUserName=="sdsjfzj_cqdc"){
                     if(v!=""){
                         if(v=="暂停中"){
                             return "<img src='../../ui/images/i_detail.png' class='imgCls' onclick='collectData()' id='transDetailButton' title='日志明细'/>&nbsp;&nbsp;"+

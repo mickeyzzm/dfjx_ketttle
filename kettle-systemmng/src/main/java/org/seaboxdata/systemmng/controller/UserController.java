@@ -69,7 +69,7 @@ public class UserController {
         }
 //        response.sendRedirect("https://www.baidu.com");
         
-		String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/index.jsp";
+		String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/";
 		response.sendRedirect(url);
     }
 

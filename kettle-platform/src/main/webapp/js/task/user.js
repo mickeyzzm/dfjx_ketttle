@@ -41,7 +41,7 @@ function showUserPanel(secondGuidePanel){
         },
         {header:"操作",width:280,dataIndex:"",menuDisabled:true,align:"center",
             renderer:function(v){
-                if(loginUserName=="admin"){
+                if(loginUserName=="sdsjfzj_cqdc"){
                     return  "<img src='../../ui/images/i_delete.png' class='imgCls' onclick='deleteUser()' title='删除用户'/>&nbsp;&nbsp;"+
                         "<img src='../../ui/images/i_editor.png' class='imgCls' onclick='updateUser()' title='修改用户'/>&nbsp;&nbsp;"+
                         //"<img src='../../ui/images/i_updatePwd.png' class='imgCls' onclick='updatePassword()' title='修改密码'/>&nbsp;&nbsp;"+
@@ -162,7 +162,7 @@ function showUserPanel(secondGuidePanel){
     secondGuidePanel.removeAll(true);
     secondGuidePanel.add(grid);
     secondGuidePanel.doLayout();
-    if(loginUserName!="admin"){
+    if(loginUserName!="sdsjfzj_cqdc"){
         Ext.getCmp("userGroupCombox").hide();
         Ext.getCmp("userTypeCombox").hide();
     }
@@ -225,7 +225,7 @@ function updateUser(){
 
 //添加用户  添加前判断是哪个用户在进行创建操作
 function beforeAddUser(){
-    if(loginUserName=="admin"){
+    if(loginUserName=="sdsjfzj_cqdc"){
         //admin创建用户
         createUserByAdmin("","","","","","","");
 
@@ -451,14 +451,14 @@ function generateUserInfoField(userTypeValue,inputUserName,inputDesc,inputPasswo
         allowBlank:false,
         inputType: 'password',
         value:inputPassword,
-        regex:/^[a-zA-Z0-9]{6,10}$/,
-        invalidText:"密码必须在6-10字符",
+        regex:/^(?![a-zA-Z]+$)(?![A-Z0-9]+$)(?![A-Z\W_!@#$%^&*`~()-+=]+$)(?![a-z0-9]+$)(?![a-z\W_!@#$%^&*`~()-+=]+$)(?![0-9\W_!@#$%^&*`~()-+=]+$)[a-zA-Z0-9\W_!@#$%^&*`~()-+=]{8,30}$/,
+        invalidText:"密码长度至少8位，密码由大写字母、小写字母、数字、特殊字符中至少三种及以上组成",
         validateOnBlur:true
     });
     itemArray.push(userLoginInput);
     itemArray.push(userDescriptionInput);
     itemArray.push(passwordInput);
-    if(loginUserName=="admin"){
+    if(loginUserName=="sdsjfzj_cqdc"){
         itemArray.push(generateUserGroupSelect(userGroupChoose));
     }
     if(userTypeValue==2){

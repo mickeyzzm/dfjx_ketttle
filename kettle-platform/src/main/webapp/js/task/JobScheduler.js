@@ -10,7 +10,7 @@
         {header:"周期",dataIndex:"timerInfo",align:"center"},
         {header:"操作",dataIndex:"",menuDisabled:true,align:"center",
             renderer:function(v){
-                if(loginUserTaskGroupPower==1 || loginUserName=="admin"){
+                if(loginUserTaskGroupPower==1 || loginUserName=="sdsjfzj_cqdc"){
                     return "<img src='../../ui/images/i_delete.png' class='imgCls' onclick='deleteSchedueler()' title='删除定时'/>&nbsp;&nbsp;"+
                         "<img src='../../ui/images/i_editor.png' class='imgCls' onclick='updateScheduler()' title='修改定时'/>";
                 }else{
@@ -117,7 +117,7 @@
     secondGuidePanel.removeAll(true);
     secondGuidePanel.add(jobSchedulerGrid);
     secondGuidePanel.doLayout();
-    if(loginUserTaskGroupPower!=1 && loginUserName!="admin"){
+    if(loginUserTaskGroupPower!=1 && loginUserName!="sdsjfzj_cqdc"){
         //Ext.getCmp("updateSchedulerButton").hide();
         //Ext.getCmp("deleteSchedulerButton").hide();
     }
