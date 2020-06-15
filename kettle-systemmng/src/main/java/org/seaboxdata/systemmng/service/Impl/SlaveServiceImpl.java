@@ -274,7 +274,7 @@ public class SlaveServiceImpl implements SlaveService {
         }*/
         JSONObject result=new JSONObject();
         //设置需要获取指标信息的起止时间段
-        if(null==chooseDate || chooseDate==""){
+        if(null==chooseDate || "".equals(chooseDate)){
             chooseDate=StringDateUtil.dateToString(new Date(),"yyyy-MM-dd HH:mm:ss");
             chooseDate=chooseDate.substring(0,10);
         }else{

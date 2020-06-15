@@ -398,7 +398,7 @@ GuidePanel = Ext.extend(Ext.Panel,{
 		var allMenus = [menuPlatform,menuModel,menuTask,menuSchedule,menuLog];
 
 		if( loginUserName === 'admin' ){
-			allMenus.push(menuNode, menuUser);
+			allMenus.push(/*menuNode,*/ menuUser);
 		}
 
 		fristGuidePanel = new Ext.tree.TreePanel({

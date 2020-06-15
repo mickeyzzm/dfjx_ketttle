@@ -269,7 +269,7 @@ public class UserServiceImpl implements UserService{
                 result="密码输入错误,请再次确认";
             }else{
                 if(null==request.getSession().getAttribute("login")){
-                    user.setPassword(KettleEncr.decryptPasswd(users.get(0).getPassword()));
+                    user.setPassword(users.get(0).getPassword());
                     //使用不同浏览器重复登录\清除缓冲再登录\关闭浏览器后再打开可能造成存在两个username属性相同的session
                     //如果之前该用户session已存在 则先移除以前的session
                     List<String> invalidSession=new ArrayList<String>();

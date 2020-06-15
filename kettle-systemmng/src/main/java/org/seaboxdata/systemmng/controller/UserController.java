@@ -68,7 +68,9 @@ public class UserController {
             response.addCookie(refreshTokenCookie);
         }
 //        response.sendRedirect("https://www.baidu.com");
-        response.sendRedirect(backUrl);
+        
+		String url = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + request.getContextPath() + "/index.jsp";
+		response.sendRedirect(url);
     }
 
 

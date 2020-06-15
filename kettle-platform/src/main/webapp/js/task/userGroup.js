@@ -55,7 +55,7 @@ function generateUserGroupPanel(secondGuidePanel){
                 return  "<img src='../../ui/images/i_delete.png' class='imgCls' onclick='deleteUserGroup()' title='删除用户组'/>&nbsp;&nbsp;"+
                     "<img src='../../ui/images/i_editor.png' class='imgCls' onclick='updateUserGroup()' title='修改用户组'/>&nbsp;&nbsp;"+
                     "<img src='../../ui/images/i_detail.png' class='imgCls' onclick='userGroupInfo()' title='用户组详情'/>&nbsp;&nbsp;"+
-                    "<img src='../../ui/images/i_assignedSlave.png' class='imgCls' onclick='assignedSlaveForUserGroup()' title='分配节点'/>&nbsp;&nbsp;"+
+                    //"<img src='../../ui/images/i_assignedSlave.png' class='imgCls' onclick='assignedSlaveForUserGroup()' title='分配节点'/>&nbsp;&nbsp;"+
                     "<img src='../../ui/images/i_assigned.png' class='imgCls' onclick='assignedTaskGroupForUserGroup()' title='分配任务组'/>&nbsp;&nbsp;";
             }
         }

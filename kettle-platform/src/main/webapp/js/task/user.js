@@ -44,12 +44,12 @@ function showUserPanel(secondGuidePanel){
                 if(loginUserName=="admin"){
                     return  "<img src='../../ui/images/i_delete.png' class='imgCls' onclick='deleteUser()' title='删除用户'/>&nbsp;&nbsp;"+
                         "<img src='../../ui/images/i_editor.png' class='imgCls' onclick='updateUser()' title='修改用户'/>&nbsp;&nbsp;"+
-                        "<img src='../../ui/images/i_updatePwd.png' class='imgCls' onclick='updatePassword()' title='修改密码'/>&nbsp;&nbsp;"+
+                        //"<img src='../../ui/images/i_updatePwd.png' class='imgCls' onclick='updatePassword()' title='修改密码'/>&nbsp;&nbsp;"+
                         "<img src='../../ui/images/i_updateUG.png' class='imgCls' onclick='allotUserGroup()' title='变更用户组'/>&nbsp;&nbsp;";
                 }else{
                     return "<img src='../../ui/images/i_delete.png' class='imgCls' onclick='deleteUser()' title='删除用户'/>&nbsp;&nbsp;"+
-                        "<img src='../../ui/images/i_editor.png' class='imgCls' onclick='updateUser()' title='修改用户'/>&nbsp;&nbsp;"+
-                        "<img src='../../ui/images/i_updatePwd.png' class='imgCls' onclick='updatePassword()' title='修改密码'/>&nbsp;&nbsp;";
+                        "<img src='../../ui/images/i_editor.png' class='imgCls' onclick='updateUser()' title='修改用户'/>&nbsp;&nbsp;";
+                        //"<img src='../../ui/images/i_updatePwd.png' class='imgCls' onclick='updatePassword()' title='修改密码'/>&nbsp;&nbsp;";
                 }
             }
         }
