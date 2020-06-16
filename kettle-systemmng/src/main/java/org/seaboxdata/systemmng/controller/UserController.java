@@ -16,6 +16,7 @@ import org.seaboxdata.systemmng.entity.UserEntity;
 import org.seaboxdata.systemmng.entity.UserGroupAttributeEntity;
 import org.seaboxdata.systemmng.service.UserService;
 import org.seaboxdata.systemmng.util.TaskUtil.KettleEncr;
+import org.seaboxdata.systemmng.util.TaskUtil.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -194,7 +195,7 @@ public class UserController {
             String userGroupName=request.getParameter("userGroupName");
             //组装user对象
             UserEntity user=new UserEntity();
-            user.setPassword(KettleEncr.encryptPassword(password));
+            user.setPassword(MD5Util.encode(password));
             user.setDescription(description);
             user.setEnabled('Y');
             user.setLogin(login);

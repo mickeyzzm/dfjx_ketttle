@@ -57,29 +57,20 @@ public class GlobalFilter implements Filter {
 		 UserGroupAttributeEntity attribute = (UserGroupAttributeEntity)req.getSession().getAttribute("userInfo");
 		 if(null!=attribute){
 			 String uri = req.getRequestURI();
-			 String url = req.getRequestURL().toString();
 			 String[] array = {"/user/getUsers.do", "/userGroup/getUserGroupOfThisPage.do", "/slave/slaveManager.do", "/slave/slaveQuatoByCondition.do"};
 			 if(null !=attribute.getUserType()) {
 				 int userType = attribute.getUserType();
 				 if(userType!=1) {
 					 if(Arrays.asList(array).contains(uri)) {
-						 if(openAuth) {
-							 rep.sendRedirect(this.goUrl(url));
-						 } else {
-							 rep.sendRedirect(req.getContextPath()+loginUrl);
-						 }
+						 throw new RuntimeException("越权访问！");
 					 }
 				 }
 			 }
+		 } else {
+			 chain.doFilter(request, response);
 		 }
-		chain.doFilter(request, response);
 	}
 
-	private String goUrl(String url) throws UnsupportedEncodingException {
-		String burl = returnBack + "?backUrl=" + URLEncoder.encode(url, "UTF-8");
-		return gotoAuth + URLEncoder.encode(burl, "UTF-8");
-	}
-	
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
 		allowDomains = allowDomain.readProperty("allowDomains");
