@@ -82,7 +82,8 @@ function showUserPanel(secondGuidePanel){
                 if(Ext.getCmp("userNameField"))
                     usernameTo=Ext.getCmp("userNameField").getValue();
                 if(Ext.getCmp("userGroupCombox"))
-                    userGroupTo=Ext.getCmp("userGroupCombox").getValue();
+                	usergroupTo=Ext.getCmp("userGroupCombox").getValue();
+                
                 store.baseParams = {
                     username:usernameTo,
                     usertype:usertypeTo,

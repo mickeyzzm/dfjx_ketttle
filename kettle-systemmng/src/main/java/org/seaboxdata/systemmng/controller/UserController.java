@@ -55,6 +55,7 @@ public class UserController {
         if(org.apache.commons.lang.StringUtils.isNotBlank(access_token)){
             Cookie accessTokenCookie = new Cookie("access_token", access_token);
             accessTokenCookie.setPath("/");
+            accessTokenCookie.setMaxAge(-1);
 //            accessTokenCookie.setDomain(tokenDomain);
 //            accessTokenCookie.setMaxAge(60 * 60 * 12 * 2 * 7);
 //            accessTokenCookie.setHttpOnly(true);
@@ -63,6 +64,8 @@ public class UserController {
         if(org.apache.commons.lang.StringUtils.isNotBlank(refresh_token)){
             Cookie refreshTokenCookie = new Cookie("refresh_token", refresh_token);
             refreshTokenCookie.setPath("/");
+
+            refreshTokenCookie.setMaxAge(-1);
 //            refreshTokenCookie.setDomain(tokenDomain);
 //            refreshTokenCookie.setMaxAge(60 * 60 * 12 * 2 * 7);
 //            refreshTokenCookie.setHttpOnly(true);
@@ -250,9 +253,9 @@ public class UserController {
             UserEntity loginUser=(UserEntity)request.getSession().getAttribute("login");
             String result="success";
             if(null==loginUser){
-//                result=userService.jxLogin(username,password,request); 
                 result=userService.login(username,password,request);
             }
+            
             response.setContentType("text/html;charset=utf-8");
             PrintWriter out=response.getWriter();
             out.write(result);
@@ -305,6 +308,13 @@ public class UserController {
 				response.addCookie(refreshTokenCookie);
 			}
 
+		    //清除cookie，并且退出
+	        Cookie[] cookies = request.getCookies();
+	        for (Cookie cookie : cookies) {
+	            cookie.setMaxAge(0);
+	            response.addCookie(cookie);
+	        }
+			
 			response.sendRedirect(request.getContextPath() + "/index.jsp");
 		}catch (Exception e){
             e.printStackTrace();

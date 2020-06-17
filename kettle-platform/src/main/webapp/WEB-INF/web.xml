@@ -55,6 +55,24 @@
 		<url-pattern>*</url-pattern>
 	</filter-mapping>
 	
+	<filter>
+		<filter-name>AllowOriginFilter</filter-name>
+		<filter-class>org.flhy.platform.filter.AllowOriginFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>AllowOriginFilter</filter-name>
+		<url-pattern>*</url-pattern>
+	</filter-mapping>
+	
+	<filter>
+		<filter-name>IpFilter</filter-name>
+		<filter-class>org.flhy.platform.filter.IpFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>IpFilter</filter-name>
+		<url-pattern>*</url-pattern>
+	</filter-mapping>
+	
 	<listener>
 		<listener-class>org.flhy.platform.listener.SystemLoadListener</listener-class>
 	</listener>

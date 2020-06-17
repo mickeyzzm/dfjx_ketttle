@@ -42,6 +42,13 @@
             <bean class="org.flhy.platform.interceptor.LoggerInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
+ 
+    <mvc:interceptors>
+        <mvc:interceptor>
+            <mvc:mapping path="/**"/>
+            <bean class="org.flhy.platform.interceptor.ParamsInterceptor"/>
+        </mvc:interceptor>
+    </mvc:interceptors> 
     
     <bean id="objectMapper" class="com.fasterxml.jackson.databind.ObjectMapper" >
     	<property name="dateFormat">

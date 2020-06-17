@@ -1,7 +1,6 @@
 package org.flhy.platform.interceptor;
 
 import java.util.Date;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,6 +9,7 @@ import org.seaboxdata.systemmng.entity.UserEntity;
 import org.seaboxdata.systemmng.util.CommonUtil.StringDateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -91,8 +91,41 @@ public class LoggerInterceptor implements HandlerInterceptor {
 			domain = "日志管理";
 		} else if (uri.indexOf("/user/") != -1) {
 			domain = "用户管理";
+		} else if (uri.indexOf("/userGroup/") != -1) {
+			domain = "用户组管理";
 		}
 		
     	return domain;
     }
+    
+//    @Autowired  
+//    private KafkaTemplate<Integer, String> kafkaTemplate;
+//    /**
+//      * 发送消息到Kafka
+//	    * @param userId        登录用户id
+//	    * @param optTime       用户操作时间 包括登录时间
+//	    * @param clientIp      用户登录客户端Ip
+//	    * @param visitModule   访问模块    //example: 用户认证 、业务模块
+//	    * @param function      点击模块下的功能  //登录成功 登录失败 注册 注销 生成令牌
+//	    * @param optContent    具体操作内容  //例如查看了【我的申请】模块  周畅登录平台！
+//	    * @param requestPra    请求参数
+//	    * @param servicePath   服务路径
+//	    * @param executeSta    执行语句
+//	    * @param logType       日志类型 0 代表接口访问日志 1 代表用户行为日志
+//	    */
+//    public void sendLoggerInfoToKafka(HttpServletRequest request) {
+//    	UserActionLog userActionLog = new UserActionLog();
+//    	userActionLog.setUserId(String.valueOf(userId));
+//    	userActionLog.setOptTime(DateToolsUtils.dateToStr(beginDate));
+//    	userActionLog.setClientIp(RemoteIpUtils.getCliectIp(request));
+//    	userActionLog.setVisitModule(busilog.visitModule().getModule());
+//    	userActionLog.setFunction(busilog.functionModule());
+//    	userActionLog.setOptContent(busilog.optContent());
+//    	userActionLog.setRequestPra(params);
+//    	userActionLog.setServicePath(request.getRequestURL().toString());
+//    	userActionLog.setExecuteSta("");
+//    	userActionLog.setLogType("1");
+//    	
+//    	kafkaTemplate.sendDefault(userActionLog);  
+//    }
 }
