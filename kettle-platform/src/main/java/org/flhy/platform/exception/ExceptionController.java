@@ -16,20 +16,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @ControllerAdvice
 public class ExceptionController {
 	
-	@Autowired
-	private HttpServletRequest request;    
-	@Autowired
-	private HttpServletResponse response;
-	
-	/*
-	 * @ExceptionHandler(Exception.class)
-	 * 
-	 * @ResponseBody public ModelAndView customException(Exception e) { try {
-	 * response.setContentType("text/html;charset=utf-8"); PrintWriter pw =
-	 * response.getWriter(); pw.write("操作出现问题，请检查!"); pw.flush(); pw.close(); }
-	 * catch (Exception ex) { ex.printStackTrace(); } return null; }
-	 */
-	
 	@ResponseBody
     @ExceptionHandler(value = Exception.class)
     public Map<String, String> errorHandler(Exception ex) {
