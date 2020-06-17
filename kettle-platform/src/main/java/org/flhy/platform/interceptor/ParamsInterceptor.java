@@ -36,8 +36,7 @@ public class ParamsInterceptor implements HandlerInterceptor {
             String value = me.getValue()[0];
             paramsMap.put(key, value);
             if(StringUtils.isNotEmpty(value)) {
-            	boolean xml = isXmlDocument(value);
-            	if(!xml) {
+            	if(value.indexOf("mxGraphModel") == -1) {
             		if(value.length()>overLengthLimit) {
             			overLength = true;
             		}
@@ -52,19 +51,6 @@ public class ParamsInterceptor implements HandlerInterceptor {
         
         return true;
     }
-    
-
-	private boolean isXmlDocument(String rtnMsg) {
-		boolean flag = true;
-		try {
-			DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder = documentBuilderFactory.newDocumentBuilder();
-			builder.parse(new InputSource(new StringReader(rtnMsg)));
-		} catch (Exception e) {
-			flag = false;
-		}
-		return flag;
-	}
     
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
