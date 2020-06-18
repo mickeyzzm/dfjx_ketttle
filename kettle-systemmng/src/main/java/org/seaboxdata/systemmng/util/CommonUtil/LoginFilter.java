@@ -13,6 +13,8 @@ import org.seaboxdata.systemmng.auth.utils.SpringContextHolder;
 import org.seaboxdata.systemmng.auth.utils.UserThreadLocal;
 import org.seaboxdata.systemmng.auth.vo.OnlineUser;
 import org.seaboxdata.systemmng.entity.UserEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
@@ -25,11 +27,14 @@ import java.util.Set;
 /**
  * Created by cRAZY on 2017/4/12.
  */
+
 public class LoginFilter implements Filter{
+    private final static Logger logger = LoggerFactory.getLogger(LoginFilter.class);
 	private static PropertiesUtil environment = new PropertiesUtil("environment.properties");
     private boolean openAuth;
     private String gotoAuth;
     private String returnBack;
+
 	
     private String loginUrl="";
     private String excludedPages="";
@@ -47,6 +52,7 @@ public class LoginFilter implements Filter{
         }else{
             excludedArray=new String[]{excludedPages};
         }
+
     }
 
     @Override
@@ -66,6 +72,7 @@ public class LoginFilter implements Filter{
     	HttpServletRequest request=(HttpServletRequest)servletRequest;
         HttpServletResponse response=(HttpServletResponse)servletResponse;
         HttpSession session=request.getSession();
+        String url = request.getRequestURL().toString();
 
         boolean isExclude=false;
         for(String excludePage:excludedArray){
@@ -73,6 +80,7 @@ public class LoginFilter implements Filter{
                 isExclude=true;
             }
         }
+
         if (!isExclude) {
             Object user=session.getAttribute("login");
             if (user!=null) {
@@ -111,6 +119,7 @@ public class LoginFilter implements Filter{
 			}
 		}
 
+
 		if (((HttpServletRequest) servletRequest).getRequestURL().indexOf("fromAuth") > 0) {
 			chain.doFilter(servletRequest, servletResponse);
 			return ;
@@ -134,8 +143,49 @@ public class LoginFilter implements Filter{
 		user.setPermissions(permissions);
 
 		UserThreadLocal.set(user);
-		
-		chain.doFilter(servletRequest, servletResponse);
+        if(!checkAuth(url)){
+            logger.info("用户没有权限，请联系管理员！");
+            logger.info("用户没有权限，请联系管理员！");
+            logger.info("用户没有权限，请联系管理员！");
+            response.sendRedirect("/exception.jsp");
+            return;
+        }
+
+
+        chain.doFilter(servletRequest, servletResponse);
+    }
+
+
+    /**
+     * sdsjfzj_cqdc
+     * 与非sdsjfzj_cqdc用户
+     *
+     * sdsjfzj_cqdc是全菜单
+     * 非sdsjfzj_cqdc是普通用户
+     * 不能看”用户“开头的菜单
+     *
+     * @param url
+     * @return
+     * @throws UnsupportedEncodingException
+     *
+     * /userGroup/
+     * /user/
+     */
+    private boolean checkAuth(String url){
+        logger.info("checkAuth into url {}", url);
+        logger.info("checkAuth into url {}", url);
+        boolean bool = true;
+        OnlineUser user = UserThreadLocal.get();
+        String username = user.getUsername();
+        logger.info("checkAuth into username {}", username);
+        if("sdsjfzj_cqdc".equals(username)){
+            bool = true;
+        }else{
+            if(url.indexOf("/user/getUsers")>-1 || url.indexOf("/userGroup/getUserGroupOfThisPage")>-1){
+                bool = false;
+            }
+        }
+        return bool;
     }
     
 
