@@ -5,15 +5,17 @@
 	Exception e = (Exception) request.getAttribute("exception");
 	String str = ExceptionUtils.toString(e);
 	str = StringEscapeHelper.encode(str);
-
-	
 %>
 <!DOCTYPE html>
 <html>
 <head>
 	<title>重庆市政务数据资源接入系统</title>
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/ext3/resources/css/ext-all.css" />
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/ui/css/animate.css" />
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/ui/css/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/ui/css/font-awesome.css" />
 	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/ui/css/public.css" />
+	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/ui/css/style.css" />
 	<link rel='shortcut icon' href='${pageContext.request.contextPath}/img/f1_logo_small.ico' type=‘image/x-ico’ />
 </head>
 <body class="gray-bg">
