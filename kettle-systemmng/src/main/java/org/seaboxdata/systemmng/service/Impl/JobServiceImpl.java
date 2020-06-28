@@ -103,13 +103,13 @@ public class JobServiceImpl implements JobService{
     }
 
     @Override
-    public JSONObject findJobs(int start, int limit, String name, String createDate,String userGroupName) throws Exception{
+    public JSONObject findJobs(int start, int limit, String name, String createDate,String userGroupName, String username) throws Exception{
         PageforBean pages=new PageforBean();
         net.sf.json.JSONObject result=null;
         //该页的作业信息以及整个表(可能是条件查询)的总记录条数
         List<JobEntity> jobs=null;
         Integer totalCount=0;
-        if (StringDateUtil.isEmpty(name)  && StringDateUtil.isEmpty(createDate)){
+        if (StringDateUtil.isEmpty(name)  && StringDateUtil.isEmpty(createDate)  && StringDateUtil.isEmpty(username)){
           jobs=jobDao.getThisPageJob(start,limit,userGroupName);
             //对日期进行处理转换成指定的格式
             for (JobEntity job:jobs){
@@ -121,7 +121,7 @@ public class JobServiceImpl implements JobService{
 			/*
 			 * if(!createDate.isEmpty()) createDate+=" 00:00:00";
 			 */
-            jobs=jobDao.conditionFindJobs(start, limit, name, createDate,userGroupName);
+            jobs=jobDao.conditionFindJobs(start, limit, name, createDate,userGroupName, username);
             for (JobEntity job:jobs){
                 job.setCreateDate(format.parse(format.format(job.getCreateDate())));
                 job.setModifiedDate(format.parse(format.format(job.getModifiedDate())));

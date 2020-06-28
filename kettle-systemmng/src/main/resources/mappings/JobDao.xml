@@ -73,6 +73,9 @@
         <if test='param4!=null and param4!=""'>
             and date_format(j.CREATED_DATE, '%Y-%m-%d') = #{3}
         </if>
+        <if test='param6!=null and param6!=""'  >
+            and j.CREATED_USER LIKE concat('%',#{5},'%')
+        </if>
         limit #{0},#{1}
     </select>
 

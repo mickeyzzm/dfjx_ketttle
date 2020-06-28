@@ -668,8 +668,8 @@ function getAllTaskGroupBeforeCreate(){
 
     var taskGroupPanelByAssigned=new Ext.grid.GridPanel({
         id:"taskGroupPanelByAssigned",
-        width:450,
-        height:550,
+        width:430,
+        height:490,
         autoScroll:true,//滚动条
         cm:taskGroupModel,
         sm:sm2,

@@ -70,7 +70,7 @@
         j.ID_DIRECTORY as directoryId,
         j.ID_TRANSFORMATION as transformationId
         from  r_transformation j WHERE 1=1
-        <if test='_parameter!=null and _parameter!=""'  >
+        <if test='_parameter!=null and _parameter!="" and _parameter!="Pristin"'  >
             AND j.`NAME` IN
             (
                 select DISTINCT TASK_NAME from d_task_group_member_attribute where TASK_GROUP_NAME in
@@ -90,7 +90,7 @@
         j.ID_DIRECTORY as directoryId,
         j.ID_JOB as jobId
         from  r_job j WHERE 1=1
-        <if test='_parameter!=null and _parameter!=""'  >
+        <if test='_parameter!=null and _parameter!="" and _parameter!="Pristin"'  >
             AND j.`NAME` IN
             (
                 select DISTINCT TASK_NAME from d_task_group_member_attribute where TASK_GROUP_NAME in

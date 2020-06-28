@@ -5,7 +5,7 @@ JobEntryTrans = Ext.extend(KettleTabDialog, {
 	initComponent: function() {
 		var me = this, cell = getActiveGraph().getGraph().getSelectionCell();
 		
-		var radioFilename = new Ext.form.Radio({boxLabel: '转换文件名', name: 'specification_method', checked: true});
+		var radioFilename = new Ext.form.Radio({boxLabel: '转换文件名', name: 'specification_method'/*, checked: true*/});
 		var wFilename = new Ext.form.TextField({flex: 1});
 		var wbFilename = new Ext.Button({text: '选择..', handler: function() {
 			var dialog = new FileExplorerWindow({includeFile: true, fileExt: 'ktr'});
@@ -13,10 +13,10 @@ JobEntryTrans = Ext.extend(KettleTabDialog, {
 			dialog.show();
 		}});
 		
-		var radioByName = new Ext.form.Radio({boxLabel: '通过目录与名称指定转换', name: 'specification_method'});
-		var wDirectory = new Ext.form.TextField({anchor: '-1', disabled: true});
-		var wTransname = new Ext.form.TextField({flex: 1, disabled: true});
-		var wbTransname = new Ext.Button({text: '选择..', disabled: true, handler: function() {
+		var radioByName = new Ext.form.Radio({boxLabel: '通过目录与名称指定转换', name: 'specification_method', checked: true});
+		var wDirectory = new Ext.form.TextField({anchor: '-1', disabled: false});
+		var wTransname = new Ext.form.TextField({flex: 1, disabled: false});
+		var wbTransname = new Ext.Button({text: '选择..', disabled: false, handler: function() {
 			var dialog = new RepositoryExplorerWindow();
 			dialog.on('ok', function(dir, name) {
 				wDirectory.setValue(dir);
@@ -171,13 +171,13 @@ JobEntryTrans = Ext.extend(KettleTabDialog, {
 			bodyStyle: 'padding: 5px',
 			labelWidth: 1,
 			xtype: 'KettleForm',
-			items: [{
+			items: [/*{
 				xtype: 'fieldset',
 				items: [{
 					xtype: 'compositefield',
 					items: [radioFilename, wFilename , wbFilename]
 				}]
-			},{
+			},*/{
 				xtype: 'fieldset',
 				items: [radioByName, wDirectory, {
 					xtype: 'compositefield',
@@ -189,9 +189,9 @@ JobEntryTrans = Ext.extend(KettleTabDialog, {
 					xtype: 'compositefield',
 					items: [radioByReference, transObjectId, wByReference, wbByReference]
 				}]
-			}, {
+			}/*, {
 				xtype: 'button', text: '新建转换'
-			}]
+			}*/]
 		},{
 			title: '高级',
 			xtype: 'KettleForm',

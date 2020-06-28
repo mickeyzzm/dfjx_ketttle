@@ -35,14 +35,16 @@ public class LoggerInterceptor implements HandlerInterceptor {
  
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
-    	UserEntity loginUser=(UserEntity)request.getSession().getAttribute("login");
-    	String user = loginUser ==null ?"":loginUser.getLogin();
-    	String ip = getIpAddress(request);
-    	String uri = request.getRequestURI();
-    	String date=StringDateUtil.dateToString(new Date(),"yyyy-MM-dd HH:mm:ss");
-    	String domain = getDomain(uri);
-    	
-    	logger.info("\r\n访问结束时间:{} \r\n访问IP:{} \r\n访问用户:{} \r\n访问模块:{} \r\n访问URI:{} ",date, ip, user, domain, uri);
+    	if(request != null && request.getSession()!= null) {
+    		UserEntity loginUser=(UserEntity)request.getSession().getAttribute("login");
+    		String user = loginUser ==null ?"":loginUser.getLogin();
+    		String ip = getIpAddress(request);
+    		String uri = request.getRequestURI();
+    		String date=StringDateUtil.dateToString(new Date(),"yyyy-MM-dd HH:mm:ss");
+    		String domain = getDomain(uri);
+    		
+    		logger.info("\r\n访问结束时间:{} \r\n访问IP:{} \r\n访问用户:{} \r\n访问模块:{} \r\n访问URI:{} ",date, ip, user, domain, uri);
+    	}
     }
     
     public String getIpAddress(HttpServletRequest request) {

@@ -63,9 +63,18 @@ function generateTrans(secondGuidePanel){
                     createDate = Ext.util.Format.date(createDate, 'Y-m-d');
                 }
                 
+                var usernameTo="";
+                var usergroupTo="";
+                if(Ext.getCmp("userNameField"))
+                    usernameTo=Ext.getCmp("userNameField").getValue();
+                if(Ext.getCmp("userGroupCombox"))
+                	usergroupTo=Ext.getCmp("userGroupCombox").getValue();
+                
                 store.baseParams = {
                     name:transName,
-                    date:createDate
+                    date:createDate,
+                    username:usernameTo,
+                    usergroup:usergroupTo
                 }
             }
         }
@@ -116,6 +125,25 @@ function generateTrans(secondGuidePanel){
         ]
     })*/
 
+    var chooseUsergroup="";
+    if(Ext.getCmp("userGroupCombox"))
+        chooseUsergroup=Ext.getCmp("userGroupCombox").getValue();
+    
+    var userGroupCom=userGroupCombobox(chooseUsergroup);
+    
+    var inputUsername="";
+    if(Ext.getCmp("userNameField"))
+        inputUsername=Ext.getCmp("userNameField").getValue();
+    //用户名搜索框
+    var usernameField=new Ext.form.TextField({
+        id:"userNameField",
+        name: "username",
+        fieldLabel: "用户名",
+        width:150,
+        value:inputUsername,
+        emptyText:"请输入用户名.."
+    });
+    
     var grid=new Ext.grid.GridPanel({
         id:"transPanel",
         title:"<font size = '3px' >转换管理</font>",
@@ -129,7 +157,7 @@ function generateTrans(secondGuidePanel){
         closable:true,
         tbar:new Ext.Toolbar({
             buttons:[
-                nameField ,"-",dateField,"-",
+                nameField ,"-",dateField,"-","-",userGroupCom,"-",usernameField,
                 {
                     iconCls:"searchCls",
                     tooltip: '查询',
@@ -585,3 +613,43 @@ function updateTransName(){
     })
 }
 
+
+//用户组选择下拉框
+function userGroupCombobox(userGroupName){
+	var proxy=new Ext.data.HttpProxy({url:"/userGroup/getUserGrouupSelect.do"});
+	
+	var hostName=Ext.data.Record.create([
+	    {name:"id",type:"String",mapping:"id"},
+	    {name:"name",type:"String",mapping:"name"},
+	]);
+	
+	var reader=new Ext.data.JsonReader({},hostName);
+	
+	var store=new Ext.data.Store({
+	    proxy:proxy,
+	    reader:reader
+	});
+	
+	var userGroupCom=new Ext.form.ComboBox({
+	    id:"userGroupCombox",
+	    triggerAction:"all",
+	    store:store,
+	    displayField:"id",
+	    valueField:"name",
+	    mode:"remote",
+	    emptyText:"用户组选择",
+	    listeners:{
+	        //index是被选中的下拉项在整个列表中的下标 从0开始
+	        'select':function(combo,record,index){
+	            var secondGuidePanel=Ext.getCmp("secondGuidePanel");
+	            generateTrans(secondGuidePanel);
+	        }
+	    }
+	})
+	if(userGroupName!=undefined && userGroupName!=""){
+	    userGroupCom.setValue(userGroupName);
+	    userGroupCom.setRawValue(userGroupName);
+	}
+	
+	return userGroupCom;
+}

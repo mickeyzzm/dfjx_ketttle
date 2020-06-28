@@ -57,7 +57,7 @@ KettleDialog = Ext.extend(Ext.Window, {
 	
 	afterRender: function() {
 		KettleDialog.superclass.afterRender.call(this);
-		
+		/*
 		if(this.enterEnable) {
 			new Ext.KeyMap(this.el, {
 			    key: 13,
@@ -70,7 +70,7 @@ KettleDialog = Ext.extend(Ext.Window, {
 			    scope: this
 			});
 		}
-		
+		*/
 		this.initData();
 	},
 	
