@@ -69,7 +69,7 @@ public class DatabaseType implements PluginTypeListener {
 
 	    for ( int value : acc ) {
 	    	LinkedHashMap jsonObject = new LinkedHashMap();
-	    	if(value != 1){
+	    	if(value != 1){//value==1 ODBC
 				jsonObject.put("value", value);
 				jsonObject.put("text", DatabaseMeta.getAccessTypeDescLong( value ));
 				list.add(jsonObject);

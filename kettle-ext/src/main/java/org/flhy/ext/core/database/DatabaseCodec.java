@@ -165,9 +165,11 @@ public class DatabaseCodec {
 			databaseMeta.setIndexTablespace(jsonObject.optString("indexTablespace"));
 		if(jsonObject.containsKey("sqlServerInstance"))		//mssql-native
 			databaseMeta.setSQLServerInstance(jsonObject.optString("sqlServerInstance"));
-		if(jsonObject.containsKey("usingDoubleDecimalAsSchemaTableSeparator"))	//mssql-jndi
-			databaseMeta.setUsingDoubleDecimalAsSchemaTableSeparator(jsonObject.optBoolean("usingDoubleDecimalAsSchemaTableSeparator"));
-		
+		if(jsonObject.containsKey("usingDoubleDecimalAsSchemaTableSeparator")) {//mssql-jndi
+			boolean b = "on".equals(jsonObject.optString("usingDoubleDecimalAsSchemaTableSeparator"));
+			databaseMeta.setUsingDoubleDecimalAsSchemaTableSeparator(b);
+		}
+			
 		// SAP Attributes...
 	    if ( jsonObject.containsKey(SAPR3DatabaseMeta.ATTRIBUTE_SAP_LANGUAGE) ) {
 	    	databaseMeta.getAttributes().put( SAPR3DatabaseMeta.ATTRIBUTE_SAP_LANGUAGE, jsonObject.optString(SAPR3DatabaseMeta.ATTRIBUTE_SAP_LANGUAGE) );
@@ -194,8 +196,8 @@ public class DatabaseCodec {
 		
 	    // Microsoft SQL Server Use Integrated Security
 	    if ( jsonObject.containsKey(MSSQLServerNativeDatabaseMeta.ATTRIBUTE_USE_INTEGRATED_SECURITY) ) {
-	    	boolean flag = jsonObject.optBoolean(MSSQLServerNativeDatabaseMeta.ATTRIBUTE_USE_INTEGRATED_SECURITY);
-	    	if(flag) databaseMeta.getAttributes().put(MSSQLServerNativeDatabaseMeta.ATTRIBUTE_USE_INTEGRATED_SECURITY, flag);
+	    	Boolean flag = "on".equals(MSSQLServerNativeDatabaseMeta.ATTRIBUTE_USE_INTEGRATED_SECURITY);
+	    	databaseMeta.getAttributes().put(MSSQLServerNativeDatabaseMeta.ATTRIBUTE_USE_INTEGRATED_SECURITY, flag.toString());
 	    } else {
 	    	databaseMeta.getAttributes().put(MSSQLServerNativeDatabaseMeta.ATTRIBUTE_USE_INTEGRATED_SECURITY, "false");
 	    }

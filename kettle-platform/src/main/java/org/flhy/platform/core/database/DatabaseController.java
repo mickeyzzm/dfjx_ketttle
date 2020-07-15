@@ -22,6 +22,7 @@ import org.pentaho.di.core.plugins.PluginRegistry;
 import org.pentaho.di.core.plugins.RepositoryPluginType;
 import org.pentaho.di.core.row.RowMetaInterface;
 import org.pentaho.di.core.row.ValueMetaInterface;
+import org.pentaho.di.core.util.Utils;
 import org.pentaho.di.i18n.BaseMessages;
 import org.pentaho.di.repository.RepositoriesMeta;
 import org.pentaho.di.repository.Repository;
@@ -106,8 +107,12 @@ public class DatabaseController {
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/accessSettings")
     public void loadAccessSettings(@RequestParam String accessData, @RequestParam int accessMethod) throws IOException {
-        String databaseName = PluginRegistry.getInstance().getPlugin(DatabasePluginType.class, accessData).getIds()[0];
+    	String databaseName = PluginRegistry.getInstance().getPlugin(DatabasePluginType.class, accessData).getIds()[0];
 
+    	if(org.apache.commons.lang.StringUtils.isNotEmpty(databaseName)) {
+    		databaseName = databaseName.toLowerCase();
+    	}
+    	
         String fragment = "";
         switch (accessMethod) {
             case DatabaseMeta.TYPE_ACCESS_JNDI:
@@ -642,14 +647,20 @@ public class DatabaseController {
                 try {
                     db.connect();
 
-                    Map<String, Collection<String>> tableMap = db.getTableMap();
+                    //Map<String, Collection<String>> tableMap = db.getTableMap();
+                    Map<String, Map<String, String>> tableMap = getTableMap(databaseMeta, db);
+                    
                     List<String> tableKeys = new ArrayList<String>(tableMap.keySet());
                     Collections.sort(tableKeys);
-                    for (String schema : tableKeys) {
-                        List<String> tables = new ArrayList<String>(tableMap.get(schema));
-                        Collections.sort(tables);
-                        for (String tableName : tables)
-                            result.add(DatabaseNode.initNode(tableName, schema, "datatable", true));
+                    for (String table : tableKeys) {
+                    	Map<String, String> subMap = tableMap.get(table);
+                    	String tableText = table;
+                    	if(!StringUtils.isEmpty(subMap.get("remarks"))) {
+                    		tableText += " 【" +subMap.get("remarks") + "】";
+                    	}
+                    	DatabaseNode dbNode = DatabaseNode.initNode(tableText, table, "datatable", true);
+                    	dbNode.setSchema(subMap.get("schema"));
+                		result.add(dbNode);
                     }
                 } finally {
                     db.disconnect();
@@ -696,6 +707,62 @@ public class DatabaseController {
         return result;
     }
 
+    public Map<String, Map<String, String>> getTableMap(DatabaseMeta databaseMeta,Database db) throws KettleDatabaseException {
+        String schemaname = db.environmentSubstitute(databaseMeta.getUsername() ).toUpperCase();;
+      
+        Map<String, Map<String, String>> tableMap = new HashMap<String, Map<String, String>>();
+        ResultSet alltables = null;
+        try {
+        	
+          alltables = db.getDatabaseMetaData().getTables( null, schemaname, null, databaseMeta.getTableTypes() );
+          while ( alltables.next() ) {
+            // due to PDI-743 with ODBC and MS SQL Server the order is changed and
+            // try/catch included for safety
+            String cat = "";
+            try {
+              cat = alltables.getString( "TABLE_CAT" );
+            } catch ( Exception e ) {
+              // ignore
+            }
+
+            String schema = "";
+            try {
+              schema = alltables.getString( "TABLE_SCHEM" );
+            } catch ( Exception e ) {
+              // ignore
+            }
+
+            if ( Utils.isEmpty( schema ) ) {
+              schema = cat;
+            }
+            
+            String table = alltables.getString("TABLE_NAME");
+
+            //获取表注释
+            String remarks = alltables.getString( "REMARKS" );
+            
+            Map<String, String> subMap = new HashMap<String, String>();
+            subMap.put("remarks", remarks);
+            subMap.put("schema", schema);
+            
+            tableMap.put(table, subMap);
+          }
+        } catch ( SQLException e ) {
+        	e.printStackTrace();
+        } finally {
+          try {
+            if ( alltables != null ) {
+              alltables.close();
+            }
+          } catch ( SQLException e ) {
+            throw new KettleDatabaseException( "Error closing resultset after getting views from schema ["
+              + schemaname + "]", e );
+          }
+        }
+
+        return tableMap;
+      }
+    
     /**
      * 删除数据库中的数据表
      *

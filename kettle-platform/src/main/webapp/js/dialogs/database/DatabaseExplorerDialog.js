@@ -58,7 +58,7 @@
 					return;
 				}
 				
-				me.fireEvent('select', node.text, node.attributes.nodeId);
+				me.fireEvent('select', node.attributes.nodeId, node.attributes.schema);
 			}
 		});
 		

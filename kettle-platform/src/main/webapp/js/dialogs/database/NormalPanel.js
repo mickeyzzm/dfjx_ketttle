@@ -58,9 +58,9 @@
 			accessBox.getStore().baseParams.accessData = connectionBox.getValue();
 			accessBox.getStore().load();
 		});
-		accessBox.getStore().on('load', function() {
-			if(this.dbinfo.type == connectionBox.getValue()) {
-				accessBox.setValue(this.dbinfo.access);
+		accessBox.getStore().on('load', function(store, records,  successful,  eOpts ) {
+			if(records.length>0){
+				accessBox.setValue(records[0].get('value'));
 			}
 		}, this);
 		
