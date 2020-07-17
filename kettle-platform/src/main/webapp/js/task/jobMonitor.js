@@ -112,7 +112,7 @@ function generateJobPanel(secondGuidePanel){
     if(Ext.getCmp("userGroupCombox"))
         chooseUsergroup=Ext.getCmp("userGroupCombox").getValue();
     
-    var userGroupCom=userGroupCombobox(chooseUsergroup);
+    var userGroupCom=jobUserGroupCombobox(chooseUsergroup);
     
     var inputUsername="";
     if(Ext.getCmp("userNameField"))
@@ -553,7 +553,7 @@ function assignedTaskGroup(jobId,jobName,jobPath,taskGroupPanelByAssigned){
             success:function(response,config){
                 var secondGuidePanel=Ext.getCmp("secondGuidePanel");
                 Ext.getCmp("taskGroupAssignedWindow").close();
-                generateJobPanel(secondGuidePanel);
+                //generateJobPanel(secondGuidePanel);
                 Ext.Msg.show({  
 	        	    title:'提示信息',  
 	        	    msg: '任务组分配成功！',  
@@ -601,7 +601,7 @@ function updateJobName(){
 
 
 //用户组选择下拉框
-function userGroupCombobox(userGroupName){
+function jobUserGroupCombobox(userGroupName){
   var proxy=new Ext.data.HttpProxy({url:"/userGroup/getUserGrouupSelect.do"});
 
   var hostName=Ext.data.Record.create([

@@ -102,7 +102,7 @@ public class TransServiceImpl implements TransService {
                 transformation.setCreateDate(format.parse(format.format(transformation.getCreateDate())));
                 transformation.setModifiedDate(format.parse(format.format(transformation.getModifiedDate())));
             }
-           totalCount=transDao.conditionFindTransCount(transName,createDate,userGroupName);
+           totalCount=transDao.conditionFindTransCount(transName,createDate,userGroupName, username);
 
         }
         //根据转换的id来查找该作业在资源库的绝对目录

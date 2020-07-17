@@ -13,6 +13,7 @@ import org.seaboxdata.systemmng.entity.UserGroupEntity;
 import org.seaboxdata.systemmng.service.SlaveService;
 import org.seaboxdata.systemmng.service.TaskGroupService;
 import org.seaboxdata.systemmng.service.UserGroupService;
+import org.seaboxdata.systemmng.util.TaskUtil.MD5Util;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -190,9 +191,24 @@ public class UserGroupController {
     //为用户组分配可见的节点
     @RequestMapping(value="/deleteUserGroup")
     @ResponseBody
-    protected void deleteUserGroup(@RequestParam String userGroupName) throws Exception{
+    protected void deleteUserGroup(HttpServletResponse response,HttpServletRequest request, @RequestParam String userGroupName
+    		, @RequestParam String repeatPassword, @RequestParam String password) throws Exception{
         try {
-            userGroupService.deleteUserGroup(userGroupName);
+        	JSONObject json=new JSONObject();
+        	json.put("success",true);
+        	json.put("msg", "");
+        	repeatPassword = MD5Util.encode(repeatPassword);
+        	if(repeatPassword.contentEquals(password)) {
+        		userGroupService.deleteUserGroup(userGroupName);
+        	} else {
+        		json.put("success",false);
+            	json.put("msg", "密码输入错误");
+        	}
+            
+            PrintWriter out=response.getWriter();
+            out.write(json.toString());
+            out.flush();
+            out.close();
         } catch (Exception e) {
             e.printStackTrace();
             throw new Exception(e.getMessage());

@@ -126,7 +126,7 @@ public class JobServiceImpl implements JobService{
                 job.setCreateDate(format.parse(format.format(job.getCreateDate())));
                 job.setModifiedDate(format.parse(format.format(job.getModifiedDate())));
             }
-            totalCount=jobDao.conditionFindJobCount(name,createDate,userGroupName);
+            totalCount=jobDao.conditionFindJobCount(name,createDate,userGroupName, username);
         }
 
         //设置作业的全目录名

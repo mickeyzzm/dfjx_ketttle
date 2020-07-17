@@ -7,7 +7,7 @@ function showUserPanel(secondGuidePanel){
         new Ext.grid.RowNumberer(),//行序号生成器,会为每一行生成一个行号
         sm,
         {header:"id",dataIndex:"userId",align:"center"},
-        {header:"type",dataIndex:"userType",menuDisabled:true,align:"center",
+        {header:"用户类型",dataIndex:"userType",menuDisabled:true,align:"center",
             renderer:function(v){
                 if(v==1){
                     return "管理员";
@@ -114,7 +114,7 @@ function showUserPanel(secondGuidePanel){
         emptyText:"请输入用户名.."
     });
 
-    var userGroupCom=userGroupCombobox(chooseUsergroup);
+    var userGroupCom=userUserGroupCombobox(chooseUsergroup);
     var userTypeCom=userTypeCombobox(chooseUsertype);
     var grid=new Ext.grid.GridPanel({
         id:"usersPanel",
@@ -933,7 +933,7 @@ function updatePassword(){
 }
 
 //用户组选择下拉框
-function userGroupCombobox(userGroupName){
+function userUserGroupCombobox(userGroupName){
     var proxy=new Ext.data.HttpProxy({url:"/userGroup/getUserGrouupSelect.do"});
 
     var hostName=Ext.data.Record.create([

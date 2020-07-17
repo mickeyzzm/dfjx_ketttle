@@ -17,7 +17,7 @@ public interface JobDao {
 
     public List<JobEntity> conditionFindJobs(int start,int limit,String namme,String date,String userGroupName, String username);//带条件的查询
 
-    public Integer conditionFindJobCount(String name,String date,String UserGroupName);//带条件查询总记录数
+    public Integer conditionFindJobCount(String name,String date,String UserGroupName, String username);//带条件查询总记录数
 
     public JobEntity getJobById(Integer jobId);
 

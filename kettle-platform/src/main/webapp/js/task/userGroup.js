@@ -279,21 +279,26 @@ function deleteUserGroup(){
                     Ext.MessageBox.prompt("输入框","请再次确认密码:",function(btn,txt){
                         if(btn=="ok"){
                             repeatPassword=txt;
-                            if(repeatPassword==password && onePassword==password){
+                            if(repeatPassword==onePassword){
                                 var secondGuidePanel=Ext.getCmp("secondGuidePanel");
                                 var userGroupPanel=Ext.getCmp("userGroupPanel");
                                 var chooseUserGroupName=userGroupPanel.getSelectionModel().getSelected().get("userGroupName");
                                 Ext.Ajax.request({
                                     url:"/userGroup/deleteUserGroup.do",
                                     success:function(response,config){
-                                        Ext.MessageBox.alert("success","移除用户组成功!");
-                                        generateUserGroupPanel(secondGuidePanel);
+                                    	var result=Ext.decode(response.responseText)
+                                    	if(result.success){
+                                    		Ext.MessageBox.alert("success","移除用户组成功!");
+                                    		generateUserGroupPanel(secondGuidePanel);
+                                    	} else {
+                                    		Ext.MessageBox.alert("success",result.msg);
+                                    	}
                                     },
                                     failure:failureResponse,
-                                    params:{userGroupName:chooseUserGroupName}
+                                    params:{userGroupName:chooseUserGroupName, repeatPassword: repeatPassword, password: password}
                                 })
                             }else{
-                                Ext.MessageBox.alert("faile","密码输入不正确,验证失败!");
+                                Ext.MessageBox.alert("faile","两次密码输入不正确一致,验证失败!");
                             }
                         }
                     });
@@ -564,6 +569,7 @@ function chooseVisualSlave(taskGroupNameArray,userGroupName,userGroupDesc,slaveI
     chooseTaskGroupWindow.close();
     //展现节点选择弹窗
     var slavePanel=getAllSlavePanel(slaveIdArray,"");
+    var clikcNum = 0;
     var chooseSlaveWindow=new Ext.Window({
         id:"chooseSlaveWindow",
         title:"请选择可见节点",
@@ -578,6 +584,12 @@ function chooseVisualSlave(taskGroupNameArray,userGroupName,userGroupDesc,slaveI
             {
                 text:"确认",
                 handler:function(){
+                	clikcNum+=1;
+                	if(clikcNum!=1){
+                		 Ext.MessageBox.alert("提示","请不要双击，或者重复确认!");
+                		 clikcNum = 0;
+                		 return;
+                	}
                     Ext.MessageBox.confirm("提示","确认创建?",function(btn){
                         if(btn=="yes"){
                             //获取被选中的节点Id集合
@@ -608,6 +620,7 @@ function chooseVisualSlave(taskGroupNameArray,userGroupName,userGroupDesc,slaveI
                         }else{
                             return;
                         }
+                        clikcNum = 0;
                     })
                 }
             },"-",

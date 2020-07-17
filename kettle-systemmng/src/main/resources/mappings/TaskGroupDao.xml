@@ -212,7 +212,7 @@
         d.TASK_GROUP_NAME as taskGroupName,
         d.TASK_DESC as taskGroupDesc
         from d_task_group d WHERE 1=1
-        <if test='_parameter!=null and _parameter!=""'>
+        <if test='_parameter!=null and _parameter!="" and _parameter!="Pristin"'>
             AND  d.TASK_GROUP_NAME IN
             (
                 select TASK_GROUP_NAME from d_user_group_tasks_relation WHERE

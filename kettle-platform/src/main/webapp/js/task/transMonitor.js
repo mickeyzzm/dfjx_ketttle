@@ -129,7 +129,7 @@ function generateTrans(secondGuidePanel){
     if(Ext.getCmp("userGroupCombox"))
         chooseUsergroup=Ext.getCmp("userGroupCombox").getValue();
     
-    var userGroupCom=userGroupCombobox(chooseUsergroup);
+    var userGroupCom=transUserGroupCombobox(chooseUsergroup);
     
     var inputUsername="";
     if(Ext.getCmp("userNameField"))
@@ -546,7 +546,7 @@ function assignedGroupTask(transId,transPath,transName,taskGroupPanelByAssigned,
                     document.getElementById("taskGroupAttrImg").onclick();
                 else{
                     var secondGuidePanel=Ext.getCmp("secondGuidePanel");
-                    generateTrans(secondGuidePanel);
+                    //generateTrans(secondGuidePanel);
                 }
                 Ext.Msg.show({  
 	        	    title:'提示信息',  
@@ -615,7 +615,7 @@ function updateTransName(){
 
 
 //用户组选择下拉框
-function userGroupCombobox(userGroupName){
+function transUserGroupCombobox(userGroupName){
 	var proxy=new Ext.data.HttpProxy({url:"/userGroup/getUserGrouupSelect.do"});
 	
 	var hostName=Ext.data.Record.create([
