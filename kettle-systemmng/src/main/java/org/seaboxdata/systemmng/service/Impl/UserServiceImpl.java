@@ -97,13 +97,13 @@ public class UserServiceImpl implements UserService{
     public String getUsersLimit(int start, int limit,HttpServletRequest request) throws Exception{
         String username=request.getParameter("username");
         String userType=request.getParameter("usertype");
-        String userGroup=request.getParameter("usergroup");
+        String selectUserGroup=request.getParameter("usergroup");
         //获取当前用户所在的用户组
         UserGroupAttributeEntity userAttribute=(UserGroupAttributeEntity)request.getSession().getAttribute("userInfo");
         String userGroupName=userAttribute.getUserGroupName();
         //如果是admin用户则把查询条件赋给该值
-        if(StringDateUtil.isEmpty(userGroupName))
-            userGroupName=userGroup;
+//        if(StringDateUtil.isEmpty(userGroupName))
+//            userGroupName=selectUserGroup;
         //获取用户类型
         Integer userTypeI=null;
         if(userType.equals("管理员"))
@@ -113,30 +113,11 @@ public class UserServiceImpl implements UserService{
 
         //获取用户集合总记录数
         List<UserEntity> users=new ArrayList<>();
-        Integer count= userDao.getUserCount(userGroupName,username,userTypeI);
-        users=userDao.getUsersLimit(start,limit,userGroupName,username,userTypeI);
+        Integer count= userDao.getUserCount(userGroupName,username,userTypeI, selectUserGroup);
+        users=userDao.getUsersLimit(start,limit,userGroupName,username,userTypeI, selectUserGroup);
         for (UserEntity userEntity : users) {
         	userEntity.setPassword("*");
 		}
-        //如果不是是admin用户 把该用户组下面所有用户权限为1的用户移除
-       /* if(!StringDateUtil.isEmpty(userGroupName)){
-            List<UserEntity> adminUserArray=new ArrayList<>();
-            for(int i=0;i<users.size();i++){
-                users.get(i).setPassword(KettleEncr.decryptPasswd(users.get(i).getPassword()));
-                if(users.get(i).getUserType()==1){
-                    adminUserArray.add(users.get(i));
-                }
-            }
-            for(UserEntity adminUser:adminUserArray){
-                users.remove(adminUser);
-                count--;
-            }
-        }else{
-            count--;
-            for(UserEntity user:users){
-                user.setPassword(KettleEncr.decryptPasswd(user.getPassword()));
-            }
-        }*/
 
         PageforBean bean=new PageforBean();
         bean.setRoot(users);

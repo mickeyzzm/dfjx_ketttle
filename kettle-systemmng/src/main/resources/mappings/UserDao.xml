@@ -29,10 +29,15 @@
         from r_user r INNER JOIN d_user_group_member_attribute d
         ON r.LOGIN=d.USER_NAME
         WHERE 1=1
-        <if test='param3!=null and param3!="" and param3!="Pristin"'>
+        <if test='param3!="Pristin"'>
             AND r.LOGIN IN
               (select a.USER_NAME from
               d_user_group_member_attribute a where a.USER_GROUP_NAME=#{2})
+        </if>
+        <if test='param6!=null and param6!=""'>
+            AND r.LOGIN IN
+              (select a.USER_NAME from
+              d_user_group_member_attribute a where a.USER_GROUP_NAME=#{5})
         </if>
         <if test='param4!=null and param4!=""'>
             AND r.LOGIN LIKE concat('%',#{3},'%')
@@ -73,10 +78,15 @@
 		INNER JOIN d_user_group_member_attribute d
         ON r.LOGIN=d.USER_NAME
         WHERE 1=1
-        <if test='param1!=null and param1!="" and param1!="Pristin"'>
+        <if test='param1!="Pristin"'>
             AND r.LOGIN IN
               (select a.USER_NAME from
               d_user_group_member_attribute a where a.USER_GROUP_NAME=#{0})
+        </if>
+        <if test='param4!=null and param4!=""'>
+            AND r.LOGIN IN
+              (select a.USER_NAME from
+              d_user_group_member_attribute a where a.USER_GROUP_NAME=#{3})
         </if>
         <if test='param2!=null and param2!=""'>
             AND r.LOGIN LIKE concat('%',#{1},'%')
