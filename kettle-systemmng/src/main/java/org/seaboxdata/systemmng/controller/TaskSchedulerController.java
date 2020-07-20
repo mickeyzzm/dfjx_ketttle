@@ -42,8 +42,10 @@ public class TaskSchedulerController {
                     typeId=2;
                 }else if(request.getParameter("typeId").equals("每周执行")){
                     typeId=3;
-                }else{
+                }else if(request.getParameter("typeId").equals("每月执行")){
                     typeId=4;
+                }else if(request.getParameter("typeId").equals("每年执行")){
+                    typeId=5;
                 }
             }
             String hostName=request.getParameter("hostName");

@@ -23,8 +23,9 @@ function generateTrans(secondGuidePanel){
                         "<img src='../../ui/images/i_updateTaskName.png' class='imgCls' onclick='updateTransName()' title='修改转换名'/>&nbsp;&nbsp;"+
                         "<img src='../../ui/images/i_compositionImg.png' class='imgCls' onclick='transCompositionImg()' title='结构图'/>&nbsp;&nbsp;"+
                         "<img src='../../ui/images/i_execute.png' class='imgCls' onclick='executeTrans()' title='执行转换配置'/>&nbsp;&nbsp;"+
-                        "<img src='../../ui/images/i_assigned.png' class='imgCls' onclick='beforeAssigned()' title='分配任务组'/>&nbsp;&nbsp;"+
-                        "<img src='../../ui/images/i_power.png' class='imgCls' onclick='transPowerExecute()' title='智能执行'/>&nbsp;&nbsp;";
+                        "<img src='../../ui/images/i_assigned.png' class='imgCls' onclick='beforeAssigned()' title='分配任务组'/>&nbsp;&nbsp;"
+                        //+"<img src='../../ui/images/i_power.png' class='imgCls' onclick='transPowerExecute()' title='智能执行'/>&nbsp;&nbsp;"
+                        ;
                 // }else{
                 //     return "<img src='../../ui/images/i_detail.png' class='imgCls' onclick='showOneTransDetail()' title='查看转换属性'/>&nbsp;&nbsp;"+
                 //         "<img src='../../ui/images/i_compositionImg.png' class='imgCls' onclick='transCompositionImg()' title='结构图'/>&nbsp;&nbsp;";

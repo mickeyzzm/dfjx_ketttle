@@ -20,8 +20,17 @@ public class JobTimeSchedulerEntity {
     private String hostName;    //节点ip
     private String executionConfig; //执行定时作业时的配置信息 不参与持久化
     private String username;
+    private Integer month;
+    
+	public Integer getMonth() {
+		return month;
+	}
 
-    public String getUsername() {
+	public void setMonth(Integer month) {
+		this.month = month;
+	}
+
+	public String getUsername() {
         return username;
     }
 

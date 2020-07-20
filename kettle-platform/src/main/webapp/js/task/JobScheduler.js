@@ -130,7 +130,8 @@ function generateSchedulerTypeSelect(typeId){
         ["间隔重复","间隔重复"],
         ["每天执行","每天执行"],
         ["每周执行","每周执行"],
-        ["每月执行","每月执行"]
+        ["每月执行","每月执行"],
+        ["每年执行","每年执行"]
     ]
     var schedulerTypeProxy=new Ext.data.MemoryProxy(schedulerType);
 
@@ -179,6 +180,8 @@ function generateSchedulerTypeSelect(typeId){
             typeChooseCom.setValue("每周执行");
         }else if(typeId=="4"){
             typeChooseCom.setValue("每月执行");
+        }else if(typeId=="5"){
+            typeChooseCom.setValue("每年执行");
         }
 
     }
@@ -299,10 +302,15 @@ function updateScheduler(){
                     formElementArray.push(MinuteTextField());
                     formElementArray.push(HourTextField());
                     formElementArray.push(generateDayChooseByWeek());
-                }else{
+                }else if(results.schedulertype==4){
                     formElementArray.push(MinuteTextField());
                     formElementArray.push(HourTextField());
                     formElementArray.push(generateDayChooseByMonth());
+                }else if(results.schedulertype==5){
+                    formElementArray.push(MinuteTextField());
+                    formElementArray.push(HourTextField());
+                    formElementArray.push(generateDayChooseByMonth());
+                    formElementArray.push(generateMonthChoose());
                 }
                 var thisWindow=fixedExecuteWindow("修改",formElementArray,"/scheduler/updateJobScheduler.do");
                 thisWindow.show(jobSchedulerGrid);
@@ -345,6 +353,13 @@ function updateScheduler(){
                         Ext.getCmp("hourField").setValue(results.hour);
                         Ext.getCmp("monthChoose").setValue(results.dayofmonth+"号");
                         Ext.getCmp("typeChoose").setValue("每月执行");
+                        break;
+                    case 5:
+                        Ext.getCmp("minuteField").setValue(results.minutes);
+                        Ext.getCmp("hourField").setValue(results.hour);
+                        Ext.getCmp("monthChoose").setValue(results.dayofmonth+"号");
+                        Ext.getCmp("month1Choose").setValue(results.month+"月份");
+                        Ext.getCmp("typeChoose").setValue("每年执行");
                         break;
                     default:
                         return;

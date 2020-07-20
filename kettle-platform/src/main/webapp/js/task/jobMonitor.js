@@ -25,8 +25,9 @@ function generateJobPanel(secondGuidePanel){
                         "<img src='../../ui/images/i_compositionImg.png' class='imgCls' onclick='jobCompositionImg()'  title='结构图'/>&nbsp;&nbsp;"+
                         "<img src='../../ui/images/i_execute.png' class='imgCls' onclick='executeJob()' title='执行作业配置'/>&nbsp;&nbsp;"+
                         "<img src='../../ui/images/i_timer.png' class='imgCls' onclick='beforeSchedulerJob()' title='定时执行'/>&nbsp;&nbsp;"+
-                        "<img src='../../ui/images/i_assigned.png' class='imgCls' onclick='beforeAssignedTaskGroup()' title='分配任务组'/>&nbsp;&nbsp;"+
-                        "<img src='../../ui/images/i_power.png' class='imgCls' onclick='jobPowerExecute()' title='智能执行'/>&nbsp;&nbsp;";
+                        "<img src='../../ui/images/i_assigned.png' class='imgCls' onclick='beforeAssignedTaskGroup()' title='分配任务组'/>&nbsp;&nbsp;"
+                        /*"+<img src='../../ui/images/i_power.png' class='imgCls' onclick='jobPowerExecute()' title='智能执行'/>&nbsp;&nbsp;"*/
+                        ;
                 // }else{
                 //     return "<img src='../../ui/images/i_detail.png' class='imgCls' onclick='showOneJobDetail()' title='作业属性'/>&nbsp;&nbsp;"+
                 //         "<img src='../../ui/images/i_compositionImg.png' class='imgCls' onclick='jobCompositionImg()' title='结构图'/>";

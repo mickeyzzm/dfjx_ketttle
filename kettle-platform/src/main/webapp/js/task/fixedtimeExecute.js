@@ -1,4 +1,47 @@
-﻿//日期(1号-30号)的下拉选择框
+﻿//月份
+function generateMonthChoose(){
+    var monthData=[
+        [1,"1月份"],
+        [2,"2月份"],
+        [3,"3月份"],
+        [4,"4月份"],
+        [5,"5月份"],
+        [6,"6月份"],
+        [7,"7月份"],
+        [8,"8月份"],
+        [9,"9月份"],
+        [10,"10月份"],
+        [11,"11月份"],
+        [12,"12月份"]
+    ]
+    var monthProxy=new Ext.data.MemoryProxy(monthData);
+
+    //下拉列表的数据结构
+    var monthRecord=Ext.data.Record.create([
+        {name:"monthId",type:"string",mapping:0},    //此列为下拉列表的实际获得值
+        {name:"monthName",type:"string",mapping:1}   //此列为下拉列表的显示值
+    ])
+    var monthReader=new Ext.data.ArrayReader({},monthRecord);
+
+    var store=new Ext.data.Store({
+        proxy:monthProxy,
+        reader:monthReader,
+        autoLoad:true
+    });
+    var monthChoose=new Ext.form.ComboBox({
+        name:"month1Choose",
+        id:"month1Choose",
+        triggerAction:"all",
+        store:store,
+        displayField:"monthName",
+        valueField:"monthId",
+        mode:"local",
+        emptyText:"请选择月份"
+    })
+    return monthChoose;
+}
+
+//日期(1号-30号)的下拉选择框
 function generateDayChooseByMonth(){
     //下拉列表智能执行的数据来源  暂时支持4种定时
     var monthData=[
@@ -163,7 +206,7 @@ function IntevalMinuteTextField(){
 }
 
 //生成定时执行的窗口
-function fixedExecuteWindow(flag,formElementArray,uri){
+function fixedExecuteWindow(flag, formElementArray,uri){
      var chooseForm=generateDateForm(flag,formElementArray,uri);
     //获得节点展示列表
     fiexdWindow=new Ext.Window({
@@ -208,7 +251,8 @@ function getExecuteTypeCombox(flag,uri){
         ["间隔重复","间隔重复"],
         ["每天执行","每天执行"],
         ["每周执行","每周执行"],
-        ["每月执行","每月执行"]
+        ["每月执行","每月执行"],
+        ["每年执行","每年执行"]
     ]
     var typeProxy=new Ext.data.MemoryProxy(typeData);
 
@@ -243,8 +287,7 @@ function getExecuteTypeCombox(flag,uri){
                 //移除当前表单
                 parWindow.remove("fiexdForm");
                 var chooseTypeName="";
-                switch(index)
-                {
+                switch(index) {
                     case 0:
                         //按指定的时间间隔执行
                         //formArray.push(IntevalMinuteTextField());
@@ -269,6 +312,13 @@ function getExecuteTypeCombox(flag,uri){
                         formArray.push(MinuteTextField());
                         formArray.push(generateDayChooseByMonth());
                         chooseTypeName="每月执行";
+                        break;
+                    case 4:
+                        formArray.push(HourTextField());
+                        formArray.push(MinuteTextField());
+                        formArray.push(generateDayChooseByMonth());
+                        formArray.push(generateMonthChoose());
+                        chooseTypeName="每年执行";
                         break;
                     default:
                         return;
@@ -365,6 +415,7 @@ function generateToolButton(flag){
                 }else{
                     var weekChoose=Ext.getCmp("weekChoose");
                     var monthChoose=Ext.getCmp("monthChoose");
+                    var month1Choose=Ext.getCmp("month1Choose");
                     if(chooseType=="每周执行"){
                         if(weekChoose.getValue()==undefined || weekChoose.getValue()==""){
                             Ext.MessageBox.alert("提示","请先选择每周执行的时间")
@@ -377,7 +428,18 @@ function generateToolButton(flag){
                             return;
                         }
                     }
-
+                    
+                    if(chooseType=="每年执行"){
+                    	if(month1Choose.getValue()==undefined || month1Choose.getValue()==""){
+                            Ext.MessageBox.alert("提示","请先选择每年执行的月份")
+                            return;
+                        }
+                        if(monthChoose.getValue()==undefined || monthChoose.getValue()==""){
+                            Ext.MessageBox.alert("提示","请先选择每年执行的日期")
+                            return;
+                        }
+                    }
+                    
                     var targetForm=Ext.getCmp("fiexdForm");
                     //获取被选中作业的作业名 作业id 作业全目录名
                     var jobInfo=getJobInfo();

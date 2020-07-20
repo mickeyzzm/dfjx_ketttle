@@ -15,7 +15,7 @@
             left join r_user usr on j.CREATED_USER = usr.ID_USER
             left join r_user usr_m on j.MODIFIED_USER = usr_m.ID_USER
             WHERE 1=1
-        <if test='param3!=null and param3!=""'  >
+        <if test='param3!="Pristin"'>
             AND j.`NAME` IN
             (
                 select DISTINCT TASK_NAME from d_task_group_member_attribute
@@ -32,7 +32,7 @@
 
     <select id="getTotalCount" resultType="java.lang.Integer">
         select count(*) from  r_job j WHERE 1=1
-        <if test='_parameter!=null and _parameter!=""'  >
+        <if test='_parameter!="Pristin"'  >
             AND j.`NAME` IN
             (
                 select DISTINCT TASK_NAME from d_task_group_member_attribute
@@ -60,13 +60,24 @@
         	left join r_user usr on j.CREATED_USER = usr.ID_USER
         	left join r_user usr_m on j.MODIFIED_USER = usr_m.ID_USER
         where 1=1
-        <if test='param5!=null and param5!=""'  >
+        <if test='param5!="Pristin"'>
             AND j.`NAME` IN
             (
                 select DISTINCT TASK_NAME from d_task_group_member_attribute where TASK_GROUP_NAME in
                 (
                   select TASK_GROUP_NAME from
                   d_user_group_tasks_relation where USER_GROUP_NAME=#{4}
+                )
+                AND TYPE="job"
+            )
+        </if>
+        <if test='param7!=null and param7!=""'>
+            AND j.`NAME` IN
+            (
+                select DISTINCT TASK_NAME from d_task_group_member_attribute where TASK_GROUP_NAME in
+                (
+                  select TASK_GROUP_NAME from
+                  d_user_group_tasks_relation where USER_GROUP_NAME=#{6}
                 )
                 AND TYPE="job"
             )
@@ -87,13 +98,24 @@
 
     <select id="conditionFindJobCount" resultType="java.lang.Integer">
         select count(1) from  r_job j where 1=1
-        <if test='param3!=null and param3!=""'  >
+        <if test='param3!="Pristin"'  >
             AND j.`NAME` IN
             (
                 select DISTINCT TASK_NAME from d_task_group_member_attribute where TASK_GROUP_NAME in
                     (
                     select TASK_GROUP_NAME from
                     d_user_group_tasks_relation where USER_GROUP_NAME=#{2}
+                    )
+                AND TYPE="job"
+            )
+        </if>
+        <if test='param5!=null and param3!=""'  >
+            AND j.`NAME` IN
+            (
+                select DISTINCT TASK_NAME from d_task_group_member_attribute where TASK_GROUP_NAME in
+                    (
+                    select TASK_GROUP_NAME from
+                    d_user_group_tasks_relation where USER_GROUP_NAME=#{4}
                     )
                 AND TYPE="job"
             )

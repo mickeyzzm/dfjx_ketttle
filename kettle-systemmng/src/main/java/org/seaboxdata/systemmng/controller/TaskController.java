@@ -252,17 +252,15 @@ public class TaskController {
 			// 获取前台传递的查询参数 作业名以及创建时间 如果为空则代表是全部查询
 			String name = request.getParameter("name");
 			String createDate = request.getParameter("date");
-			String usergroup = request.getParameter("usergroup");
+			String selectUsergroup = request.getParameter("usergroup");
 			String username = request.getParameter("username");
 			// 获取当前用户所在的用户组
 			UserGroupAttributeEntity attr = (UserGroupAttributeEntity) request.getSession().getAttribute("userInfo");
 			String userGroupName = "";
-			if (null != attr && StringUtils.isEmpty(usergroup)) {
+			if (null != attr ) {
 				userGroupName = attr.getUserGroupName();
-			} else {
-				userGroupName = usergroup;
 			}
-			JSONObject result = jobService.findJobs(start, limit, name, createDate, userGroupName, username);
+			JSONObject result = jobService.findJobs(start, limit, name, createDate, userGroupName, username, selectUsergroup);
 
 			response.setContentType("text/html;charset=utf-8");
 			PrintWriter out = response.getWriter();

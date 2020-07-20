@@ -103,13 +103,13 @@ public class JobServiceImpl implements JobService{
     }
 
     @Override
-    public JSONObject findJobs(int start, int limit, String name, String createDate,String userGroupName, String username) throws Exception{
+    public JSONObject findJobs(int start, int limit, String name, String createDate,String userGroupName, String username, String selectUsergroup) throws Exception{
         PageforBean pages=new PageforBean();
         net.sf.json.JSONObject result=null;
         //该页的作业信息以及整个表(可能是条件查询)的总记录条数
         List<JobEntity> jobs=null;
         Integer totalCount=0;
-        if (StringDateUtil.isEmpty(name)  && StringDateUtil.isEmpty(createDate)  && StringDateUtil.isEmpty(username)){
+        if (StringDateUtil.isEmpty(selectUsergroup) && StringDateUtil.isEmpty(name) && StringDateUtil.isEmpty(createDate)  && StringDateUtil.isEmpty(username)){
           jobs=jobDao.getThisPageJob(start,limit,userGroupName);
             //对日期进行处理转换成指定的格式
             for (JobEntity job:jobs){
@@ -121,12 +121,12 @@ public class JobServiceImpl implements JobService{
 			/*
 			 * if(!createDate.isEmpty()) createDate+=" 00:00:00";
 			 */
-            jobs=jobDao.conditionFindJobs(start, limit, name, createDate,userGroupName, username);
+            jobs=jobDao.conditionFindJobs(start, limit, name, createDate,userGroupName, username, selectUsergroup);
             for (JobEntity job:jobs){
                 job.setCreateDate(format.parse(format.format(job.getCreateDate())));
                 job.setModifiedDate(format.parse(format.format(job.getModifiedDate())));
             }
-            totalCount=jobDao.conditionFindJobCount(name,createDate,userGroupName, username);
+            totalCount=jobDao.conditionFindJobCount(name,createDate,userGroupName, username, selectUsergroup);
         }
 
         //设置作业的全目录名
@@ -317,6 +317,43 @@ public class JobServiceImpl implements JobService{
                                 }
                             }
                             break;
+                        case 5:
+                        	//首先判断每月执行的日期xx号是否相同
+                            List<JobTimeSchedulerEntity> dayLikeByTypeMonth=new ArrayList<>();
+                            for(JobTimeSchedulerEntity jobTime:typeEqualJobs){
+                                if(jobTime.getMonth()==willAddJobTimer.getMonth()){
+                                	dayLikeByTypeMonth.add(jobTime);
+                                }
+                            }
+                        	
+                            List<JobTimeSchedulerEntity> dayLikeByTypeFour1=new ArrayList<>();
+                            if(dayLikeByTypeMonth.size()>=1) {
+                            	//首先判断每月执行的日期xx号是否相同
+                            	for(JobTimeSchedulerEntity jobTime:dayLikeByTypeMonth){
+                            		if(jobTime.getDayofmonth()==willAddJobTimer.getDayofmonth()){
+                            			dayLikeByTypeFour1.add(jobTime);
+                            		}
+                            	}
+                            	
+                            }
+                            //如果日期xx号相同则继续判断时间hour是否相同
+                            List<JobTimeSchedulerEntity> dayAndHourLikeByTypeFour1=new ArrayList<>();
+                            if(dayLikeByTypeFour1.size()>=1){
+                                for(JobTimeSchedulerEntity dayLike:dayLikeByTypeFour1){
+                                    if(dayLike.getHour()==willAddJobTimer.getHour()){
+                                        dayAndHourLikeByTypeFour1.add(dayLike);
+                                    }
+                                }
+                            }
+                            //如果日期和时间值都相同则最终判断minute是否相同
+                            if(dayAndHourLikeByTypeFour1.size()>=1){
+                                for(JobTimeSchedulerEntity dayAndHourLike:dayAndHourLikeByTypeFour1){
+                                    if(dayAndHourLike.getMinutes()==willAddJobTimer.getMinutes()){
+                                        flag=true;
+                                    }
+                                }
+                            }
+                            break;
                         default:
                             break;
                     }
@@ -352,6 +389,11 @@ public class JobServiceImpl implements JobService{
             //每月执行设置每月多少号执行 monthDay
             schedulerType=4;
             jobTimeScheduler.setDayofmonth(StringDateUtil.getdayInt(params.get("monthChoose").toString()));
+        }else if(typeInfo.trim().equals("每年执行")){
+            //每年执行设置每月多少号执行 monthDay
+            schedulerType=5;
+            jobTimeScheduler.setDayofmonth(StringDateUtil.getdayInt(params.get("monthChoose").toString()));
+            jobTimeScheduler.setMonth(StringDateUtil.getMonth(params.get("month1Choose").toString()));
         }
         jobTimeScheduler.setSchedulertype(schedulerType);
         //只要不是间隔执行 其它三种都需要设置hour minute 执行的具体时间

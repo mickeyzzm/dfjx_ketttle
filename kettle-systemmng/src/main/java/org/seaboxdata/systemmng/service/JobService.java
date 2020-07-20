@@ -15,7 +15,7 @@ import java.util.Map;
  * Created by cRAZY on 2017/2/22.
  */
 public interface JobService {
-    public JSONObject findJobs(int start,int limit,String name,String createDate,String userGroupName, String username) throws Exception;
+    public JSONObject findJobs(int start,int limit,String name,String createDate,String userGroupName, String username, String selectUsergroup) throws Exception;
 
     public void deleteJobs(String jobPath,String flag) throws Exception;
 

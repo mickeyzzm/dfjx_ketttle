@@ -228,7 +228,7 @@ public class RepositoryController {
 	
 	@ResponseBody
 	@RequestMapping(method = RequestMethod.POST, value = "/createJob")
-	protected void createJob(@RequestParam String dir, @RequestParam String jobName,@RequestParam String[] taskGroupArray) throws KettleException, IOException {
+	protected void createJob(HttpServletResponse response,HttpServletRequest request,@RequestParam String dir, @RequestParam String jobName,@RequestParam String[] taskGroupArray) throws KettleException, IOException {
 		Repository repository = App.getInstance().getRepository();
 		SqlSession sqlSession=CarteClient.sessionFactory.openSession();;
         RepositoryDirectoryInterface directory = null;
@@ -254,11 +254,13 @@ public class RepositoryController {
 				JsonUtils.fail("该作业已经存在，请重新输入！");
 				return;
 			}
-			 
+			
+			String userId = ((UserGroupAttributeEntity)request.getSession().getAttribute("userInfo")).getUserName();
 			JobMeta jobMeta = new JobMeta();
 			jobMeta.setRepository(App.getInstance().getRepository());
 			jobMeta.setMetaStore(App.getInstance().getMetaStore());
 			jobMeta.setName(jobName);
+			jobMeta.setCreatedUser(userId);
 			jobMeta.setRepositoryDirectory(directory);
 			repository.save(jobMeta, "add: " + new Date(), null);
 			isSuccess=true;

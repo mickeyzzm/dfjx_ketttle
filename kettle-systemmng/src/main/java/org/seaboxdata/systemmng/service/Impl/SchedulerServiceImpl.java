@@ -63,7 +63,7 @@ public class SchedulerServiceImpl implements SchedulerService {
             //遍历查找相同作业名的情况下 是否有作业定时类型也相同的作业
             if(jobNameEqual.size()>=1){
                 List<JobTimeSchedulerEntity> typeEqualJobs=new ArrayList<>(); //存放定时类型与用户传递的定时运行相同的作业
-                for(JobTimeSchedulerEntity jobTimer:jobs){
+                for(JobTimeSchedulerEntity jobTimer:jobNameEqual){
                     if(jobTimer.getSchedulertype()==willAddJobTimer.getSchedulertype()){
                         typeEqualJobs.add(jobTimer);
                     }
@@ -204,6 +204,9 @@ public class SchedulerServiceImpl implements SchedulerService {
                 case 4:
                     job.setTimerInfo("每月"+job.getDayofmonth()+"号"+job.getHour()+":"+job.getMinutes()+"执行");
                     break;
+                case 5:
+                    job.setTimerInfo("每年"+job.getMonth()+"月"+job.getDayofmonth()+"号"+job.getHour()+":"+job.getMinutes()+"执行");
+                    break;
                 default:
                     break;
             }
@@ -302,7 +305,24 @@ public class SchedulerServiceImpl implements SchedulerService {
             //设置每月执行的trigger
             oldtrigger = newTrigger().withIdentity(taskJobId +"trigger", CarteTaskManager.JOB_TIMER_TASK_GROUP).
                     withSchedule(cronSchedule("0 " + minuteByMonth + " " + hourByMonth + " " + dayOfMonth + " * ?")).build();
+        }else if(type.equals("每年执行")){
+            Integer month=StringDateUtil.getdayInt(params.get("month1Choose").toString());
+            Integer dayOfMonth=StringDateUtil.getdayInt(params.get("monthChoose").toString());
+            Integer minuteByMonth=Integer.valueOf(params.get("minute").toString());
+            Integer hourByMonth=Integer.valueOf(params.get("hour").toString());
+
+            oldJobScheduler.setMonth(month);
+            oldJobScheduler.setDayofmonth(dayOfMonth);
+            oldJobScheduler.setMinutes(minuteByMonth);
+            oldJobScheduler.setHour(hourByMonth);
+            oldJobScheduler.setWeekday(null);
+            oldJobScheduler.setIntervalminutes(null);
+            oldJobScheduler.setSchedulertype(4);
+            //设置每月执行的trigger
+            oldtrigger = newTrigger().withIdentity(taskJobId +"trigger", CarteTaskManager.JOB_TIMER_TASK_GROUP).
+                    withSchedule(cronSchedule("0 " + minuteByMonth + " " + hourByMonth + " " + dayOfMonth + " "+ month + " ? * ")).build();
         }
+        
         JobServiceImpl js=new JobServiceImpl();
         //判断是否在数据库中是否有执行周期完全相同的一个作业
         boolean isAlike=this.judgeJobIsAlike(oldJobScheduler);

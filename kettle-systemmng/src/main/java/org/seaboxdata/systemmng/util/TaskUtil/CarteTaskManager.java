@@ -218,6 +218,7 @@ public class CarteTaskManager {
 				Integer hour = timerJob.getHour();
 				Integer weekday = timerJob.getWeekday();
 				Integer dayOfMonth = timerJob.getDayofmonth();
+				Integer month = timerJob.getMonth();
 				long idJobTask = timerJob.getIdJobtask();
 				Integer jobId = timerJob.getIdJob();
 				String executionConfiguration = timerJob.getExecutionConfig();
@@ -244,6 +245,8 @@ public class CarteTaskManager {
 							.build();
 				} else if (schedulertype == 4) {
 					trigger = newTrigger().withIdentity(idJobTask + "trigger", JOB_TIMER_TASK_GROUP).withSchedule(cronSchedule("0 " + minutes + " " + hour + " " + dayOfMonth + " * ?")).build();
+				} else if (schedulertype == 5) {
+					trigger = newTrigger().withIdentity(idJobTask + "trigger", JOB_TIMER_TASK_GROUP).withSchedule(cronSchedule("0 " + minutes + " " + hour + " " + dayOfMonth + " "+ month +" ? * ")).build();
 				}
 				Scheduler sched = sf.getScheduler();
 				sched.scheduleJob(job, trigger);

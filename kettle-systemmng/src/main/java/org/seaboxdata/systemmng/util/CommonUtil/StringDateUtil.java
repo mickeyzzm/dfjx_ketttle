@@ -64,6 +64,14 @@ public class StringDateUtil {
         return Integer.parseInt(result);
     }
 
+    public static Integer getMonth(String month) {
+        String result = "";
+        month = month.trim();
+        int index = month.indexOf("月份");
+        result = month.substring(0, index);
+        return Integer.parseInt(result);
+    }    
+    
     public static Integer getIntWeek(String week) {
         Integer result = 0;
         week = week.trim();

@@ -5,13 +5,13 @@ JobEntryTrans = Ext.extend(KettleTabDialog, {
 	initComponent: function() {
 		var me = this, cell = getActiveGraph().getGraph().getSelectionCell();
 		
-		var radioFilename = new Ext.form.Radio({boxLabel: '转换文件名', name: 'specification_method'/*, checked: true*/});
+		/*var radioFilename = new Ext.form.Radio({boxLabel: '转换文件名', name: 'specification_method', checked: true});
 		var wFilename = new Ext.form.TextField({flex: 1});
 		var wbFilename = new Ext.Button({text: '选择..', handler: function() {
 			var dialog = new FileExplorerWindow({includeFile: true, fileExt: 'ktr'});
 			dialog.on('ok', function(v) {wFilename.setValue(v);dialog.close();});
 			dialog.show();
-		}});
+		}});*/
 		
 		var radioByName = new Ext.form.Radio({boxLabel: '通过目录与名称指定转换', name: 'specification_method', checked: true});
 		var wDirectory = new Ext.form.TextField({anchor: '-1', disabled: false});
@@ -94,10 +94,10 @@ JobEntryTrans = Ext.extend(KettleTabDialog, {
 			JobEntryTrans.superclass.initData.apply(this, [cell]);
 			
 			var cell = this.getInitData();
-			if('filename' == cell.getAttribute('specification_method')) {
+			/*if('filename' == cell.getAttribute('specification_method')) {
 				radioFilename.setValue(true);
 				wFilename.setValue(cell.getAttribute('filename'));
-			} else if('rep_name' == cell.getAttribute('specification_method')) {
+			} else */if('rep_name' == cell.getAttribute('specification_method')) {
 				radioByName.setValue(true);
 				wDirectory.setValue(cell.getAttribute('directory'));
 				wTransname.setValue(cell.getAttribute('transname'));
@@ -137,10 +137,10 @@ JobEntryTrans = Ext.extend(KettleTabDialog, {
 		this.saveData = function(){
 			var data = {};
 			
-			if(radioFilename.getValue() === true) {
+			/*if(radioFilename.getValue() === true) {
 				data.specification_method = 'filename';
 				data.filename = wFilename.getValue();
-			} else if(radioByName.getValue() === true) {
+			} else */if(radioByName.getValue() === true) {
 				data.specification_method = 'rep_name';
 				data.directory = wDirectory.getValue();
 				data.transname = wTransname.getValue();
@@ -231,7 +231,7 @@ JobEntryTrans = Ext.extend(KettleTabDialog, {
 		
 		JobEntryTrans.superclass.initComponent.call(this);
 		
-		radioFilename.on('check', function(cb, checked) {
+		/*radioFilename.on('check', function(cb, checked) {
 			if(checked === true) {
 				wFilename.enable();
 				wbFilename.enable();
@@ -239,7 +239,7 @@ JobEntryTrans = Ext.extend(KettleTabDialog, {
 				wFilename.disable();
 				wbFilename.disable();
 			}
-		});
+		});*/
 		
 		radioByName.on('check', function(cb, checked) {
 			if(checked === true) {
