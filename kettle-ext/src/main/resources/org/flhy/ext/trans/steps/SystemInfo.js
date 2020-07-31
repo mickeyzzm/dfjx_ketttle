@@ -16,7 +16,14 @@ SystemInfoDialog = Ext.extend(KettleDialog, {
 			columns: [new Ext.grid.RowNumberer(), {
 				header: '名称', dataIndex: 'name', width: 200, editor: new Ext.form.TextField({
 	                allowBlank: false
-	            })
+	            }),
+	            renderer : function(value, cellmeta, record, rowIndex, columnIndex, store) {
+					if(value == undefined){
+						return '';
+					}
+					
+					return value.replace(/<[^<>]+?>/g,'');
+				}
 			},{
 				header: '类型', dataIndex: 'type', width: 200, renderer: function(v)
 				{

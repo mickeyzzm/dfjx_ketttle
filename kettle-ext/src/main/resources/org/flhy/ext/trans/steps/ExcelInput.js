@@ -90,6 +90,8 @@ ExcelInputDialog = Ext.extend(KettleTabDialog, {
 			value: cell.getAttribute('spreadsheet_type')
 	    });
 
+		console.log(Ext.decode(cell.getAttribute('file') || Ext.encode([])));
+		
 		var fileNameStore  = new Ext.data.JsonStore({
 			idProperty: 'fileName',
 			fields: ['realName', 'name', 'filemask', 'exclude_filemask', 'file_required', 'include_subfolders'],

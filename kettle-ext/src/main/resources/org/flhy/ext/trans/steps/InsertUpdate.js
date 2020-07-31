@@ -194,7 +194,7 @@ InsertUpdateDialog = Ext.extend(KettleTabDialog, {
 			}],
 			store: searchStore
 		}, {
-			title: BaseMessages.getString(PKG, "InsertUpdateDialog.UpdateFields.Label"),
+			title: '更新字段',
 			xtype: 'editorgrid',
 			tbar: [{
 				text: '新增字段', handler: function(btn) {
@@ -210,7 +210,7 @@ InsertUpdateDialog = Ext.extend(KettleTabDialog, {
 					var sm = btn.findParentByType('editorgrid').getSelectionModel();
 					if(sm.hasSelection()) {
 						var row = sm.getSelectedCell()[0];
-						searchStore.removeAt(row);
+						updateStore.removeAt(row);
 					}
 				}
 			}, {
@@ -219,9 +219,9 @@ InsertUpdateDialog = Ext.extend(KettleTabDialog, {
 						updateStore.merge(store, [{name:'updateLookup', field: 'name'}, {name:'updateStream', field: 'name'}, {name: 'update', value: 'Y'}]);
 					});
 				}
-			}, {
+			}/*, {
 				text: BaseMessages.getString(PKG, "InsertUpdateDialog.EditMapping.Label")
-			}],
+			}*/],
 			columns: [new Ext.grid.RowNumberer(), {
 				header: BaseMessages.getString(PKG, "InsertUpdateDialog.ColumnInfo.TableField"), dataIndex: 'updateLookup', width: 100, editor: new Ext.form.ComboBox({
 					displayField: 'name',

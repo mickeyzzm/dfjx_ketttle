@@ -280,7 +280,7 @@ public class TransMetaCodec extends BaseGraphCodec {
 		transMeta.setTransstatus(Const.toInt(root.getAttribute("trans_status"), -1));
 		transMeta.setTransversion(root.getAttribute("trans_version"));
 
-
+		//添加数据库
 		if(transMeta.getRepository() != null)
 			transMeta.setSharedObjects(transMeta.getRepository().readTransSharedObjects( transMeta ));
 		else

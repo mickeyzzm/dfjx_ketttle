@@ -102,26 +102,26 @@ public class TaskSchedulerController {
         }
     }
 
-    //修改
-    @RequestMapping(value="/updateJobScheduler")
-    @ResponseBody
-    protected void updateJobScheduler(HttpServletResponse response,HttpServletRequest request) throws Exception{
-        try{
-            response.setContentType("text/html;charset=utf-8");
-            PrintWriter out=response.getWriter();
-            String json="";
-                boolean isSuccess=schedulerService.updateSchedulerJob(StringDateUtil.getMapByRequest(request),request);
-            if(isSuccess){
-                json="{'success':true,'isSuccess':true}";
-            }else{
-                json="{'success':true,'isSuccess':false}";
-            }
-            out.write(json);
-            out.flush();
-            out.close();
-        }catch (Exception e){
-            e.printStackTrace();
-            throw new Exception(e.getMessage());
-        }
-    }
+	// 修改
+	@RequestMapping(value = "/updateJobScheduler")
+	@ResponseBody
+	protected void updateJobScheduler(HttpServletResponse response, HttpServletRequest request) throws Exception {
+		try {
+			response.setContentType("text/html;charset=utf-8");
+			PrintWriter out = response.getWriter();
+			String json = "";
+			boolean isSuccess = schedulerService.updateSchedulerJob(StringDateUtil.getMapByRequest(request), request);
+			if (isSuccess) {
+				json = "{'success':true,'isSuccess':true}";
+			} else {
+				json = "{'success':true,'isSuccess':false}";
+			}
+			out.write(json);
+			out.flush();
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new Exception(e.getMessage());
+		}
+	}
 }

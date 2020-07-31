@@ -328,6 +328,9 @@ public class UserController {
     protected void getUsersByInfo(HttpServletResponse response,HttpServletRequest request,@RequestParam String userGroupName) throws Exception{
         try{
             List<UserEntity> users=userService.getUsers(userGroupName);
+            for (UserEntity userEntity : users) {
+            	userEntity.setPassword("*");
+			}
             PrintWriter out=response.getWriter();
             out.write(JSONArray.fromObject(users).toString());
             out.flush();

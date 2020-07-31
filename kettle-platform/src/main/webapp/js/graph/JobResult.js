@@ -2,7 +2,7 @@
 	region: 'south',
 	hidden: true,
 	height: 250,
-	activeTab: 1,
+	activeTab: 0,
 	initComponent: function() {
 		var me = this;
 		var jobMeasure = new TreeGrid({
@@ -27,21 +27,21 @@
 		
 		var log = new Ext.form.TextArea({readOnly: true});
 		
-		this.items = [{
+		this.items = [/*{
 			title: '历史',
 			iconCls: 'imageShowHistory',
 			disabled: true
-		}, {
+		}, */{
 			xtype: 'form',
 			title: '日志',
 			iconCls: 'imageShowLog',
 			layout: 'fit',
 			items: log
-		}, jobMeasure, {
+		}, jobMeasure/*, {
 			title: 'Metrics',
 			iconCls: 'imageGantt',
 			disabled: true
-		}];
+		}*/];
 
 //		this.loadResult = function(executionId) {
 //			if(!executionId) return;

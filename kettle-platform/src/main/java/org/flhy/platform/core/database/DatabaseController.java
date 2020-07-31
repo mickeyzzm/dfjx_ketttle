@@ -630,9 +630,21 @@ public class DatabaseController {
                     ResultSet rs = dbmd.getTables(null, text, null, null);
                     try {
                         while (rs.next()) {
+                            String schema = rs.getString(2);
                             String tableName = rs.getString(3);
-                            if (!db.isSystemTable(tableName)) {
-                                result.add(DatabaseNode.initNode(tableName, text, "datatable", true));
+                            String tableType = rs.getString(4);
+                            String remarks = rs.getString(5);
+                            if("TABLE".equals(tableType)) {
+                            	if (!db.isSystemTable(tableName)) {
+                            		String tableText = tableName;
+                            		if(!StringUtils.isEmpty(remarks)) {
+                            			tableText += " 【" + remarks + "】";
+                            		}
+                            		
+                            		DatabaseNode dbNode = DatabaseNode.initNode(tableText, tableName, "datatable", true);
+                            		dbNode.setSchema(schema);
+                            		result.add(dbNode);
+                            	}
                             }
                         }
                     } finally {
@@ -676,8 +688,11 @@ public class DatabaseController {
                     for (String schema : viewKeys) {
                         List<String> views = new ArrayList<String>(viewMap.get(schema));
                         Collections.sort(views);
-                        for (String viewName : views)
-                            result.add(DatabaseNode.initNode(viewName, schema, "dataview", true));
+                        for (String viewName : views) {
+                        	DatabaseNode dbNode = DatabaseNode.initNode(viewName, viewName, "dataview", true);
+                        	dbNode.setSchema(schema);
+                        	result.add(dbNode);
+                        }
                     }
                 } finally {
                     db.disconnect();
@@ -693,8 +708,11 @@ public class DatabaseController {
                     for (String schema : synonymKeys) {
                         List<String> synonyms = new ArrayList<String>(synonymMap.get(schema));
                         Collections.sort(synonyms);
-                        for (String synonymName : synonyms)
-                            result.add(DatabaseNode.initNode(synonymName, schema, "synonym", true));
+                        for (String synonymName : synonyms) {
+                        	DatabaseNode dbNode = DatabaseNode.initNode(synonymName, synonymName, "synonym", true);
+                        	dbNode.setSchema(schema);
+                        	result.add(synonymName);
+                        }
                     }
                 } finally {
                     db.disconnect();

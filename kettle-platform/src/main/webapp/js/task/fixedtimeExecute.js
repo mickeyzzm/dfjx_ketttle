@@ -467,7 +467,7 @@ function generateToolButton(flag){
                         targetForm.getForm().submit({
                             success:function(form,action){
                                 if(action.result.isSuccess==false){
-                                    Ext.MessageBox.alert("失败","该作业已经存在相同执行周期的调度计划");
+                                    Ext.MessageBox.alert("失败","该作业已经存、或存在在相同执行周期的调度计划！");
                                 }else{
                                    /* var defaultConfig="{'exec_local':'Y','exec_remote':'N','pass_export':'N','parameters':[],"
                                        +"'variables':[],'arguments':[], 'safe_mode':'N','log_level':'Basic','clear_log':'Y',"

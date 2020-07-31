@@ -185,15 +185,14 @@ public class JobExecutor implements Runnable {
 			}
 			//记录日志
 			trace.setEndTime(new Date());
-			trace.setJobName(jobMeta.getName());
 			//运行结果
 			String status="成功";
 			if(errCount>0){
 				status="失败";
 			}
 			trace.setStatus(status);
-			//任务类型
-			trace.setType("job");
+			
+			trace.setJobName(jobMeta.getName());
 			//日志信息
 			net.sf.json.JSONObject logJSON=new net.sf.json.JSONObject();
 			logJSON.put("jobMeasure",this.getJobMeasure());
@@ -240,11 +239,10 @@ public class JobExecutor implements Runnable {
 		} catch(Exception e) {
 			try {
 				trace.setEndTime(new Date());
-				trace.setJobName(jobMeta.getName());
 				trace.setStatus("系统调度失败");
 				trace.setExecutionLog(ExceptionUtils.toString(e));
+				trace.setJobName(jobMeta.getName());
 				//任务类型
-				trace.setType("trans");
 				String execMethod="";
 				if(executionConfiguration.isExecutingLocally()){
 					execMethod="本地";
@@ -286,6 +284,8 @@ public class JobExecutor implements Runnable {
 			}
 		} finally {
 			finished = true;
+			//任务类型
+			trace.setType("job");
 			SqlSession session=MybatisDaoSuppo.sessionFactory.openSession();
 			session.insert("org.seaboxdata.systemmng.dao.ExecutionTraceDao.addExecutionTrace",trace);
 			session.commit();
@@ -389,7 +389,11 @@ public class JobExecutor implements Runnable {
 		if(executionConfiguration.isExecutingLocally()) {
 			StringBuffer sb = new StringBuffer();
 			KettleLogLayout logLayout = new KettleLogLayout( true );
-			List<String> childIds = LoggingRegistry.getInstance().getLogChannelChildren( job.getLogChannelId() );
+			String logChannelId = "";
+			if(null != job) {
+				logChannelId = job.getLogChannelId() ;
+			}
+			List<String> childIds = LoggingRegistry.getInstance().getLogChannelChildren(logChannelId);
 			List<KettleLoggingEvent> logLines = KettleLogStore.getLogBufferFromTo( childIds, true, -1, KettleLogStore.getLastBufferLineNr() );
 			 for ( int i = 0; i < logLines.size(); i++ ) {
 	             KettleLoggingEvent event = logLines.get( i );

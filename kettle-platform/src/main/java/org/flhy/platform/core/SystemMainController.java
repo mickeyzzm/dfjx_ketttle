@@ -366,8 +366,8 @@ public class SystemMainController{
 	protected void systemDataTypes() throws IOException {
 		JSONArray jsonArray = new JSONArray();
 		
-		SystemDataTypes[] values = SystemDataTypes.values();
-		for (SystemDataTypes value : values) {
+		for ( int i = 1; i < SystemDataTypes.values().length; i++ ) {
+			SystemDataTypes value = SystemDataTypes.values()[i];
 			JSONObject jsonObject = new JSONObject();
 			jsonObject.put("code", value.getCode());
 			jsonObject.put("descrp", value.getDescription());

@@ -121,8 +121,9 @@ public class CarteTaskManager {
 				Integer hour = dTimerschedulerEntity.getHour();
 				Integer weekday = dTimerschedulerEntity.getWeekday();
 				Integer dayOfMonth = dTimerschedulerEntity.getDayofmonth();
+				Integer month = dTimerschedulerEntity.getMonth();
 				// 设置定时信息
-				long idJobTask = dTimerschedulerEntity.getIdJobtask();
+				String idJobTask = dTimerschedulerEntity.getIdJobtask();
 				job = newJob(org.seaboxdata.systemmng.util.quartzUtil.JobTimerTask.class).withIdentity(idJobTask + "", JOB_TIMER_TASK_GROUP).build();
 				job.getJobDataMap().put("jobExecutor", jobExecutor);
 				job.getJobDataMap().put("loginUser", loginUser);
@@ -141,6 +142,9 @@ public class CarteTaskManager {
 					} else if (schedulertype == 4) {
 						trigger = newTrigger().withIdentity(idJobTask + "trigger", JOB_TIMER_TASK_GROUP)
 								.withSchedule(cronSchedule("0 " + minutes + " " + hour + " " + dayOfMonth + " * ?")).build();
+					} else if (schedulertype == 5) {
+						trigger = newTrigger().withIdentity(idJobTask + "trigger", JOB_TIMER_TASK_GROUP)
+								.withSchedule(cronSchedule("0 " + minutes + " " + hour + " " + dayOfMonth + " " + month + " ? * ")).build();
 					}
 				} else if (isRepeat == "N") {// 执行一次性的方法
 					if (schedulertype == 1) {
@@ -154,6 +158,9 @@ public class CarteTaskManager {
 					} else if (schedulertype == 4) {
 						trigger = newTrigger().withIdentity(idJobTask + "trigger", idJobTask + "group")
 								.withSchedule(cronSchedule("0 " + minutes + " " + hour + " " + dayOfMonth + " * ?")).build();
+					} else if (schedulertype == 5) {
+						trigger = newTrigger().withIdentity(idJobTask + "trigger", idJobTask + "group")
+								.withSchedule(cronSchedule("0 " + minutes + " " + hour + " " + dayOfMonth + " " + month +" ? * ")).build();
 					}
 				}
 				sched.scheduleJob(job, trigger);
@@ -219,7 +226,7 @@ public class CarteTaskManager {
 				Integer weekday = timerJob.getWeekday();
 				Integer dayOfMonth = timerJob.getDayofmonth();
 				Integer month = timerJob.getMonth();
-				long idJobTask = timerJob.getIdJobtask();
+				String idJobTask = timerJob.getIdJobtask();
 				Integer jobId = timerJob.getIdJob();
 				String executionConfiguration = timerJob.getExecutionConfig();
 				// 封装executor对象
@@ -246,7 +253,7 @@ public class CarteTaskManager {
 				} else if (schedulertype == 4) {
 					trigger = newTrigger().withIdentity(idJobTask + "trigger", JOB_TIMER_TASK_GROUP).withSchedule(cronSchedule("0 " + minutes + " " + hour + " " + dayOfMonth + " * ?")).build();
 				} else if (schedulertype == 5) {
-					trigger = newTrigger().withIdentity(idJobTask + "trigger", JOB_TIMER_TASK_GROUP).withSchedule(cronSchedule("0 " + minutes + " " + hour + " " + dayOfMonth + " "+ month +" ? * ")).build();
+					trigger = newTrigger().withIdentity(idJobTask + "trigger", JOB_TIMER_TASK_GROUP).withSchedule(cronSchedule("0 " + minutes + " " + hour + " " + dayOfMonth + " "+ month +" ? *")).build();
 				}
 				Scheduler sched = sf.getScheduler();
 				sched.scheduleJob(job, trigger);

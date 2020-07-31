@@ -37,7 +37,14 @@ SetVariableDialog = Ext.extend(KettleDialog, {
 					store: getActiveGraph().inputFields(cell.getAttribute('label'))
 				})
 			},{
-				header: BaseMessages.getString(PKG, "SetVariableDialog.Fields.Column.VariableName"), dataIndex: 'variable_name', width: 100, editor: new Ext.form.TextField()
+				header: BaseMessages.getString(PKG, "SetVariableDialog.Fields.Column.VariableName"), dataIndex: 'variable_name', width: 100, editor: new Ext.form.TextField(),
+				renderer : function(value, cellmeta, record, rowIndex, columnIndex, store) {
+					if(value == undefined){
+						return '';
+					}
+					
+					return value.replace(/<[^<>]+?>/g,'');
+				}
 			},{
 				header: BaseMessages.getString(PKG, "SetVariableDialog.Fields.Column.VariableType"), dataIndex: 'variable_type', width: 180, editor: new Ext.form.ComboBox({
 			        store: Ext.StoreMgr.get('variableTypeStore'),
@@ -54,7 +61,14 @@ SetVariableDialog = Ext.extend(KettleDialog, {
 			    	return v;
 				}
 			},{
-				header: '默认值', dataIndex: 'default_value', width: 100, editor: new Ext.form.TextField()
+				header: '默认值', dataIndex: 'default_value', width: 100, editor: new Ext.form.TextField(),
+				renderer : function(value, cellmeta, record, rowIndex, columnIndex, store) {
+					if(value == undefined){
+						return '';
+					}
+					
+					return value.replace(/<[^<>]+?>/g,'');
+				}
 			}],
 			store: store
 		});

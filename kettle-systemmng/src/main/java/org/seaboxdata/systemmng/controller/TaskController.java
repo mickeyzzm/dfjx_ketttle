@@ -2,17 +2,10 @@ package org.seaboxdata.systemmng.controller;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.UUID;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -28,20 +21,12 @@ import org.flhy.ext.trans.TransExecutionConfigurationCodec;
 import org.flhy.ext.utils.JsonUtils;
 import org.flhy.ext.utils.RepositoryUtils;
 import org.flhy.ext.utils.StringEscapeHelper;
+import org.pentaho.di.core.database.DatabaseMeta;
 import org.pentaho.di.job.JobExecutionConfiguration;
 import org.pentaho.di.job.JobMeta;
 import org.pentaho.di.trans.TransExecutionConfiguration;
 import org.pentaho.di.trans.TransMeta;
 import org.pentaho.di.trans.step.StepStatus;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.seaboxdata.systemmng.entity.JobEntity;
 import org.seaboxdata.systemmng.entity.SlaveEntity;
 import org.seaboxdata.systemmng.entity.TaskControlEntity;
@@ -51,7 +36,14 @@ import org.seaboxdata.systemmng.service.ControlService;
 import org.seaboxdata.systemmng.service.JobService;
 import org.seaboxdata.systemmng.service.SlaveService;
 import org.seaboxdata.systemmng.service.TransService;
+import org.seaboxdata.systemmng.util.DesUtils;
 import org.seaboxdata.systemmng.util.CommonUtil.StringDateUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
@@ -447,12 +439,24 @@ public class TaskController {
 			TransMeta transMeta = RepositoryUtils.loadTransByPath(taskName);
 			jsonObject.put("GraphType", "TransGraph");
 			GraphCodec codec = (GraphCodec) PluginFactory.getBean(GraphCodec.TRANS_CODEC);
+			
+			List<DatabaseMeta> databaseMet =transMeta.getDatabases();
+			for (DatabaseMeta databaseMeta : databaseMet) {
+				databaseMeta.setPassword(DesUtils.encrypt(databaseMeta.getPassword()));
+			}
+			
 			String graphXml = codec.encode(transMeta);
 			jsonObject.put("graphXml", StringEscapeHelper.encode(graphXml));
 		} else if (type.equals("job")) {
 			JobMeta jobMeta = RepositoryUtils.loadJobByPath(taskName);
 			jsonObject.put("GraphType", "JobGraph");
 			GraphCodec codec = (GraphCodec) PluginFactory.getBean(GraphCodec.JOB_CODEC);
+			
+			List<DatabaseMeta> databaseMet =jobMeta.getDatabases();
+			for (DatabaseMeta databaseMeta : databaseMet) {
+				databaseMeta.setPassword(DesUtils.encrypt(databaseMeta.getPassword()));
+			}
+			
 			String graphXml = codec.encode(jobMeta);
 			jsonObject.put("graphXml", StringEscapeHelper.encode(graphXml));
 		}

@@ -17,4 +17,6 @@ public interface ExecutionTraceDao {
     public Integer getAllLogCount(String statu,String type,String startDate,String taskName,String userGroupName);
 
     public ExecutionTraceEntity getTraceById(Integer id);
+
+	public void updateLogSchedulerJobName(String oldName, String newName);
 }

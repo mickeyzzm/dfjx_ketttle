@@ -16,14 +16,26 @@ DataGridDialog = Ext.extend(KettleTabDialog, {
 		var initDataStore = function() {
 			var columns = [];
 			store.each(function(rec) {
-				columns.push({header: rec.get('name'), dataIndex: rec.get('name'), width: 100, editor: new Ext.form.TextField()});
+				columns.push({
+					header : rec.get('name').replace(/<[^<>]+?>/g, ''),
+					dataIndex : rec.get('name').replace(/<[^<>]+?>/g, ''),
+					width : 100,
+					editor : new Ext.form.TextField(),
+					renderer : function(value, cellmeta, record, rowIndex, columnIndex, store) {
+						if(value == undefined){
+							return '';
+						}
+						
+						return value.replace(/<[^<>]+?>/g,'');
+					}
+				});
 			});
-			
+
 			var records = [];
 			wData.getStore().each(function(datarec) {
 				var record = {};
 				store.each(function(rec) {
-					var field = rec.get('name');
+					var field = rec.get('name').replace(/<[^<>]+?>/g,'');
 					record[field] = datarec.get(field);
 				});
 				records.push(record);
@@ -41,10 +53,10 @@ DataGridDialog = Ext.extend(KettleTabDialog, {
 			store.loadData(Ext.decode(cell.getAttribute('fields')));
 			var columns = [];
 			store.each(function(rec) {
-				columns.push({header: rec.get('name'), dataIndex: rec.get('name'), width: 100, editor: new Ext.form.TextField()});
+				columns.push({header: rec.get('name').replace(/<[^<>]+?>/g,''), dataIndex: rec.get('name').replace(/<[^<>]+?>/g,''), width: 100, editor: new Ext.form.TextField()});
 			});
 			wData.loadMetaAndValue({
-				columns: columns, records: Ext.decode(cell.getAttribute('data'))
+				columns: columns, records: Ext.decode(cell.getAttribute('data').replace(/<[^<>]+?>/g,''))
 			})
 		};
 		
@@ -63,7 +75,13 @@ DataGridDialog = Ext.extend(KettleTabDialog, {
 			columns: [new Ext.grid.RowNumberer(), {
 				header: BaseMessages.getString(PKG, "DataGridDialog.Name.Column"), dataIndex: 'name', width: 100, editor: new Ext.form.TextField({
 	                allowBlank: false
-	            })
+	            }),
+	            renderer:function(value, cellmeta, record, rowIndex, columnIndex, store){
+	            	if(value == undefined){
+						return '';
+					}
+	            	return value.replace(/<[^<>]+?>/g,'');
+	            }
 			},{
 				header: BaseMessages.getString(PKG, "DataGridDialog.Type.Column"), dataIndex: 'type', width: 100, editor: new Ext.form.ComboBox({
 			        store: Ext.StoreMgr.get('valueMetaStore'),
@@ -87,18 +105,48 @@ DataGridDialog = Ext.extend(KettleTabDialog, {
 			        selectOnFocus:true
 			    })
 			},{
-				header: BaseMessages.getString(PKG, "DataGridDialog.Length.Column"), dataIndex: 'length', width: 50, editor: new Ext.form.NumberField()
+				header: BaseMessages.getString(PKG, "DataGridDialog.Length.Column"), dataIndex: 'length', width: 50, editor: new Ext.form.NumberField(),
+	            renderer:function(value, cellmeta, record, rowIndex, columnIndex, store){
+	            	if(value == undefined){
+						return '';
+					}
+	            	return value.replace(/<[^<>]+?>/g,'');
+	            }
 			},{
-				header: BaseMessages.getString(PKG, "DataGridDialog.Precision.Column"), dataIndex: 'precision', width: 100, editor: new Ext.form.TextField()
+				header: BaseMessages.getString(PKG, "DataGridDialog.Precision.Column"), dataIndex: 'precision', width: 100, editor: new Ext.form.TextField(),
+	            renderer:function(value, cellmeta, record, rowIndex, columnIndex, store){
+	            	if(value == undefined){
+						return '';
+					}
+	            	return value.replace(/<[^<>]+?>/g,'');
+	            }
 			},{
-				header: BaseMessages.getString(PKG, "DataGridDialog.Currency.Column"), dataIndex: 'currencyType', width: 100, editor: new Ext.form.TextField()
+				header: BaseMessages.getString(PKG, "DataGridDialog.Currency.Column"), dataIndex: 'currencyType', width: 100, editor: new Ext.form.TextField(),
+	            renderer:function(value, cellmeta, record, rowIndex, columnIndex, store){
+	            	if(value == undefined){
+						return '';
+					}
+	            	return value.replace(/<[^<>]+?>/g,'');
+	            }
 			},{
-				header: BaseMessages.getString(PKG, "DataGridDialog.Decimal.Column"), dataIndex: 'decimal', width: 100, editor: new Ext.form.TextField()
+				header: BaseMessages.getString(PKG, "DataGridDialog.Decimal.Column"), dataIndex: 'decimal', width: 100, editor: new Ext.form.TextField(),
+	            renderer:function(value, cellmeta, record, rowIndex, columnIndex, store){
+	            	if(value == undefined){
+						return '';
+					}
+	            	return value.replace(/<[^<>]+?>/g,'');
+	            }
 			},{
-				header: BaseMessages.getString(PKG, "DataGridDialog.Group.Column"), dataIndex: 'group', width: 100, editor: new Ext.form.TextField()
-			},{
+				header: BaseMessages.getString(PKG, "DataGridDialog.Group.Column"), dataIndex: 'group', width: 100, editor: new Ext.form.TextField(),
+	            renderer:function(value, cellmeta, record, rowIndex, columnIndex, store){
+	            	if(value == undefined){
+						return '';
+					}
+	            	return value.replace(/<[^<>]+?>/g,'');
+	            }
+			}/*,{
 				header: '值', dataIndex: 'value', width: 100, editor: new Ext.form.TextField()
-			},{
+			}*/,{
 				header: BaseMessages.getString(PKG, "DataGridDialog.Value.SetEmptyString"), dataIndex: 'nullable', xtype: 'checkcolumn', width: 80
 			}],
 			store: store

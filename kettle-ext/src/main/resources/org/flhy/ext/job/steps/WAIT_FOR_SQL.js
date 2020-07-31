@@ -25,18 +25,20 @@ JobEntryWaitForSQLDialog = Ext.extend(KettleDialog, {
             wConnection.setValue(dialog.getValue().name);
             dialog.close();
 		};
-		
-		var wGetSQLbutton =new Ext.Button({
-            buttonAlign : 'right',
-			xtype: 'button', text: '获取  SELECT SQL', handler: function() {
+
+		var wGetSQLbutton = new Ext.Button({
+			buttonAlign : 'right',
+			xtype : 'button',
+			text : '获取  SELECT SQL',
+			handler : function() {
 				var store = getActiveGraph().getDatabaseStore();
 				store.each(function(item) {
-					if(item.get('name') == wConnection.getValue()) {
+					if (item.get('name') == wConnection.getValue()) {
 						me.getSQL(item.json, wCustomSQL);
 					}
 				});
 			}
-		});		
+		});
 		var wEditbutton =new Ext.Button({xtype: 'button', text: '编辑...', handler: function() {
 			/*var store = getActiveGraph().getDatabaseStore();
 			store.each(function(item) {
@@ -74,16 +76,18 @@ JobEntryWaitForSQLDialog = Ext.extend(KettleDialog, {
 		var wSchemaname = new Ext.form.TextField({fieldLabel: '目标模式', flex: 1,	anchor: '0', value: cell.getAttribute('schemaname')});
 		var wTablename = new Ext.form.TextField({fieldLabel: '目标表名称', flex: 1,anchor: '-10', value: cell.getAttribute('tablename')});
 		var wFindbutton = new Ext.Button({
-			text: '浏览(B)', 
-			disabled:false,
-			handler: function() {
-			var dialog = new FileExplorerWindow();
-			dialog.on('ok', function(path) {
-				wTablename.setValue(path);
-				dialog.close();
-			});
-			dialog.show();
-		}});
+			text : '浏览(B)',
+			disabled : false,
+			handler : function() {
+				me.selectTable(wConnection, wSchemaname, wTablename);
+				/*var dialog = new FileExplorerWindow();
+				dialog.on('ok', function(path) {
+					wTablename.setValue(path);
+					dialog.close();
+				});
+				dialog.show();*/
+			}
+		});
 		var wSuccessCondition = new Ext.form.ComboBox({
 			fieldLabel: '满足成功条件行数',
 			flex: 1,
@@ -151,12 +155,13 @@ JobEntryWaitForSQLDialog = Ext.extend(KettleDialog, {
 				xtype: 'button', 
 				disabled:true, 
                 text: '获取SELECT SQL. .', handler: function() {
-					var store = getActiveGraph().getDatabaseStore();
+                	me.selectTableSql(wConnection, wCustomSQL);
+					/*var store = getActiveGraph().getDatabaseStore();
 					store.each(function(item) {
 						if(item.get('name') == wConnection.getValue()) {
 							me.getSQL(item.json, wCustomSQL);
 						}
-					});
+					});*/
 				}
 			});
 		var form = new Ext.form.FormPanel({
@@ -271,7 +276,48 @@ JobEntryWaitForSQLDialog = Ext.extend(KettleDialog, {
 		dialog.show(null, function() {
 			dialog.initDatabase(dbInfo);
 		});
-	}
+	},
+	selectTable: function(wConnection, wSchema, wTable) {
+		var dialog = new DatabaseExplorerDialog();
+		dialog.on('select', function(table, schema) {
+			wTable.setValue(table);
+			wSchema.setValue(schema);
+			dialog.close();
+		});
+		dialog.show(null, function() {
+			dialog.initDatabase(wConnection.getValue());
+		});
+		return false;
+	},
+	selectTableSql: function(wConnection, wSQL) {
+		var dialog = new DatabaseExplorerDialog();
+		dialog.on('select', function(table, schema) {
+			wSQL.setValue('select * from ' + schema + '.' + table);
+			dialog.close();
+			Ext.Msg.show({
+				title:'系统提示',
+				msg: '你想在SQL里面包含字段名吗？',
+				buttons: Ext.Msg.YESNO,
+				icon: Ext.MessageBox.QUESTION,
+				fn: function(bId) {
+					if(bId == 'yes') {
+						var store = getActiveGraph().tableFields(wConnection.getValue(), schema, table, function(store) {
+							var data = [];
+							store.each(function(rec) {
+								data.push('\n\t' + rec.get('name'));
+							});
+							wSQL.setValue('select ' + data.join(',') + '\n from ' + schema + '.' + table);
+						});
+						store.load();
+					}
+				}
+			});
+		});
+		dialog.show(null, function() {
+			dialog.initDatabase(wConnection.getValue());
+		});
+		return false;
+	}	
 });
 
 Ext.reg('WAIT_FOR_SQL', JobEntryWaitForSQLDialog);

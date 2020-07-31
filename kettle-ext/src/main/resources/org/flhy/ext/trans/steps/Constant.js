@@ -23,12 +23,18 @@ ConstantDialog = Ext.extend(KettleDialog, {
 	                grid.startEditing(0, 0);
 				}
 			},{
-				text: '删除字段'
-			},{
+				text: '删除字段', handler: function(btn) {
+                    var sm = btn.findParentByType('editorgrid').getSelectionModel();
+                    if(sm.hasSelection()) {
+                        var row = sm.getSelectedCell()[0];
+                        store.removeAt(row);
+                    }
+                }
+			}/*,{
 				text: '获取字段'
 			},{
 				text: '最小宽度'
-			}],
+			}*/],
 			columns: [new Ext.grid.RowNumberer(), {
 				header: BaseMessages.getString(PKG, "ConstantDialog.Name.Column"), dataIndex: 'name', width: 100, editor: new Ext.form.TextField({
 	                allowBlank: false

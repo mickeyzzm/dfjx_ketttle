@@ -50,10 +50,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.seaboxdata.systemmng.entity.UserEntity;
+import org.seaboxdata.systemmng.util.DesUtils;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.enterprisedt.net.ftp.FTPClient;
+import com.mxgraph.io.mxCodec;
+import com.mxgraph.model.mxCell;
 import com.mxgraph.util.mxUtils;
+import com.mxgraph.view.mxGraph;
 
 @Controller
 @RequestMapping(value="/job")
@@ -152,6 +157,8 @@ public class JobGraphController {
 		UserEntity loginUser =(UserEntity) request.getSession().getAttribute("login");
 		System.out.println(StringEscapeHelper.decode(graphXml));
 		String xml = StringEscapeHelper.decode(graphXml);
+		xml = this.dealXml(xml);
+		
 		JobMeta jobMeta = (JobMeta) codec.decode(xml);
 //		JobMeta jobMeta = (JobMeta) codec.decode(StringEscapeHelper.decode(graphXml));
 		repository = App.getInstance().getRepository();
@@ -191,6 +198,32 @@ public class JobGraphController {
 		JsonUtils.success("作业保存成功！");
 	}
 
+	protected String dealXml(String graphXml) throws Exception {
+    	mxGraph graph = new mxGraph();
+		mxCodec codec = new mxCodec();
+		Document doc = mxUtils.parseXml(graphXml);
+		codec.decode(doc.getDocumentElement(), graph.getModel());
+		mxCell root = (mxCell) graph.getDefaultParent();
+		JSONArray jsonArray = JSONArray.fromObject(root.getAttribute("databases"));
+		JSONArray resultArray= new JSONArray();
+		for (int i = 0; i < jsonArray.size(); i++) {
+			JSONObject jsonObject = jsonArray.getJSONObject(i);
+			
+			jsonObject.put("password", DesUtils.decrypt(jsonObject.optString("password")));
+			
+			resultArray.add(jsonObject);
+		}
+		
+		root.setAttribute("databases", resultArray.toString());
+		graph.setDefaultParent(root);
+			
+		mxCodec encoder = new mxCodec();
+		org.w3c.dom.Node node = encoder.encode(graph.getModel());
+        String xml=mxUtils.getXml(node);
+		System.out.println(xml);
+    	return xml;
+    } 
+	
 	@ResponseBody
 	@RequestMapping(method=RequestMethod.POST, value="/stop")
 	protected JSONObject stop(@RequestParam String executionId,HttpServletResponse response) throws Exception {
@@ -542,8 +575,9 @@ public class JobGraphController {
 	@ResponseBody
 	@RequestMapping(method=RequestMethod.POST, value="/run")
 	protected void run(@RequestParam String graphXml, @RequestParam String executionConfiguration) throws Exception {
-
 		GraphCodec codec = (GraphCodec) PluginFactory.getBean(GraphCodec.JOB_CODEC);
+
+		graphXml = this.dealXml(graphXml);
 		JobMeta jobMeta = (JobMeta) codec.decode(graphXml);
 
 		JSONObject jsonObject = JSONObject.fromObject(executionConfiguration);

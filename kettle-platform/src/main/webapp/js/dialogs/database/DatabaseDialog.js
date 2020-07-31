@@ -169,6 +169,10 @@
 		});
 		var bOk = new Ext.Button({
 			text: '确定', handler: function() {
+				if(Ext.getCmp('password') != undefined){
+					var password = Ext.getCmp('password').getValue();
+					Ext.getCmp('password').setValue(encryptByDES(password));
+				}
 				var db = Ext.encode(me.getValue());
 				Ext.Ajax.request({
 					url: GetUrl('database/check.do'),
@@ -181,7 +185,7 @@
 						} else {
 							me.fireEvent('create', me);
 							Ext.getBody().mask('正在保存，请稍后...', 'x-mask-loading');
-
+							//alert(encryptByDES("123456", "73961011"));
 							Ext.Ajax.request({
 								url: GetUrl('trans/save.do'),
 								params: {graphXml: encodeURIComponent(activeGraph.toXml()),databaseInfo:db},

@@ -52,7 +52,13 @@ Normaliser = Ext.extend(KettleDialog, {
         this.fitItems = {
             layout: 'border',
             border: false,
-            items: [wTypeField,editorGridTarget]
+            items: [{
+				region: 'north',
+				xtype: 'KettleForm',
+				height: 40,
+				labelWidth: 95,
+				items: [wTypeField]
+			},editorGridTarget]
         };
 
         Normaliser.superclass.initComponent.call(this);

@@ -8,7 +8,7 @@ SampleRowsDialog = Ext.extend(KettleDialog, {
 		var wLinesRange = new Ext.form.TextField({fieldLabel: BaseMessages.getString(PKG, "SampleRowsDialog.LinesRange.Label"), anchor: '-10', value: cell.getAttribute('linesrange')});
 		var wLineNumberField = new Ext.form.TextField({fieldLabel: BaseMessages.getString(PKG, "SampleRowsDialog.LineNumberField.Label"), anchor: '-10', value: cell.getAttribute('linenumfield')});
 		
-		this.fitItem = new KettleForm({
+		this.fitItems = new KettleForm({
 			labelWidth: 80,
 			items: [wLinesRange, wLineNumberField]
 		});

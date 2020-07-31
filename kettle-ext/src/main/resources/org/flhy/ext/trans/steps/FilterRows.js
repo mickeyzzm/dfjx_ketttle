@@ -7,6 +7,7 @@ FilterRowsDialog = Ext.extend(KettleDialog, {
 		
 		var wTrueTo = new Ext.form.ComboBox({
 			fieldLabel: BaseMessages.getString(PKG, "FilterRowsDialog.SendTrueTo.Label"),
+			labelSeparator: '',
 			anchor: '-1',
 			displayField: 'name',
 			valueField: 'name',
@@ -19,6 +20,7 @@ FilterRowsDialog = Ext.extend(KettleDialog, {
 		});
 		var wFalseTo = new Ext.form.ComboBox({
 			fieldLabel: BaseMessages.getString(PKG, "FilterRowsDialog.SendFalseTo.Label"),
+			labelSeparator: '',
 			anchor: '-1',
 		    displayField: 'name',
 			valueField: 'name',

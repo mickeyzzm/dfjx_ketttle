@@ -131,7 +131,13 @@ function pauseOrStart(){
     Ext.Ajax.request({
         url:"/task/pauseOrStart.do",
         success:function(response,config){
-            Ext.MessageBox.alert("result","OK");
+        	Ext.Msg.show({  
+        	    title:'提示信息',  
+        	    msg: '操作成功！',  
+        	    buttons: Ext.Msg.OK,  
+        	    icon: Ext.Msg.INFO     //注意此处为INFO  
+        	}); 
+            //Ext.MessageBox.alert("result","OK");
             secondGuidePanel.removeAll(true);
             secondGuidePanel.add(showTaskControlPanel());
             secondGuidePanel.doLayout();
@@ -156,7 +162,13 @@ function stopJobOrTrans(){
     Ext.Ajax.request({
         url:"/task/stopTransOrJob.do",
         success:function(response,config){
-            Ext.MessageBox.alert("result","OK");
+        	Ext.Msg.show({  
+        	    title:'提示信息',  
+        	    msg: '停止成功！',  
+        	    buttons: Ext.Msg.OK,  
+        	    icon: Ext.Msg.INFO     //注意此处为INFO  
+        	}); 
+            //Ext.MessageBox.alert("result","OK");
             secondGuidePanel.removeAll(true);
             secondGuidePanel.add(showTaskControlPanel());
             secondGuidePanel.doLayout();
@@ -207,7 +219,13 @@ function showTransDetailWindow(){
         transDetailWindow.show(grid);
         transDetailInterval=setInterval("refreshTransDetailWindow(transDetailWindow,transAndJobGrid)",2000);
     }else{
-        Ext.MessageBox.alert("请先选择一个(不能多选)需要查看的转换");
+    	Ext.Msg.show({  
+    	    title:'提示信息',  
+    	    msg: '请先选择一个(不能多选)需要查看的转换',  
+    	    buttons: Ext.Msg.OK,  
+    	    icon: Ext.Msg.INFO     //注意此处为INFO  
+    	}); 
+       // Ext.MessageBox.alert("请先选择一个(不能多选)需要查看的转换");
         return;
     }
 }

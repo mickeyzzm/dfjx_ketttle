@@ -16,7 +16,7 @@ public class XssRequestWrapper extends HttpServletRequestWrapper {
     // 定义HTML标签的正则表达式
     private static final String REGEX_HTML = "<[^>]+>";////String regEx = "(?!<(img|p|span).*?>)<.*?>";
     // 定义空格回车换行符
-    private static final String REGEX_SPACE = "\\s*|\t|\r|\n";
+    private static final String REGEX_SPACE = "\t|\r|\n";//\\s*|\t|\r|\n
     //定义所有w标签
     private static final String REGEX_W = "<w[^>]*?>[\\s\\S]*?<\\/w[^>]*?>";
     //定义SQL注入
@@ -144,8 +144,7 @@ public class XssRequestWrapper extends HttpServletRequestWrapper {
 	        Pattern p_space = Pattern.compile(REGEX_SPACE, Pattern.CASE_INSENSITIVE);
 	        Matcher m_space = p_space.matcher(htmlStr);
 	        htmlStr = m_space.replaceAll(""); // 过滤空格回车标签
-	
-	        htmlStr = htmlStr.replaceAll(" ", ""); //过滤
+	        //htmlStr = htmlStr.replaceAll(" ", ""); //过滤
     	}
         return htmlStr.trim(); // 返回文本字符串
     }}

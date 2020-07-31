@@ -92,6 +92,8 @@ KettleDialog = Ext.extend(Ext.Window, {
 			alert('步骤名称不能为空！');
 			return false;
 		}
+		
+		this.wLabel.setValue(this.wLabel.getValue().replace(/<[^<>]+?>/g,''));
 		return true;
 	},
 	

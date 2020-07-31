@@ -405,7 +405,12 @@ JobExecutionConfigurationScheduler = Ext.extend(Ext.Window, {
 					params: {graphXml: getActiveGraph().toXml(), executionConfiguration: Ext.encode(data)},
 					method: 'POST',
 					success: function(response) {
-						Ext.MessageBox.alert("加入定时成功!");
+						Ext.Msg.show({  
+			        	    title:'提示信息',  
+			        	    msg: '加入定时成功!',  
+			        	    buttons: Ext.Msg.OK,  
+			        	    icon: Ext.Msg.INFO     //注意此处为INFO  
+			        	}); 
 						me.close();
 						Ext.getCmp("schedulerDialog").close();
 					},

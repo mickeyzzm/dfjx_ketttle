@@ -88,4 +88,9 @@
         from task_execution_log e WHERE e.fireId=#{id}
     </select>
 
+    <!-- 修改job名称同步修改task_execution_log -->
+	<update id="updateLogSchedulerJobName" parameterType="java.lang.String">
+		UPDATE task_execution_log SET jobName=#{1} WHERE jobName=#{0}
+    </update>
+
 </mapper>

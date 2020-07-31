@@ -230,6 +230,7 @@ ExcelOutputDialog=Ext.extend(KettleTabDialog,{
             proxy:columnTypeProxy,
             reader:columnTypeReader
         });
+        
         var columnFormatsProxy=new Ext.data.HttpProxy({url:"/ExcelOutput/columnFormats.do"});
         var columnFormatsData=Ext.data.Record.create([
             {name:"format",type:"String",mapping:"format"}
@@ -279,6 +280,8 @@ ExcelOutputDialog=Ext.extend(KettleTabDialog,{
                 wAppendTemplate.disable();
             }
         });
+        
+        console.log(Ext.decode(cell.getAttribute('fields')));
         var fieldStore = new Ext.data.JsonStore({
             fields: ['name', 'type','format'],
             data: Ext.decode(cell.getAttribute('fields'))
@@ -317,7 +320,7 @@ ExcelOutputDialog=Ext.extend(KettleTabDialog,{
                     wRetainNullValues,wUsetempfiles,wTempFileDir,wUsetemplatefiles,wTemplateFile,wAppendTemplate
                 ]
             },{
-                title: 'Custom',
+                title: '格式',
                 xtype: 'KettleForm',
                 bodyStyle: 'padding: 10px 0px',
                 items: [
@@ -326,7 +329,7 @@ ExcelOutputDialog=Ext.extend(KettleTabDialog,{
                     wRowFontSize,wRowFontColor,wRowBackgroundColor
                 ]
             },{
-                title: 'fields',
+                title: '字段',
                 xtype: 'editorgrid',
                 columns: [new Ext.grid.RowNumberer(),{
                     header: '字段名', dataIndex: 'name', width: 200, editor: new Ext.form.ComboBox({
@@ -351,7 +354,7 @@ ExcelOutputDialog=Ext.extend(KettleTabDialog,{
                         triggerAction: 'all',
                         selectOnFocus:true,
                         store: columnTypeStore,
-                        mode:"remote"
+                        mode : 'remote'
                     })
                 },{
                     header: '格式', dataIndex: 'format', width: 200, editor: new Ext.form.ComboBox({
@@ -386,7 +389,7 @@ ExcelOutputDialog=Ext.extend(KettleTabDialog,{
                     },{
                         text: '获取字段', handler: function() {
                             getActiveGraph().inputOutputFields(cell.getAttribute('label'), true, function(store) {
-                                fieldStore.merge(store, [{name: 'name', field: 'name'}]);
+                                fieldStore.merge(store, [{name: 'name', field: 'name'},{name: 'type', field: 'type'}]);
                             });
                         }
                     }

@@ -694,6 +694,9 @@ DatabaseConnGrid = Ext.extend(Ext.grid.GridPanel, {
 				}
 			}
 		]);
+		
+		var usergroup=document.getElementById("belongToUserGroup").value;
+		
 		var proxy=new Ext.data.HttpProxy({url:"/common/getDatabases.do"});
 		var human=Ext.data.Record.create([
 			{name:"databaseId",type:"string",mapping:"databaseId"},
@@ -706,7 +709,8 @@ DatabaseConnGrid = Ext.extend(Ext.grid.GridPanel, {
 		var reader=new Ext.data.JsonReader({},human);
 		var store=new Ext.data.Store({
 			proxy:proxy,
-			reader:reader
+			reader:reader,
+			baseParams: {usergroup: usergroup}
 		})
 		store.load();
 		this.store=store;

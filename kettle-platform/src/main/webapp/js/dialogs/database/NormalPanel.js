@@ -27,7 +27,7 @@
 		this.initData = function(dbinfo) {
 			connectionNameBox.setValue(dbinfo.name);
 			connectionBox.setValue(dbinfo.type);
-			accessBox.setValue(dbinfo.access);
+			//accessBox.setValue(dbinfo.access);
 			this.dbinfo = dbinfo;
 		};
 		
@@ -82,6 +82,11 @@
 						fieldset.add(item);
 					});
 					fieldset.doLayout();
+
+					//解密密码
+					if(this.dbinfo.password != undefined && this.dbinfo.password != '' && this.dbinfo.password != null ){
+						this.dbinfo.password = decryptByDES(this.dbinfo.password);
+					}
 					
 					settingsForm.getForm().setValues(this.dbinfo);
 				},

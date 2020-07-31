@@ -21,7 +21,13 @@ RandomValueDialog = Ext.extend(KettleDialog, {
 	                wFields.startEditing(0, 0);
 				}
 			},{
-				iconCls: 'delete', text: '删除字段'
+				iconCls: 'delete', text: '删除字段', handler: function(btn) {
+	                var sm = btn.findParentByType('editorgrid').getSelectionModel();
+					if(sm.hasSelection()) {
+						var row = sm.getSelectedCell()[0];
+						store.removeAt(row);
+					}
+				}
 			}],
 			columns: [new Ext.grid.RowNumberer(), {
 				header: BaseMessages.getString(PKG, "RandomValueDialog.NameColumn.Column"), dataIndex: 'name', width: 200, editor: new Ext.form.TextField({

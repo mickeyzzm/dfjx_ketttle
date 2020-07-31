@@ -3,6 +3,7 @@ package org.flhy.platform.trans;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Toolkit;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -67,6 +68,7 @@ import org.seaboxdata.systemmng.entity.DatabaseConnEntity;
 import org.seaboxdata.systemmng.entity.UserEntity;
 import org.seaboxdata.systemmng.entity.UserGroupAttributeEntity;
 import org.seaboxdata.systemmng.service.CommonService;
+import org.seaboxdata.systemmng.util.DesUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -74,9 +76,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.mxgraph.io.mxCodec;
+import com.mxgraph.model.mxCell;
 import com.mxgraph.util.mxUtils;
+import com.mxgraph.view.mxGraph;
 
 @Controller
 @RequestMapping(value = "/trans")
@@ -98,12 +106,39 @@ public class TransGraphController {
 
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/database")
-    protected void database(@RequestParam String graphXml, String name) throws Exception {
+    protected void database(HttpServletResponse response,HttpServletRequest request, @RequestParam String graphXml, String name) throws Exception {
+        UserGroupAttributeEntity attr = (UserGroupAttributeEntity) request.getSession().getAttribute("userInfo");
+        String userGroupName = "";
+        if (null != attr) {
+        	userGroupName = attr.getUserGroupName();
+        }
+        List<DatabaseConnEntity> items=cService.getDatabases(userGroupName);
+        
         GraphCodec codec = (GraphCodec) PluginFactory.getBean(GraphCodec.TRANS_CODEC);
         TransMeta transMeta = (TransMeta) codec.decode(graphXml);
         DatabaseMeta databaseMeta = transMeta.findDatabase(name);
-        if (databaseMeta == null)
-            databaseMeta = new DatabaseMeta();
+        
+        if (databaseMeta == null) {
+        	databaseMeta = new DatabaseMeta();
+        } else {//判断用户是否拥有数据库权限
+        	boolean ownDataBase = false;
+        	for (DatabaseConnEntity databaseConnEntity : items) {
+				if(name.equals(databaseConnEntity.getName())) {
+					ownDataBase = true;
+					break;
+				}
+			}
+        	
+        	try {
+				DesUtils.decrypt(databaseMeta.getPassword());
+			} catch (Exception e) {
+				databaseMeta.setPassword(DesUtils.encrypt(databaseMeta.getPassword()));
+			}
+        	
+        	if(!ownDataBase) {
+        		databaseMeta = new DatabaseMeta();
+        	}
+        }
 
         JSONObject jsonObject = DatabaseCodec.encode(databaseMeta);
         JsonUtils.response(jsonObject);
@@ -124,6 +159,8 @@ public class TransGraphController {
         Repository repository = null;
         GraphCodec codec = (GraphCodec) PluginFactory.getBean(GraphCodec.TRANS_CODEC);
         String xml = StringEscapeHelper.decode(graphXml);
+        xml = this.dealXml(xml);
+        
         //System.out.println(StringEscapeHelper.decode(graphXml));
         AbstractMeta transMeta = codec.decode(xml);
         repository = App.getInstance().getRepository();
@@ -162,7 +199,7 @@ public class TransGraphController {
 
         repository.save(transMeta, versionComment, null);
         if(null != databaseInfo && !"".equals(databaseInfo)){
-            updateDatabaseUserName(databaseInfo,userGroupName);
+            //updateDatabaseUserName(databaseInfo,userGroupName);
         }
 
         JsonUtils.success("转换保存成功！");
@@ -512,8 +549,10 @@ public class TransGraphController {
     @RequestMapping(method = RequestMethod.POST, value = "/run")
     protected void run(@RequestParam String graphXml, @RequestParam String executionConfiguration) throws Exception {
         GraphCodec codec = (GraphCodec) PluginFactory.getBean(GraphCodec.TRANS_CODEC);
+        
+        graphXml = this.dealXml(graphXml);
         TransMeta transMeta = (TransMeta) codec.decode(graphXml);
-
+        
         JSONObject jsonObject = JSONObject.fromObject(executionConfiguration);
         TransExecutionConfiguration transExecutionConfiguration = TransExecutionConfigurationCodec.decode(jsonObject, transMeta);
 
@@ -525,6 +564,32 @@ public class TransGraphController {
         JsonUtils.success(transExecutor.getExecutionId());
     }
 
+    protected String dealXml(String graphXml) throws Exception {
+    	mxGraph graph = new mxGraph();
+		mxCodec codec = new mxCodec();
+		Document doc = mxUtils.parseXml(graphXml);
+		codec.decode(doc.getDocumentElement(), graph.getModel());
+		mxCell root = (mxCell) graph.getDefaultParent();
+		JSONArray jsonArray = JSONArray.fromObject(root.getAttribute("databases"));
+		JSONArray resultArray= new JSONArray();
+		for (int i = 0; i < jsonArray.size(); i++) {
+			JSONObject jsonObject = jsonArray.getJSONObject(i);
+			
+			jsonObject.put("password", DesUtils.decrypt(jsonObject.optString("password")));
+			
+			resultArray.add(jsonObject);
+		}
+		
+		root.setAttribute("databases", resultArray.toString());
+		graph.setDefaultParent(root);
+			
+		mxCodec encoder = new mxCodec();
+		org.w3c.dom.Node node = encoder.encode(graph.getModel());
+        String xml=mxUtils.getXml(node);
+		System.out.println(xml);
+    	return xml;
+    } 
+    
 //	private static HashMap<String, TransExecutor> executions = new HashMap<String, TransExecutor>();
 
     /**
@@ -719,7 +784,11 @@ public class TransGraphController {
         GraphCodec codec = (GraphCodec) PluginFactory.getBean(GraphCodec.TRANS_CODEC);
         TransMeta transMeta = (TransMeta) codec.decode(graphXml);
         DatabaseMeta inf = transMeta.findDatabase(databaseName);
-
+        try {
+			inf.setPassword(DesUtils.decrypt(inf.getPassword()));
+		} catch (Exception e) {
+		}
+        
         Database db = new Database(loggingObject, inf);
         db.connect();
 
@@ -742,7 +811,17 @@ public class TransGraphController {
     @RequestMapping(method = RequestMethod.POST, value = "/previewData")
     protected void previewData(@RequestParam String graphXml, @RequestParam String stepName, @RequestParam int rowLimit) throws Exception {
         GraphCodec codec = (GraphCodec) PluginFactory.getBean(GraphCodec.TRANS_CODEC);
+        
         TransMeta transMeta = (TransMeta) codec.decode(graphXml);
+        
+        List<DatabaseMeta> databaseMet =transMeta.getDatabases();
+		for (DatabaseMeta databaseMeta : databaseMet) {
+			try {
+				databaseMeta.setPassword(DesUtils.decrypt(databaseMeta.getPassword()));
+			} catch (Exception e) {
+			}
+		}
+        
         StepMeta stepMeta = getStep(transMeta, stepName);
         TransMeta previewMeta = TransPreviewFactory.generatePreviewTransformation(transMeta, stepMeta.getStepMetaInterface(), stepName);
         TransPreviewProgress progresser = new TransPreviewProgress(previewMeta, new String[]{stepName}, new int[]{rowLimit});

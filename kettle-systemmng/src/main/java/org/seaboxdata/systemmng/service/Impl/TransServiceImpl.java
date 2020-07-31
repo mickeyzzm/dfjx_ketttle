@@ -7,6 +7,7 @@ import org.pentaho.di.repository.ObjectId;
 import org.pentaho.di.repository.Repository;
 import org.pentaho.di.repository.RepositoryDirectoryInterface;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.seaboxdata.systemmng.bean.PageforBean;
@@ -38,6 +39,11 @@ public class TransServiceImpl implements TransService {
 
     @Autowired
     private DirectoryDao directoryDao;
+    
+    @Autowired
+    @Qualifier("taskExecutionTraceDao")
+    private ExecutionTraceDao executionTraceDao;
+    
     protected SimpleDateFormat format =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
@@ -188,6 +194,9 @@ public class TransServiceImpl implements TransService {
         }
         taskGroupDao.updateTaskNameforAttr(oldName,newName,"trans","/"+newName);
         transDao.updateTransNameforTrans(oldName,newName);
+        
+
+        executionTraceDao.updateLogSchedulerJobName(oldName,newName);
         return true;
     }
 }

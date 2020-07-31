@@ -28,6 +28,66 @@
 		<input type="hidden" id="taskGroupPowerHidden" value="${sessionScope.userInfo.taskPremissionType}" />
 		<input type="hidden" id="belongToUserGroup" value="${sessionScope.userInfo.userGroupName}" />
 		
+		
+	    <script type="text/javascript" src="${pageContext.request.contextPath}/js/crypto-js.js"></script>
+	    <script type="text/javascript">
+			/**
+			* 检查是否含有非法字符
+			* @param temp_str
+			* @returns {Boolean}
+			*/
+			function is_forbid(temp_str){
+				temp_str=trimTxt(temp_str);
+				temp_str = temp_str.replace('*',"@");
+				temp_str = temp_str.replace('--',"@");
+				temp_str = temp_str.replace('/',"@");
+				temp_str = temp_str.replace('+',"@");
+				temp_str = temp_str.replace('\'',"@");
+				temp_str = temp_str.replace('\\',"@");
+				temp_str = temp_str.replace('$',"@");
+				temp_str = temp_str.replace('^',"@");
+				temp_str = temp_str.replace('.',"@");
+				temp_str = temp_str.replace(';',"@");
+				temp_str = temp_str.replace('<',"@");
+				temp_str = temp_str.replace('>',"@");
+				temp_str = temp_str.replace('"',"@");
+				temp_str = temp_str.replace('=',"@");
+				temp_str = temp_str.replace('{',"@");
+				temp_str = temp_str.replace('}',"@");
+				var forbid_str=new String('@,%,~,&');
+				var forbid_array=new Array();
+				forbid_array=forbid_str.split(',');
+				for(i=0;i<forbid_array.length;i++){
+				    if(temp_str.search(new RegExp(forbid_array[i])) != -1)
+				    return false;
+				}
+				return true;
+			}	    
+	    
+			//DES 加密 key与后端一样的秘钥(8的倍数)   message(值)
+			var key = '73961011';
+			function encryptByDES(message) {
+			  var keyHex = CryptoJS.enc.Utf8.parse(key);
+			  var encrypted = CryptoJS.DES.encrypt(message, keyHex, {
+			      mode: CryptoJS.mode.ECB,
+			      padding: CryptoJS.pad.Pkcs7
+			  });
+			  return encrypted.toString();
+			}
+			//DES 解密
+			function decryptByDES(ciphertext) {
+			  var keyHex = CryptoJS.enc.Utf8.parse(key);
+			  // direct decrypt ciphertext
+			  var decrypted = CryptoJS.DES.decrypt({
+			      ciphertext: CryptoJS.enc.Base64.parse(ciphertext)
+			  }, keyHex, {
+			      mode: CryptoJS.mode.ECB,
+			      padding: CryptoJS.pad.Pkcs7
+			  });
+			  return decrypted.toString(CryptoJS.enc.Utf8);
+			}	    
+	    </script>
+		
 		<!-- javascript脚本编辑器框架加载 -->
 		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/CodeMirror/codemirror.css" />
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/CodeMirror/codemirror.js"></script>
@@ -138,6 +198,7 @@
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/task/transMonitor.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/task/slave.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/task/fixedtimeExecute.js"></script>
+		<script type="text/javascript" src="${pageContext.request.contextPath}/js/task/JobScheduler.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/task/JobScheduler.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/task/taskControl.js"></script>
 		<script type="text/javascript" src="${pageContext.request.contextPath}/js/task/slaveMonitor.js"></script>

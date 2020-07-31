@@ -18,6 +18,7 @@ import org.quartz.SchedulerFactory;
 import org.quartz.TriggerKey;
 import org.quartz.impl.StdSchedulerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.seaboxdata.systemmng.bean.PageforBean;
 import org.seaboxdata.systemmng.dao.*;
@@ -52,9 +53,11 @@ public class JobServiceImpl implements JobService{
     protected JobSchedulerDao jobSchedulerDao;
     @Autowired
     protected TaskGroupDao taskGroupDao;
-    @Autowired
-    protected  JobSchedulerDao schedulerDao;
 
+    @Autowired
+    @Qualifier("taskExecutionTraceDao")
+    private ExecutionTraceDao executionTraceDao;
+    
     protected SimpleDateFormat format =  new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     @Override
@@ -164,11 +167,11 @@ public class JobServiceImpl implements JobService{
         String dir = jobPath.substring(0, jobPath.lastIndexOf("/"));
         String name = jobPath.substring(jobPath.lastIndexOf("/") + 1);
 
-        List<JobTimeSchedulerEntity> timers=schedulerDao.getTimerJobByJobName(name);
+        List<JobTimeSchedulerEntity> timers=jobSchedulerDao.getTimerJobByJobName(name);
 
         if(timers!=null && timers.size()>0){
             //删除作业的定时记录
-            schedulerDao.deleteSchedulerByJobName(name);
+        	jobSchedulerDao.deleteSchedulerByJobName(name);
             SchedulerFactory factory=new StdSchedulerFactory();
             Scheduler scheduler=factory.getScheduler();
             //从trigger中移除该定时
@@ -217,11 +220,12 @@ public class JobServiceImpl implements JobService{
         if(jobs!=null && jobs.size()>=1){
             //遍历查找是否有作业名与用户选择的作业名相同的作业
             List<JobTimeSchedulerEntity> jobNameEqual=new ArrayList<>(); //存放作业名与用户选择的相同的作业
-            for(JobTimeSchedulerEntity nameEqual:jobs){
-                if(nameEqual.getJobName().equals(willAddJobTimer.getJobName())){
-                    jobNameEqual.add(nameEqual);
-                }
-            }
+			for (JobTimeSchedulerEntity nameEqual : jobs) {
+				if (nameEqual.getJobName().equals(willAddJobTimer.getJobName())) {
+					return true;
+					//jobNameEqual.add(nameEqual);
+				}
+			}
 
             //遍历查找相同作业名的情况下 是否有作业定时类型也相同的作业
             if(jobNameEqual.size()>=1){
@@ -368,7 +372,7 @@ public class JobServiceImpl implements JobService{
     public boolean beforeTimeExecuteJob(Map<String, Object> params,HttpServletRequest request) throws Exception {
         boolean isSuccess=false;
         JobTimeSchedulerEntity jobTimeScheduler=new JobTimeSchedulerEntity();
-        jobTimeScheduler.setIdJobtask(System.nanoTime());   //定时的ID 唯一标识
+        jobTimeScheduler.setIdJobtask(String.valueOf(System.nanoTime()));   //定时的ID 唯一标识
         jobTimeScheduler.setIdJob(Integer.parseInt(params.get("jobId").toString()));    //所需定时的作业ID
         jobTimeScheduler.setJobName(params.get("jobName").toString());                  //作业名
         jobTimeScheduler.setIsrepeat("Y");                                       //是否重复执行 暂时默认重复执行Y
@@ -416,34 +420,37 @@ public class JobServiceImpl implements JobService{
 
     @Override
     //定时作业
-        public void addTimeExecuteJob(String graphXml,String executionConfiguration,HttpServletRequest request) throws Exception {
-        // JobMeta jobMeta = RepositoryUtils.loadJobbyPath(taskName);
-        GraphCodec codec = (GraphCodec) PluginFactory.getBean(GraphCodec.JOB_CODEC);
+	public void addTimeExecuteJob(String graphXml, String executionConfiguration, HttpServletRequest request)
+			throws Exception {
+		// JobMeta jobMeta = RepositoryUtils.loadJobbyPath(taskName);
+		GraphCodec codec = (GraphCodec) PluginFactory.getBean(GraphCodec.JOB_CODEC);
 
-        JobMeta jobMeta = (JobMeta) codec.decode(graphXml);
-        org.flhy.ext.utils.JSONObject jsonObject = org.flhy.ext.utils.JSONObject.fromObject(executionConfiguration);
-        JobExecutionConfiguration jobExecutionConfiguration = JobExecutionConfigurationCodec.decode(jsonObject, jobMeta);
-        JobExecutor jobExecutor = JobExecutor.initExecutor(jobExecutionConfiguration, jobMeta);
-        //获取当前登录的用户
-        UserEntity loginUser=(UserEntity)request.getSession().getAttribute("login");
-        JobTimeSchedulerEntity jobTimeScheduler=CarteTaskManager.jobTimerMap.get(loginUser.getLogin());
-        jobExecutor.setUsername(loginUser.getLogin());
-        //设置执行时的配置参数 以及执行节点
-        jobTimeScheduler.setExecutionConfig(executionConfiguration);
-        if(jobExecutor.getExecutionConfiguration().isExecutingLocally()){
-            jobTimeScheduler.setSlaves("本地执行");
-        }else{
-            SlaveEntity thisSlave=slaveDao.getSlaveByHostName(jobExecutor.getExecutionConfiguration().getRemoteServer().getHostname());
-            jobTimeScheduler.setSlaves(thisSlave.getSlaveId()+"_"+thisSlave.getHostName());
-        }
+		JobMeta jobMeta = (JobMeta) codec.decode(graphXml);
+		org.flhy.ext.utils.JSONObject jsonObject = org.flhy.ext.utils.JSONObject.fromObject(executionConfiguration);
+		JobExecutionConfiguration jobExecutionConfiguration = JobExecutionConfigurationCodec.decode(jsonObject,
+				jobMeta);
+		JobExecutor jobExecutor = JobExecutor.initExecutor(jobExecutionConfiguration, jobMeta);
+		// 获取当前登录的用户
+		UserEntity loginUser = (UserEntity) request.getSession().getAttribute("login");
+		JobTimeSchedulerEntity jobTimeScheduler = CarteTaskManager.jobTimerMap.get(loginUser.getLogin());
+		jobExecutor.setUsername(loginUser.getLogin());
+		// 设置执行时的配置参数 以及执行节点
+		jobTimeScheduler.setExecutionConfig(executionConfiguration);
+		if (jobExecutor.getExecutionConfiguration().isExecutingLocally()) {
+			jobTimeScheduler.setSlaves("本地执行");
+		} else {
+			SlaveEntity thisSlave = slaveDao
+					.getSlaveByHostName(jobExecutor.getExecutionConfiguration().getRemoteServer().getHostname());
+			jobTimeScheduler.setSlaves(thisSlave.getSlaveId() + "_" + thisSlave.getHostName());
+		}
 
-        //执行定时任务
-        CarteTaskManager.addTimerTask(jobExecutor, null, jobTimeScheduler, loginUser);
-        //把该定时信息更新到数据库
-        jobTimeScheduler.setUsername(loginUser.getLogin());
-        jobSchedulerDao.addTimerJob(jobTimeScheduler);
-        CarteTaskManager.jobTimerMap.remove(loginUser.getLogin());
-    }
+		// 执行定时任务
+		CarteTaskManager.addTimerTask(jobExecutor, null, jobTimeScheduler, loginUser);
+		// 把该定时信息更新到数据库
+		jobTimeScheduler.setUsername(loginUser.getLogin());
+		jobSchedulerDao.addTimerJob(jobTimeScheduler);
+		CarteTaskManager.jobTimerMap.remove(loginUser.getLogin());
+	}
 
     @Override
     public JobEntity getJobByName(String jobName) throws Exception{
@@ -462,8 +469,11 @@ public class JobServiceImpl implements JobService{
             if (job.getName().equals(newName))
                 return false;
         }
+        
         jobDao.updateJobNameforJob(oldName,newName);
         taskGroupDao.updateTaskNameforAttr(oldName,newName,"job","/"+newName);
+        jobSchedulerDao.updateSchedulerJobName(oldName,newName);
+        executionTraceDao.updateLogSchedulerJobName(oldName,newName);
         return true;
     }
 }

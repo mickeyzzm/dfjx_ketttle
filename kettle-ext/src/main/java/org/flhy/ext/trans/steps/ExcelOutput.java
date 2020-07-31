@@ -94,6 +94,9 @@ public class ExcelOutput extends AbstractStep{
                 efs[i]=ef;
             }
             excel.setOutputFields(efs);
+        } else {
+        	ExcelField[] efs=new ExcelField[0];
+        	excel.setOutputFields(efs);
         }
 
         excel.setHeaderFontName(this.getIndex(excel.font_name_code,cell.getAttribute("header_font_name")));

@@ -12,7 +12,7 @@
         from r_database d INNER JOIN r_database_type t
         on d.ID_DATABASE_TYPE=t.ID_DATABASE_TYPE
         <where>
-            <if test='_parameter!=null and _parameter!="" and _parameter!="Pristin"'>
+            <if test='_parameter!="Pristin"'>
                 d.user_group=#{_parameter}
             </if>
         </where>

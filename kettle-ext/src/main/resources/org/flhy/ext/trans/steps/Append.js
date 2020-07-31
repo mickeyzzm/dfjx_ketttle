@@ -5,6 +5,7 @@ AppendDialog = Ext.extend(KettleDialog, {
 	initComponent: function() {
 		var wHeadHop = new Ext.form.ComboBox({
 			fieldLabel: BaseMessages.getString(PKG, "AppendDialog.HeadHop.Label"),
+			labelSeparator: '',
 			anchor: '-10',
 			displayField: 'name',
 			valueField: 'name',
@@ -17,6 +18,7 @@ AppendDialog = Ext.extend(KettleDialog, {
 		
 		var wTailHop = new Ext.form.ComboBox({
 			fieldLabel:  BaseMessages.getString(PKG, "AppendDialog.TailHop.Label"),
+			labelSeparator: '',
 			anchor: '-10',
 			displayField: 'name',
 			valueField: 'name',

@@ -24,7 +24,7 @@ SequenceDialog = Ext.extend(KettleDialog, {
 		
 		var wCounterName = new Ext.form.TextField({fieldLabel: BaseMessages.getString(PKG, "AddSequenceDialog.CounterName.Label"), anchor: '-10', emptyText: '可选'});
 		var wStartAt = new Ext.form.NumberField({fieldLabel: BaseMessages.getString(PKG, "AddSequenceDialog.StartAt.Label"), anchor: '-10'});
-		var wIncrBy = new Ext.form.NumberField({fieldLabel: BaseMessages.getString(PKG, "AddSequenceDialog.StartAt.Label"), anchor: '-10'});
+		var wIncrBy = new Ext.form.NumberField({fieldLabel: BaseMessages.getString(PKG, "AddSequenceDialog.IncrBy.Label"), anchor: '-10'});
 		var wMaxVal = new Ext.form.NumberField({fieldLabel: BaseMessages.getString(PKG, "AddSequenceDialog.MaxVal.Label"), anchor: '-10'});
 		
 		this.initData = function() {

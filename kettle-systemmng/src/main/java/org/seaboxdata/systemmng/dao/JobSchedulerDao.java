@@ -28,4 +28,11 @@ public interface JobSchedulerDao {
 
     public List<JobTimeSchedulerEntity> getTimerJobByJobName(String jobName);
 
+    /**
+     * 修改d_timerscheduler 中job_name
+     * @param oldName
+     * @param newName
+     */
+	public void updateSchedulerJobName(String oldName, String newName);
+
 }

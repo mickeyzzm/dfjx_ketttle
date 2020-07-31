@@ -583,6 +583,19 @@ function updateJobName(){
     });
     Ext.Msg.prompt('修该作业名', '请输入新的作业名称:', function(btn, text) {
         if (btn == 'ok' && text != '') {
+        	var result = is_forbid(text);
+	    	
+	    	if(!result){
+	    		Ext.Msg.show({  
+	        	    title:'提示信息',  
+	        	    msg: '名称包含非法字符！',  
+	        	    buttons: Ext.Msg.OK,  
+	        	    icon: Ext.Msg.INFO 
+	        	});
+	    		
+	    		return ;
+	    	}        	
+        	
             Ext.Ajax.request({
                 url:"/task/updateTaskName.do",
                 success:function(response,config){

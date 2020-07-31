@@ -2,7 +2,7 @@
 	region: 'south',
 	hidden: true,
 	height: 250,
-	activeTab: 2,
+	activeTab: 1,
 	initComponent: function() {
 		var me = this;
 		var measureStore = new Ext.data.ArrayStore({
@@ -10,11 +10,11 @@
 		});
 		var log = new Ext.form.TextArea({readOnly: true});
 		
-		this.items = [{
+		this.items = [/*{
 			title: '执行历史',
 			iconCls: 'imageShowHistory',
 			disabled: true,
-		}, {
+		}, */{
 			xtype: 'form',
 			title: '日志',
 			iconCls: 'imageShowLog',
@@ -52,7 +52,7 @@
 				header: 'Pri/in/out', dataIndex: 'pio', width: 100
 			}],
 			store: measureStore
-		}, {
+		}/*, {
 			title: '性能图',
 			iconCls: 'imageShowPerf',
 			disabled: true
@@ -64,7 +64,7 @@
 			title: 'Preview Data',
 			iconCls: 'imagePreview',
 			disabled: true
-		}];
+		}*/];
 		
 //		this.loadResult = function(executionId) {
 //			if(!executionId) return;

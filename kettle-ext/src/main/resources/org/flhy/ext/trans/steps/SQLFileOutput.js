@@ -35,7 +35,7 @@ SQLFileOutputDialog = Ext.extend(KettleTabDialog, {
 		var wCreateParentFolder = new Ext.form.Checkbox({ fieldLabel: BaseMessages.getString(PKG, "SQLFileOutputDialog.CreateParentFolder.Label"), checked: cell.getAttribute('create_parent_folder') == 'Y' });
 		var wDoNotOpenNewFileInit = new Ext.form.Checkbox({ fieldLabel: BaseMessages.getString(PKG, "SQLFileOutputDialog.DoNotOpenNewFileInit.Label"), checked: cell.getAttribute('DoNotOpenNewFileInit') == 'Y' });
 		
-		var wExtension = new Ext.form.TextField({ fieldLabel: '扩展名', anchor: '-10', value: cell.getAttribute('extention')});
+		var wExtension = new Ext.form.TextField({ fieldLabel: '扩展名', anchor: '-10', value: cell.getAttribute('extention')==null ?"sql":cell.getAttribute('extention')});
 		var wAddStepnr = new Ext.form.Checkbox({ fieldLabel: BaseMessages.getString(PKG, "SQLFileOutputDialog.AddStepnr.Label"), checked: cell.getAttribute('split') == 'Y' });
 		var wAddDate = new Ext.form.Checkbox({ fieldLabel: BaseMessages.getString(PKG, "SQLFileOutputDialog.AddDate.Label"), checked: cell.getAttribute('add_date') == 'Y' });
 		var wAddTime = new Ext.form.Checkbox({ fieldLabel: BaseMessages.getString(PKG, "SQLFileOutputDialog.AddTime.Label"), checked: cell.getAttribute('add_time') == 'Y' });

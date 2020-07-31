@@ -5,7 +5,7 @@ package org.seaboxdata.systemmng.entity;
  * 作业定时调度类 包含了定时调度的时间信息以及被调度的作业、节点等信息
  */
 public class JobTimeSchedulerEntity {
-    private long idJobtask;
+    private String idJobtask;
     private Integer idJob;
     private String jobName;
     private String slaves;
@@ -38,15 +38,15 @@ public class JobTimeSchedulerEntity {
         this.username = username;
     }
 
-    public long getIdJobtask() {
-        return idJobtask;
-    }
+    public String getIdJobtask() {
+		return idJobtask;
+	}
 
-    public void setIdJobtask(long idJobtask) {
-        this.idJobtask = idJobtask;
-    }
+	public void setIdJobtask(String idJobtask) {
+		this.idJobtask = idJobtask;
+	}
 
-    public Integer getIdJob() {
+	public Integer getIdJob() {
         return idJob;
     }
 

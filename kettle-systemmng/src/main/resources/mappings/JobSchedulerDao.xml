@@ -35,24 +35,28 @@
 
     <!--分页形式获得所有的定时作业 附带条件查询-->
     <select id="getTimerJobByPage" resultType="org.seaboxdata.systemmng.entity.JobTimeSchedulerEntity">
-        select
-        d.ID_JOBTASK as idJobtask,
-        d.ID_JOB as idJob,
-        d.JOB_NAME as jobName,
-        d.SLAVES as slaves,
-        d.ISREPEAT as isrepeat,
-        d.SCHEDULERTYPE as schedulertype,
-        d.INTERVALMINUTES as intervalminutes,
-        d.`HOUR` as hour,
-        d.MINUTES as minutes,
-        d.WEEKDAY as weekday,
-        d.DAYOFMONTH as dayofmonth,
-        d.executionConfig as executionConfig,
-        d.username as username,
-        d.month as month
-        from d_timerscheduler d where 1=1
+		SELECT
+		    d.ID_JOBTASK      AS idJobtask,
+		    d.ID_JOB          AS idJob,
+		    job.NAME          AS jobName,
+		    d.SLAVES          AS slaves,
+		    d.ISREPEAT        AS isrepeat,
+		    d.SCHEDULERTYPE   AS schedulertype,
+		    d.INTERVALMINUTES AS intervalminutes,
+		    d.`HOUR`          AS hour,
+		    d.MINUTES         AS minutes,
+		    d.WEEKDAY         AS weekday,
+		    d.DAYOFMONTH      AS dayofmonth,
+		    d.executionConfig AS executionConfig,
+		    d.username        AS username,
+		    d.month           AS MONTH
+		FROM
+		    d_timerscheduler d,
+		    r_job job
+		WHERE
+		    d.ID_JOB = job.ID_JOB
         <if test='param6!=null and param6!="" and param6!="Pristin"'  >
-            and  d.JOB_NAME IN
+            and  job.NAME IN
             (
               select  d.TASK_NAME from d_task_group_member_attribute d
               WHERE d.TASK_GROUP_NAME IN
@@ -69,7 +73,7 @@
             and d.SLAVES = #{3}
         </if>
         <if test='param5!=null and param5!=""'>
-            and d.JOB_NAME LIKE concat('%',#{4},'%')
+            and job.NAME LIKE concat('%',#{4},'%')
         </if>
          limit #{0},#{1}
     </select>
@@ -169,4 +173,8 @@
         d.month
         from d_timerscheduler d where d.JOB_NAME=#{0}
     </select>
+    <!-- 修改job名称同步修改d_timerscheduler -->
+	<update id="updateSchedulerJobName" parameterType="java.lang.String">
+		UPDATE d_timerscheduler SET JOB_NAME=#{1} WHERE JOB_NAME=#{0}
+    </update>
 </mapper>

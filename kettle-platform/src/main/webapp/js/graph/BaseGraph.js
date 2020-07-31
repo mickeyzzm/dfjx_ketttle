@@ -370,6 +370,8 @@ BaseGraph = Ext.extend(Ext.Panel, {
 	},
 
 	getDatabaseStoreAll: function() {
+		var usergroup=document.getElementById("belongToUserGroup").value;
+		
 		var proxy=new Ext.data.HttpProxy({url:"/common/getDatabases.do"});
 		var data=Ext.data.Record.create([
 			{name:"name",type:"String",mapping:"name"}
@@ -377,7 +379,8 @@ BaseGraph = Ext.extend(Ext.Panel, {
 		var reader=new Ext.data.JsonReader({},data);
 		var store=new Ext.data.Store({
 			proxy:proxy,
-			reader:reader
+			reader:reader,
+			baseParams: {usergroup: usergroup}
 		});
 		return store;
 	},

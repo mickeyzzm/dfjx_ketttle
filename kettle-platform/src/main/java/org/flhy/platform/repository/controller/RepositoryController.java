@@ -62,6 +62,7 @@ import org.pentaho.di.ui.repository.kdr.KettleDatabaseRepositoryDialog;
 import org.seaboxdata.systemmng.entity.TaskGroupAttributeEntity;
 import org.seaboxdata.systemmng.entity.UserGroupAttributeEntity;
 import org.seaboxdata.systemmng.service.CommonService;
+import org.seaboxdata.systemmng.util.DesUtils;
 import org.seaboxdata.systemmng.util.CommonUtil.StringDateUtil;
 import org.seaboxdata.systemmng.util.TaskUtil.CarteClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -407,6 +408,11 @@ public class RepositoryController {
 				TransMeta transMeta = repository.loadTransformation(name, directory, null, true, null);
 				transMeta.setRepositoryDirectory(directory);
 
+				List<DatabaseMeta> databaseMet =transMeta.getDatabases();
+				for (DatabaseMeta databaseMeta : databaseMet) {
+					databaseMeta.setPassword(DesUtils.encrypt(databaseMeta.getPassword()));
+				}
+				
 				GraphCodec codec = (GraphCodec) PluginFactory.getBean(GraphCodec.TRANS_CODEC);
 				String graphXml = codec.encode(transMeta);
 				JsonUtils.responseXml(StringEscapeHelper.encode(graphXml));
@@ -414,6 +420,11 @@ public class RepositoryController {
 				JobMeta jobMeta = repository.loadJob(name, directory, null, null);
 				jobMeta.setRepositoryDirectory(directory);
 
+				List<DatabaseMeta> databaseMet =jobMeta.getDatabases();
+				for (DatabaseMeta databaseMeta : databaseMet) {
+					databaseMeta.setPassword(DesUtils.encrypt(databaseMeta.getPassword()));
+				}
+				
 				GraphCodec codec = (GraphCodec) PluginFactory.getBean(GraphCodec.JOB_CODEC);
 				String graphXml = codec.encode(jobMeta);
 				JsonUtils.responseXml(StringEscapeHelper.encode(graphXml));
@@ -449,7 +460,6 @@ public class RepositoryController {
 		else
 			dir = repository.getUserHomeDirectory();
 		
-		
 		List<RepositoryDirectoryInterface> directorys = dir.getChildren();
 		for(RepositoryDirectoryInterface child : directorys) {
 			list.add(RepositoryNode.initNode(child.getName(), child.getPath()));
@@ -480,6 +490,8 @@ public class RepositoryController {
 					List<Map<String, Object>> existsList = cService.queryRepositoryByUserGroup(entity);
 					if(existsList.size() > 0 ) {
 						list.add(RepositoryNode.initNode(e.getName(),  transPath, e.getObjectType()));
+					} else {
+						System.out.println("没有查下出来结果！");
 					}
 				}
 			}

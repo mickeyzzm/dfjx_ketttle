@@ -35,7 +35,7 @@ import static org.quartz.TriggerBuilder.newTrigger;
 @Service
 public class SchedulerServiceImpl implements SchedulerService {
     @Autowired
-    JobSchedulerDao schedulerDao;
+    JobSchedulerDao jobSchedulerDao;
     @Autowired
     SlaveDao slaveDao;
     @Autowired
@@ -43,13 +43,13 @@ public class SchedulerServiceImpl implements SchedulerService {
 
     @Override
     public List<JobTimeSchedulerEntity> getSchedulerJobByLogin(String userGroupName) {
-        return schedulerDao.getAllTimerJob(userGroupName);
+        return jobSchedulerDao.getAllTimerJob(userGroupName);
     }
 
     //判断是否在数据库中已经存在相同类型 相同执行周期的同一个作业
     public boolean judgeJobIsAlike(JobTimeSchedulerEntity willAddJobTimer) throws Exception{
         boolean flag=false;
-        List<JobTimeSchedulerEntity> jobs=schedulerDao.getAllTimerJob("");
+        List<JobTimeSchedulerEntity> jobs=jobSchedulerDao.getAllTimerJob("");
 
         if(jobs!=null && jobs.size()>=1){
             //遍历查找是否有作业名与用户选择的作业名相同的作业
@@ -154,6 +154,38 @@ public class SchedulerServiceImpl implements SchedulerService {
                                 }
                             }
                             break;
+                        case 5:
+                            //首先判断每月执行的日期xx号是否相同
+                            List<JobTimeSchedulerEntity> month=new ArrayList<>();
+                            for(JobTimeSchedulerEntity jobTime:typeEqualJobs){
+                                if(jobTime.getMonth()==willAddJobTimer.getMonth()){
+                                	month.add(jobTime);
+                                }
+                            }
+                            //首先判断每月执行的日期xx号是否相同
+                            List<JobTimeSchedulerEntity> dayLikeByTypeFive=new ArrayList<>();
+                            for(JobTimeSchedulerEntity jobTime:month){
+                                if(jobTime.getDayofmonth()==willAddJobTimer.getDayofmonth()){
+                                    dayLikeByTypeFive.add(jobTime);
+                                }
+                            }
+                            //如果日期xx号相同则继续判断时间hour是否相同
+                            List<JobTimeSchedulerEntity> dayAndHourLikeByTypeFive=new ArrayList<>();
+                            if(dayLikeByTypeFive.size()>=1){
+                                for(JobTimeSchedulerEntity dayLike:dayLikeByTypeFive){
+                                    if(dayLike.getHour()==willAddJobTimer.getHour()){
+                                        dayAndHourLikeByTypeFive.add(dayLike);
+                                    }
+                                }
+                            }
+                            //如果日期和时间值都相同则最终判断minute是否相同
+                            if(dayAndHourLikeByTypeFive.size()>=1){
+                                for(JobTimeSchedulerEntity dayAndHourLike:dayAndHourLikeByTypeFive){
+                                    if(dayAndHourLike.getMinutes()==willAddJobTimer.getMinutes()){
+                                        flag=true;
+                                    }
+                                }
+                            }
                         default:
                             break;
                     }
@@ -175,7 +207,7 @@ public class SchedulerServiceImpl implements SchedulerService {
             scheduler.unscheduleJob(triggerKey);  //移除触发器
             scheduler.deleteJob(JobKey.jobKey(taskId,CarteTaskManager.JOB_TIMER_TASK_GROUP));   //删除作业
             //删除表中的定时作业记录
-            schedulerDao.deleteScheduler(Long.valueOf(taskId));
+            jobSchedulerDao.deleteScheduler(Long.valueOf(taskId));
         }
     }
 
@@ -186,7 +218,7 @@ public class SchedulerServiceImpl implements SchedulerService {
             SlaveEntity slave=slaveDao.getSlaveByHostName(hostName);
             hostName=slave.getSlaveId()+"_"+hostName;
         }
-        List<JobTimeSchedulerEntity> jobs=schedulerDao.getTimerJobByPage(start,limit,typeId,hostName,jobName,userGroupName);
+        List<JobTimeSchedulerEntity> jobs=jobSchedulerDao.getTimerJobByPage(start,limit,typeId,hostName,jobName,userGroupName);
         for(JobTimeSchedulerEntity job:jobs){
             int index=job.getSlaves().indexOf("_");
             job.setHostName(job.getSlaves().substring(index + 1));
@@ -214,13 +246,13 @@ public class SchedulerServiceImpl implements SchedulerService {
         PageforBean bean=new PageforBean();
         //查询总条数
         bean.setRoot(jobs);
-        bean.setTotalProperty(schedulerDao.getTotalCount(typeId,hostName,jobName,userGroupName));
+        bean.setTotalProperty(jobSchedulerDao.getTotalCount(typeId,hostName,jobName,userGroupName));
         return bean;
     }
 
     @Override
     public JSONObject beforeUpdate(String taskId) throws Exception{
-        JobTimeSchedulerEntity schedulerJob=schedulerDao.getSchedulerBytaskId(Long.valueOf(taskId));
+        JobTimeSchedulerEntity schedulerJob=jobSchedulerDao.getSchedulerBytaskId(Long.valueOf(taskId));
         return JSONObject.fromObject(schedulerJob);
     }
 
@@ -228,13 +260,14 @@ public class SchedulerServiceImpl implements SchedulerService {
     public boolean updateSchedulerJob(Map<String, Object> params,HttpServletRequest request) throws Exception{
         boolean isSuccess=false;
         //获取修改前对象
-        JobTimeSchedulerEntity oldJobScheduler=schedulerDao.getSchedulerBytaskId(Long.valueOf(params.get("taskId").toString()));
-        Long taskJobId=oldJobScheduler.getIdJobtask();
+        JobTimeSchedulerEntity oldJobScheduler=jobSchedulerDao.getSchedulerBytaskId(Long.valueOf(params.get("taskId").toString()));
+        String taskJobId=oldJobScheduler.getIdJobtask();
         String triggerName=taskJobId+"trigger";
 
         //获取修改前的trigger
         SchedulerFactory factory=new StdSchedulerFactory();
         Scheduler scheduler=factory.getScheduler();
+        
         TriggerKey triggerKey=TriggerKey.triggerKey(triggerName, CarteTaskManager.JOB_TIMER_TASK_GROUP);
         Trigger oldtrigger=scheduler.getTrigger(triggerKey);
         //把新值赋给旧对象 并且根据不同的定时类型拼接不同的cron表达式
@@ -306,7 +339,7 @@ public class SchedulerServiceImpl implements SchedulerService {
             oldtrigger = newTrigger().withIdentity(taskJobId +"trigger", CarteTaskManager.JOB_TIMER_TASK_GROUP).
                     withSchedule(cronSchedule("0 " + minuteByMonth + " " + hourByMonth + " " + dayOfMonth + " * ?")).build();
         }else if(type.equals("每年执行")){
-            Integer month=StringDateUtil.getdayInt(params.get("month1Choose").toString());
+            Integer month=StringDateUtil.getMonth(params.get("month1Choose").toString());
             Integer dayOfMonth=StringDateUtil.getdayInt(params.get("monthChoose").toString());
             Integer minuteByMonth=Integer.valueOf(params.get("minute").toString());
             Integer hourByMonth=Integer.valueOf(params.get("hour").toString());
@@ -317,7 +350,7 @@ public class SchedulerServiceImpl implements SchedulerService {
             oldJobScheduler.setHour(hourByMonth);
             oldJobScheduler.setWeekday(null);
             oldJobScheduler.setIntervalminutes(null);
-            oldJobScheduler.setSchedulertype(4);
+            oldJobScheduler.setSchedulertype(5);
             //设置每月执行的trigger
             oldtrigger = newTrigger().withIdentity(taskJobId +"trigger", CarteTaskManager.JOB_TIMER_TASK_GROUP).
                     withSchedule(cronSchedule("0 " + minuteByMonth + " " + hourByMonth + " " + dayOfMonth + " "+ month + " ? * ")).build();
@@ -338,7 +371,7 @@ public class SchedulerServiceImpl implements SchedulerService {
             String username=oldJobScheduler.getUsername();
             jobDetail.getJobDataMap().put("loginUser",userDao.getUserbyName(username).get(0));
             //更新数据库
-            schedulerDao.updateScheduler(oldJobScheduler);
+            jobSchedulerDao.updateScheduler(oldJobScheduler);
             isSuccess=true;
         }
         return isSuccess;

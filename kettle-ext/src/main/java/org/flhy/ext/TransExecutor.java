@@ -119,6 +119,8 @@ public class TransExecutor implements Runnable {
 		ExecutionTraceEntity trace=new ExecutionTraceEntity();
 		try {
 			trace.setStartTime(new Date());
+
+			trace.setJobName(transMeta.getName());
 			if (executionConfiguration.isExecutingLocally()) {
 				// Set the variables
 				transMeta.injectVariables( executionConfiguration.getVariables() );
@@ -237,7 +239,6 @@ public class TransExecutor implements Runnable {
 				errCount = result.getNrErrors();
 			}
 			trace.setEndTime(new Date());
-			trace.setJobName(transMeta.getName());
 			//结果
 			String status="成功";
 			if(errCount>0){
@@ -336,6 +337,7 @@ public class TransExecutor implements Runnable {
 				e.printStackTrace();
 				App.getInstance().getLog().logError("执行失败！", e);
 			}catch (Exception e1){
+				trace.setStatus("程序错误");
 				e1.printStackTrace();
 			}
 		} finally {
