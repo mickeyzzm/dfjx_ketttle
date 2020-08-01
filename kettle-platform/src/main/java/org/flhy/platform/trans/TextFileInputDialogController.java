@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping(value = "/textFileInput")
-public class TextFileInputDialog {
+public class TextFileInputDialogController {
 	public static final LoggingObjectInterface l = new SimpleLoggingObject("TextFileInputDialog", LoggingObjectType.TRANSMETA, null);
     
 	@Autowired

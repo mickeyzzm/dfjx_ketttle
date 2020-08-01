@@ -345,32 +345,6 @@ TransGraph = Ext.extend(BaseGraph, {
             
             transExecutor.on('result', this.doResult, this);
 
-//			this.on('initgraph', function(graph) {
-//				graph.getSelectionModel().addListener(mxEvent.CHANGE, function(sender, evt){
-//					if(transExecutor.isDebuging()) {
-//						Ext.each(evt.getProperty('added'), function(cell) {
-//
-//							var doc = mxUtils.createXmlDocument();
-//							var di = doc.createElement('DebugInfo');
-//							di.setAttribute('label', '<div id="DebugInfo' + cell.getId() + '"></div>');
-//
-//							var nc = graph.insertVertex(graph.getDefaultParent(), null, di, 1, 1, 200, 230);
-//
-//							new StatusPanel({
-//								renderTo: Ext.get('DebugInfo' + cell.getId()),
-//								width: 180
-//							});
-//
-//
-//						});
-//
-//						Ext.each(evt.getProperty('removed'), function(cell) {
-//
-//						});
-//					}
-//				});
-//			});
-
             var startrun = function() {
                 var tb = this.getTopToolbar();
                 tb.find('iconCls', 'pause')[0].enable();

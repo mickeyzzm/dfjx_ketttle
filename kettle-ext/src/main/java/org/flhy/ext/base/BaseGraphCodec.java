@@ -170,6 +170,15 @@ public abstract class BaseGraphCodec implements GraphCodec {
 		}
 	}
 	
+	/**
+	 * 
+	 * @param root
+	 * @param meta
+	 * @throws KettleException
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
 	public void decodeCommRootAttr(mxCell root, AbstractMeta meta) throws KettleException, JsonParseException, JsonMappingException, IOException {
 		Repository repository = App.getInstance().getRepository();
 		meta.setRepository(repository);
@@ -282,6 +291,15 @@ public abstract class BaseGraphCodec implements GraphCodec {
 		}
 	}
 	
+	/**
+	 * 添加数据库配置
+	 * @param root
+	 * @param meta
+	 * @throws KettleDatabaseException
+	 * @throws JsonParseException
+	 * @throws JsonMappingException
+	 * @throws IOException
+	 */
 	public void decodeDatabases(mxCell root, AbstractMeta meta) throws KettleDatabaseException, JsonParseException, JsonMappingException, IOException {
 		JSONArray jsonArray = JSONArray.fromObject(root.getAttribute("databases"));
 		Set<String> privateTransformationDatabases = new HashSet<String>(jsonArray.size());
@@ -308,6 +326,12 @@ public abstract class BaseGraphCodec implements GraphCodec {
 		meta.setPrivateDatabases(privateTransformationDatabases);
 	}
 	
+	/**
+	 * 解析SlaveServers
+	 * @param root
+	 * @param meta
+	 * @throws Exception
+	 */
 	public void decodeSlaveServers(mxCell root, AbstractMeta meta) throws Exception {
 		JSONArray jsonArray = JSONArray.fromObject(root.getAttribute("slaveServers"));
 		for (int i = 0; i < jsonArray.size(); i++) {

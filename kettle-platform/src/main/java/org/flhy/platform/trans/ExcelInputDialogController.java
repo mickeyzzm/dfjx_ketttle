@@ -36,7 +36,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @RequestMapping(value = "/excelInput")
-public class ExcelInputDialog {
+public class ExcelInputDialogController {
 
 	/**
 	 * 获取输入输出字段

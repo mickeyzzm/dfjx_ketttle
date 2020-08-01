@@ -67,10 +67,8 @@
 //		}
 		
 		this.loadLocal = function(result) {
-			if(0 >result.jobMeasure.length ) {
-				jobMeasure.getRootNode().removeAll(true);
-				jobMeasure.getRootNode().appendChild(result.jobMeasure);
-			}
+			jobMeasure.getRootNode().removeAll(true);
+			jobMeasure.getRootNode().appendChild(result.jobMeasure);
 			log.setValue(decodeURIComponent(result.log));
 		};
 		

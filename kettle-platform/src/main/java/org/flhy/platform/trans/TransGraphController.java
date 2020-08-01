@@ -144,7 +144,13 @@ public class TransGraphController {
         JsonUtils.response(jsonObject);
     }
 
-
+    /**
+     * 保存转换
+     * @param graphXml
+     * @param databaseInfo
+     * @param request
+     * @throws Exception
+     */
     @RequestMapping(value = "/save")
     @ResponseBody
     protected void save(@RequestParam String graphXml,@RequestParam String databaseInfo,HttpServletRequest request) throws Exception {
@@ -197,6 +203,7 @@ public class TransGraphController {
             versionComment = "no comment";
         }
 
+        //调用kettle 接口 进行数据保存
         repository.save(transMeta, versionComment, null);
         if(null != databaseInfo && !"".equals(databaseInfo)){
             //updateDatabaseUserName(databaseInfo,userGroupName);
@@ -564,6 +571,12 @@ public class TransGraphController {
         JsonUtils.success(transExecutor.getExecutionId());
     }
 
+    /**
+     * 处理xml 密码加密
+     * @param graphXml
+     * @return
+     * @throws Exception
+     */
     protected String dealXml(String graphXml) throws Exception {
     	mxGraph graph = new mxGraph();
 		mxCodec codec = new mxCodec();
@@ -737,7 +750,7 @@ public class TransGraphController {
     @RequestMapping(method = RequestMethod.POST, value = "/inputOutputFields")
     protected void inputOutputFields(@RequestParam String graphXml, @RequestParam String stepName, @RequestParam boolean before) throws Exception {
         stepName = StringEscapeHelper.decode(stepName);
-
+        graphXml = dealXml(graphXml);
         GraphCodec codec = (GraphCodec) PluginFactory.getBean(GraphCodec.TRANS_CODEC);
 		
 		TransMeta transMeta = (TransMeta) codec.decode(graphXml);

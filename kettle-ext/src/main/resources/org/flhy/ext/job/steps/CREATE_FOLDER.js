@@ -35,7 +35,7 @@ JobEntryCreateFolderDialog = Ext.extend(KettleDialog, {
 					xtype: 'button', text: '浏览...', handler: function() {
 						var dialog = new FileExplorerWindow();
 						dialog.on('ok', function(path) {
-							wFilename.setValue(path);
+							wFoldername.setValue(path);
 							dialog.close();
 						});
 						dialog.show();

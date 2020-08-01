@@ -66,12 +66,14 @@ public class ExcelInput extends AbstractStep{
         excel.allocate(fileArray.size(), sheetsArray.size(), fieldsArray.size());
         
         String[] fileName=new String[fileArray.size()];
+        String[] realFileName=new String[fileArray.size()];
         String[] fileMask=new String[fileArray.size()];
         String[] excludeFileMask=new String[fileArray.size()];
         String[] fileRequired=new String[fileArray.size()];
         String[] includeSubFolders=new String[fileArray.size()];
         for(int i=0;i<fileArray.size();i++){
             JSONObject jsonObject = fileArray.getJSONObject(i);
+            realFileName[i]=jsonObject.optString("realName");
             fileName[i]=jsonObject.optString("name");
             fileMask[i]=jsonObject.optString("filemask");
             excludeFileMask[i]=jsonObject.optString("exclude_filemask");
@@ -80,6 +82,7 @@ public class ExcelInput extends AbstractStep{
         }
         
         excel.setFileName(fileName);
+        excel.setRealFileName(realFileName);
         excel.setFileMask(fileMask);
         excel.setExcludeFileMask(excludeFileMask);
         excel.setFileRequired(fileRequired);
@@ -91,7 +94,6 @@ public class ExcelInput extends AbstractStep{
 			excel.getStartRow()[i] = Const.toInt(jsonObject.getString("startrow"), 0);
 			excel.getStartColumn()[i] = Const.toInt(jsonObject.getString("startcol"), 0);
 		}
-        
         
         ExcelInputField[] inputFields=new ExcelInputField[fieldsArray.size()];
         for(int i=0;i<fieldsArray.size();i++){
@@ -170,6 +172,7 @@ public class ExcelInput extends AbstractStep{
         for(int i=0;i<excel.getFileName().length;i++){
             JSONObject json1=new JSONObject();
             json1.put("name",excel.getFileName()[i]);
+            json1.put("realName",excel.getRealFileName()[i]);
             json1.put("filemask",excel.getFileMask()[i]);
             json1.put("exclude_filemask",excel.getExcludeFileMask()[i]);
             json1.put("file_required",excel.getFileRequired()[i]);

@@ -1,5 +1,5 @@
 JobEntryWriteToFileDialog = Ext.extend(KettleDialog, {
-	title: '创建文件',
+	title: '写入文件',
 	width: 450,
 	height: 400,
 	initComponent: function() {

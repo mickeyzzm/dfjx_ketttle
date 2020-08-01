@@ -2,6 +2,7 @@ package org.flhy.ext;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -126,6 +127,9 @@ public class JobExecutor implements Runnable {
 		return jobExecutor;
 	}
 
+	/**
+	 * 作业运行
+	 */
 	@Override
 	public void run() {
 		ExecutionTraceEntity trace=new ExecutionTraceEntity();
@@ -303,7 +307,7 @@ public class JobExecutor implements Runnable {
     	if(executionConfiguration.isExecutingLocally()) {
     		JobTracker jobTracker = job.getJobTracker();
         	int nrItems = jobTracker.getTotalNumberOfItems();
-        	if ( nrItems != previousNrItems ) {
+        	if (previousNrItems!= nrItems) {
                 // Re-populate this...
                 String jobName = jobTracker.getJobName();
 
@@ -332,6 +336,26 @@ public class JobExecutor implements Runnable {
         	}
     	}
     	return jsonArray;
+	}
+	
+	public JSONArray getStepStatus() throws Exception {
+		JSONArray jsonArray = new JSONArray();
+		if(executionConfiguration.isExecutingLocally()) {
+			List<JobEntryResult> jobEntryResultList = job.getJobEntryResults();
+			for (JobEntryResult jobEntryResult : jobEntryResultList) {
+				JSONObject jsonObject = new JSONObject();
+				jsonObject.put("stepName", jobEntryResult.getJobEntryName());
+				
+				Result result = jobEntryResult.getResult();
+				
+				jsonObject.put("stepStatus", result.getResult());
+				jsonObject.put("logText", result.getResult());
+				
+				jsonArray.add(jsonObject);
+			}
+		}
+		
+		return jsonArray;
 	}
 	
 	private JSONObject addTrackerToTree( JobTracker jobTracker ) {

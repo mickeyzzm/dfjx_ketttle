@@ -610,12 +610,12 @@ public class JobGraphController {
 			
 			jsonObject.put("jobMeasure", jobExecutor.getJobMeasure());
 			jsonObject.put("log", StringEscapeHelper.encode(jobExecutor.getExecutionLog()));
-//			jsonObject.put("stepStatus", transExecutor.getStepStatus());
+			jsonObject.put("stepStatus", jobExecutor.getStepStatus());
 //			jsonObject.put("previewData", transExecutor.getPreviewData());
 		} else {
 			jsonObject.put("jobMeasure", jobExecutor.getJobMeasure());
 			jsonObject.put("log", StringEscapeHelper.encode(jobExecutor.getExecutionLog()));
-//			jsonObject.put("stepStatus", transExecutor.getStepStatus());
+			jsonObject.put("stepStatus", jobExecutor.getStepStatus());
 //			jsonObject.put("previewData", transExecutor.getPreviewData());
 		}
 		

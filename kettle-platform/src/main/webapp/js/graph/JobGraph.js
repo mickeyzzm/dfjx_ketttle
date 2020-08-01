@@ -150,6 +150,7 @@ JobGraph = Ext.extend(BaseGraph, {
 	doResult: function(result) {
 		var resultPanel = this.layout.south.panel;
 		resultPanel.loadLocal(result);
+        this.updateStatus(result.stepStatus);
 	},
 	
 	toRun: function(executionId) {
@@ -517,7 +518,38 @@ JobGraph = Ext.extend(BaseGraph, {
 		store.load();
 		
 		return store;
-	}
+	},
+    updateStatus: function(status) {
+        var graph = this.getGraph();
+        console.log(status);
+		for (var i = 0; i < status.length; i++) {
+			var cells = graph.getModel().getChildCells(graph.getDefaultParent(), true, false);
+            for(var j=0; j<cells.length; j++) {
+                var cell = cells[j];
+                if(cell.getAttribute('label') == status[i].stepName) {
+                    var overlays = graph.getCellOverlays(cell) || [];
+                    for(var k=0; k<overlays.length; k++) {
+                        var overlay = overlays[k];
+
+                        if(overlay.align == mxConstants.ALIGN_RIGHT && overlay.verticalAlign == mxConstants.ALIGN_TOP
+                            && overlay.offset.x == 0 && overlay.offset.y == 0) {
+                            graph.removeCellOverlay(cell, overlay);
+                        }
+                    }
+                    
+                    
+                    if(!status[i].stepStatus) {
+                        var overlay = new mxCellOverlay(new mxImage('ui/images/false.png', 16, 16), status[i].logText, mxConstants.ALIGN_RIGHT, mxConstants.ALIGN_TOP);
+                        graph.addCellOverlay(cell, overlay);
+                    } else {
+                        var overlay = new mxCellOverlay(new mxImage('ui/images/true.png', 16, 16), null, mxConstants.ALIGN_RIGHT, mxConstants.ALIGN_TOP);
+                        graph.addCellOverlay(cell, overlay);
+                    }
+                    break;
+                }
+            }
+        }
+    }
 	
 });
 Ext.reg('JobGraph', JobGraph);

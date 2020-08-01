@@ -97,6 +97,9 @@ public class JobMetaCodec extends BaseGraphCodec {
 		return mxUtils.getPrettyXml(codec.encode(graph.getModel()));
 	}
 
+	/**
+	 * 解析作业xml文件
+	 */
 	@Override
 	public AbstractMeta decode(String graphXml) throws Exception {
 		mxGraph graph = new mxGraph();
