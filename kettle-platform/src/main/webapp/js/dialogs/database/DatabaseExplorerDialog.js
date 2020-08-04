@@ -17,10 +17,10 @@
 			rootVisible: false
 		});
 		
-		this.initDatabase = function(databaseInfo) {
+		this.initDatabase = function(databaseInfo, type) {
 			var loader = new Ext.tree.TreeLoader({
 				dataUrl: GetUrl('database/explorer.do'),
-				baseParams: {databaseInfo: /*Ext.encode(databaseInfo)*/databaseInfo, includeElement: this.includeElement,transName:activeGraph.title}
+				baseParams: {databaseInfo: /*Ext.encode(databaseInfo)*/databaseInfo,type: type, includeElement: this.includeElement,transName:activeGraph.title}
 			});
 			
 			var root = new Ext.tree.AsyncTreeNode({

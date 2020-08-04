@@ -28,4 +28,6 @@ public interface CommonDao {
 	public List<TaskGroupAttributeEntity> getTaskGroupAttribute(TaskGroupAttributeEntity attr);
 
 	public List<Map<String, Object>> queryRepositoryByUserGroup(TaskGroupAttributeEntity entity);
+
+	public List<DatabaseConnEntity> selectDatabaseByParams(DatabaseConnEntity dbConn);
 }

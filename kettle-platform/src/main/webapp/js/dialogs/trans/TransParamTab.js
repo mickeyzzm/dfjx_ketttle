@@ -1,6 +1,5 @@
 ﻿TransParamTab = Ext.extend(Ext.grid.EditorGridPanel, {
 	title: '命名参数',
-	
 	initComponent: function() {
 		this.tbar = [{
 			iconCls: 'add', scope: this, handler: function() {
@@ -15,7 +14,13 @@
 	            this.startEditing(0, 0);
 			}
 		},{
-			iconCls: 'delete'
+			iconCls: 'delete', handler: function(btn) {
+                var sm = btn.findParentByType('editorgrid').getSelectionModel();
+                if(sm.hasSelection()) {
+                    var row = sm.getSelectedCell()[0];
+                    this.getStore().removeAt(row);
+                }
+            }
 		}];
 		
 		this.columns = [new Ext.grid.RowNumberer(), {

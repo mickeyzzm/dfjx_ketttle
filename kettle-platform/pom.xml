@@ -3,17 +3,17 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<artifactId>kettle</artifactId>
-		<groupId>org.flhy</groupId>
+		<groupId>org.seaboxdata</groupId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<groupId>org.flhy.platform</groupId>
+	<groupId>org.seaboxdata.platform</groupId>
 	<artifactId>kettle-platform</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 
 	<dependencies>
 		<dependency>
-			<groupId>org.flhy.ext</groupId>
+			<groupId>org.seaboxdata.ext</groupId>
 			<artifactId>kettle-ext</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<type>jar</type>

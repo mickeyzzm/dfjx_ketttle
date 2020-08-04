@@ -70,6 +70,30 @@
         DELETE FROM r_step_database WHERE ID_DATABASE=#{id}
     </delete>
 
+	<!-- 根据参数查下数据库 -->
+	<select id="selectDatabaseByParams" parameterType="org.seaboxdata.systemmng.entity.DatabaseConnEntity" resultType="org.seaboxdata.systemmng.entity.DatabaseConnEntity">
+		SELECT
+		    t.ID_DATABASE,
+		    t.NAME,
+		    t.ID_DATABASE_TYPE,
+		    t.ID_DATABASE_CONTYPE,
+		    t.HOST_NAME,
+		    t.DATABASE_NAME,
+		    t.PORT,
+		    t.USERNAME,
+		    t.PASSWORD,
+		    t.SERVERNAME,
+		    t.DATA_TBS,
+		    t.INDEX_TBS,
+		    t.USER_GROUP
+		FROM
+		    r_database t
+		WHERE
+		    t.NAME=#{name}
+		AND t.HOST_NAME=#{hostName}
+		AND t.DATABASE_NAME =#{databaseName}	
+	
+	</select>
 
     <update id="updateDatabaseUserName" parameterType="org.seaboxdata.systemmng.entity.DatabaseConnEntity">
         update r_database set USER_GROUP =#{userGroup} WHERE NAME=#{name} AND HOST_NAME=#{hostName} AND DATABASE_NAME =#{databaseName}

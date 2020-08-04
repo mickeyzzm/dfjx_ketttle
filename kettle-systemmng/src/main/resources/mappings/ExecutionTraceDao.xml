@@ -2,13 +2,13 @@
 
 <mapper namespace="org.seaboxdata.systemmng.dao.ExecutionTraceDao">
 
-    <insert id="addExecutionTrace" parameterType="org.flhy.ext.Task.ExecutionTraceEntity">
+    <insert id="addExecutionTrace" parameterType="org.seaboxdata.ext.Task.ExecutionTraceEntity">
       INSERT INTO task_execution_log
       (jobName,startTime,endTime,execMethod,status,executionConfiguration,executionLog,type)
       VALUES (#{jobName},#{startTime},#{endTime},#{execMethod},#{status},#{executionConfiguration},#{executionLog},#{type})
     </insert>
 
-    <select id="getAllLogByPage" resultType="org.flhy.ext.Task.ExecutionTraceEntity">
+    <select id="getAllLogByPage" resultType="org.seaboxdata.ext.Task.ExecutionTraceEntity">
         select
         e.fireId as fireId,
         e.jobName as jobName,
@@ -74,7 +74,7 @@
         </if>
     </select>
 
-    <select id="getTraceById" resultType="org.flhy.ext.Task.ExecutionTraceEntity">
+    <select id="getTraceById" resultType="org.seaboxdata.ext.Task.ExecutionTraceEntity">
         select
         e.fireId as fireId,
         e.jobName as jobName,

@@ -29,7 +29,7 @@
 		<input type="hidden" id="belongToUserGroup" value="${sessionScope.userInfo.userGroupName}" />
 		
 		
-	    <script type="text/javascript" src="${pageContext.request.contextPath}/js/crypto-js.js"></script>
+	    <script type="text/javascript" src="${pageContext.request.contextPath}/js/utils/crypto-js.js"></script>
 	    <script type="text/javascript">
 			/**
 			* 检查是否含有非法字符

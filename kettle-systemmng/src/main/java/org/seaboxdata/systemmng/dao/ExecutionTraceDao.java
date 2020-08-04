@@ -1,6 +1,6 @@
 package org.seaboxdata.systemmng.dao;
 
-import org.flhy.ext.Task.ExecutionTraceEntity;
+import org.seaboxdata.ext.Task.ExecutionTraceEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

@@ -188,7 +188,13 @@
 	                wParams.startEditing(0, 0);
 				}
 			},{
-				text: '删除参数'
+				text: '删除参数', handler: function(btn) {
+                    var sm = btn.findParentByType('editorgrid').getSelectionModel();
+                    if(sm.hasSelection()) {
+                        var row = sm.getSelectedCell()[0];
+                        paramStore.removeAt(row);
+                    }
+                }
 			}],
 			columns: [new Ext.grid.RowNumberer(), {
 				header: '命名参数', dataIndex: 'name', width: 100, editor: new Ext.form.TextField()
@@ -210,7 +216,13 @@
 	                wVariables.startEditing(0, 0);
 				}
 			},{
-				text: '删除变量'
+				text: '删除变量', handler: function(btn) {
+                    var sm = btn.findParentByType('editorgrid').getSelectionModel();
+                    if(sm.hasSelection()) {
+                        var row = sm.getSelectedCell()[0];
+                        varStore.removeAt(row);
+                    }
+                }
 			}],
 			columns: [new Ext.grid.RowNumberer(), {
 				header: '变量', dataIndex: 'name', width: 200, editor: new Ext.form.TextField()
@@ -230,7 +242,13 @@
 	                wArguments.startEditing(0, 0);
 				}
 			},{
-				text: '删除参数'
+				text: '删除参数', handler: function(btn) {
+                    var sm = btn.findParentByType('editorgrid').getSelectionModel();
+                    if(sm.hasSelection()) {
+                        var row = sm.getSelectedCell()[0];
+                        argStore.removeAt(row);
+                    }
+                }
 			}],
 			columns: [new Ext.grid.RowNumberer(), {
 				header: '位置参数', dataIndex: 'name', width: 250

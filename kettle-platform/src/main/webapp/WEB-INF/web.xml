@@ -3,6 +3,14 @@
 	xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
+	<context-param>
+        <param-name>log4jConfigLocation</param-name>
+        <param-value>classpath:conf/log4j.xml</param-value>
+    </context-param>
+    <listener>
+        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+    </listener>
+
 	<filter>
 		<filter-name>encodingFilter</filter-name>
 		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -25,7 +33,7 @@
 		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
-			<param-value>classpath*:dispatcher-servlet.xml</param-value>
+			<param-value>classpath*:conf/dispatcher-servlet.xml</param-value>
 		</init-param>
 		<load-on-startup>1</load-on-startup>
 	</servlet>
@@ -48,7 +56,7 @@
 	
 	<filter>
 		<filter-name>GlobalFilter</filter-name>
-		<filter-class>org.flhy.platform.filter.GlobalFilter</filter-class>
+		<filter-class>org.seaboxdata.platform.config.filter.GlobalFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>GlobalFilter</filter-name>
@@ -57,7 +65,7 @@
 	
 	<filter>
 		<filter-name>AllowOriginFilter</filter-name>
-		<filter-class>org.flhy.platform.filter.AllowOriginFilter</filter-class>
+		<filter-class>org.seaboxdata.platform.config.filter.AllowOriginFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>AllowOriginFilter</filter-name>
@@ -66,7 +74,7 @@
 	
 	<filter>
 		<filter-name>IpFilter</filter-name>
-		<filter-class>org.flhy.platform.filter.IpFilter</filter-class>
+		<filter-class>org.seaboxdata.platform.config.filter.IpFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>IpFilter</filter-name>
@@ -74,14 +82,14 @@
 	</filter-mapping>
 	
 	<listener>
-		<listener-class>org.flhy.platform.listener.SystemLoadListener</listener-class>
+		<listener-class>org.seaboxdata.platform.config.listener.SystemLoadListener</listener-class>
 	</listener>
 
 	<!-- 验证登录过滤器 -->
 	<filter>
 		<display-name>LoginFilter</display-name>
 		<filter-name>LoginFilter</filter-name>
-		<filter-class>org.seaboxdata.systemmng.util.CommonUtil.LoginFilter</filter-class>
+		<filter-class>org.seaboxdata.platform.config.filter.LoginFilter</filter-class>
 		<init-param>
 			<param-name>login_url</param-name>
 			<param-value>/login.jsp</param-value>
@@ -104,7 +112,7 @@
 	<filter>
 		<display-name>beforeLoginFilter</display-name>
 		<filter-name>beforeLoginFilter</filter-name>
-		<filter-class>org.seaboxdata.systemmng.util.CommonUtil.BeforeLoginFilter</filter-class>
+		<filter-class>org.seaboxdata.platform.config.filter.BeforeLoginFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>beforeLoginFilter</filter-name>
@@ -113,7 +121,7 @@
 
 	<filter>
 		<filter-name>XssFilter</filter-name>
-		<filter-class>org.flhy.platform.filter.XSSFilter</filter-class>
+		<filter-class>org.seaboxdata.platform.config.filter.XSSFilter</filter-class>
 	</filter>
 	<filter-mapping>
 		<filter-name>XssFilter</filter-name>
@@ -126,7 +134,7 @@
 	</session-config>
 	
 	<listener>
-		<listener-class>org.seaboxdata.systemmng.util.CommonUtil.SessionLis</listener-class>
+		<listener-class>org.seaboxdata.platform.config.listener.SessionListener</listener-class>
 	</listener>
 
 	<welcome-file-list>

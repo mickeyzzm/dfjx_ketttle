@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <artifactId>kettle</artifactId>
-        <groupId>org.flhy</groupId>
+        <groupId>org.seaboxdata</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     
@@ -15,7 +15,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.flhy.ext</groupId>
+            <groupId>org.seaboxdata.ext</groupId>
             <artifactId>kettle-ext</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <type>jar</type>
@@ -45,7 +45,7 @@
         <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
 
 <!--        <dependency>-->
-<!--            <groupId>org.flhy.webapp</groupId>-->
+<!--            <groupId>org.seaboxdata.webapp</groupId>-->
 <!--            <artifactId>kettle-platform</artifactId>-->
 <!--            <version>0.0.1-SNAPSHOT</version>-->
 <!--            <type>jar</type>-->

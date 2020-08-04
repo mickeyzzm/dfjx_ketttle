@@ -623,7 +623,7 @@ TransGraph = Ext.extend(BaseGraph, {
         carteInfoWindow.show();
     },
     databaseConn:function(){
-        var grid=new DatabaseConnGrid();
+        var grid=new DatabaseConnGrid({type: 'trans'});
         grid.getColumnModel().setHidden(1,true);
         var databaseConnW=new Ext.Window({
             title:"连接管理",
@@ -689,8 +689,12 @@ TransGraph = Ext.extend(BaseGraph, {
                 }, null, null, true);
             } else if(cell.isVertex()) {
                 if(cell.value.nodeName == 'NotePad') {
-                    menu.addItem('编辑注释', null, function() {alert(1);}, null, null, true);
-                    menu.addItem('删除注释', null, function(){alert(1);}, null, null, true);
+                    menu.addItem('编辑注释', null, function() {
+                    	me.editCell(cell);
+                    }, null, null, true);
+                    menu.addItem('删除注释', null, function(){
+                    	graph.removeCells()
+                    }, null, null, true);
                 } else {
                     menu.addItem('编辑步骤', null, function() {me.editCell(cell);}, null, null, true);
                     menu.addItem('编辑步骤描述', null, function(){alert(1);}, null, null, true);

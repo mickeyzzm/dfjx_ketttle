@@ -252,7 +252,7 @@ JobGraph = Ext.extend(BaseGraph, {
 		this.doLayout();
 	},
 	databaseConn:function(){
-		var grid=new DatabaseConnGrid();
+		var grid=new DatabaseConnGrid({type: 'job'});
 		grid.getColumnModel().setHidden(1,true);
 		var databaseConnW=new Ext.Window({
 			title:"连接管理",
@@ -708,9 +708,10 @@ DatabaseConnGrid = Ext.extend(Ext.grid.GridPanel, {
 		forceFit : true //让grid的列自动填满grid的整个宽度，不用一列一列的设定宽度
 	},
 	closable:true,
-
+	type : '',
 	initComponent: function() {
 		var me = this;
+		var type = this.type;
 		var cm=new Ext.grid.ColumnModel([
 			new Ext.grid.RowNumberer(),//行序号生成器,会为每一行生成一个行号
 			{header:"ID",dataIndex:"databaseId",align:"center"},
@@ -722,7 +723,7 @@ DatabaseConnGrid = Ext.extend(Ext.grid.GridPanel, {
 			{header:"操作",dataIndex:"",menuDisabled:true,align:"center",
 				renderer:function(v){
 					return "<img src='../../ui/images/i_delete.png' class='imgCls' onclick='deleteConn()' title='删除连接'/>&nbsp;&nbsp;"+
-					"<img src='../../ui/images/i_editor.png' class='imgCls' onclick='editorConn()' title='修改连接'/>&nbsp;&nbsp;";
+					"<img src='../../ui/images/i_editor.png' class='imgCls' onclick='editorConn(\""+ type +"\")' title='修改连接'/>&nbsp;&nbsp;";
 				}
 			}
 		]);
@@ -753,7 +754,7 @@ DatabaseConnGrid = Ext.extend(Ext.grid.GridPanel, {
 					iconCls:"addCls",
 					tooltip: '新增连接',
 					handler:function(){
-						var databaseDialog = new DatabaseDialog({operation:'add'});
+						var databaseDialog = new DatabaseDialog({operation:'add', type: 'job'});
 						databaseDialog.on('create', onDatabaseCreate);
 						databaseDialog.show(null, function() {
 							databaseDialog.initTransDatabase(null);
@@ -779,7 +780,12 @@ function deleteConn(){
 	Ext.Ajax.request({
 		url:"/common/deleteDatabaseConn.do",
 		success:function(response,config){
-			Ext.MessageBox.alert("提示","删除连接成功!");
+    		Ext.Msg.show({  
+        	    title:'提示信息',  
+        	    msg: '删除连接成功!',  
+        	    buttons: Ext.Msg.OK,  
+        	    icon: Ext.Msg.INFO 
+        	});
 			grid.store.reload();
 		},
 		failure:failureResponse,
@@ -787,11 +793,11 @@ function deleteConn(){
 	});
 
 }
-function editorConn(){
+function editorConn(type){
 	var grid=Ext.getCmp("DatabaseConnGrid");
 	var databaseConnName=grid.getSelectionModel().getSelected().get("name");
 
-	var databaseDialog = new DatabaseDialog({operation:'editor'});
+	var databaseDialog = new DatabaseDialog({operation:'editor', type : type});
 	databaseDialog.on('create', onDatabaseCreate);
 	databaseDialog.show(null, function() {
 		databaseDialog.initTransDatabase(databaseConnName);

@@ -6,6 +6,7 @@
 	modal: true,
 	layout: 'border',
 	operation:'',
+	type : '',
 	initComponent: function() {
 		var deckOptionsBox = new ListView({
 			valueField: 'value',
@@ -158,11 +159,13 @@
 				});
 			}
 		});
+		
+		var type = this.type;
 		var bView = new Ext.Button({
 			text: '浏览', scope: this, handler: function() {
 				var dialog = new DatabaseExplorerDialog();
 				dialog.show(null, function() {
-					dialog.initDatabase(normal.getValue().name);
+					dialog.initDatabase(normal.getValue().name, type);
 				}, this);
 
 			}
@@ -181,7 +184,13 @@
 					success: function(response) {
 						var json = Ext.decode(response.responseText);
 						if(!json.success) {
-							Ext.Msg.alert('系统提示', json.message);
+							//Ext.Msg.alert('系统提示', json.message);
+							Ext.Msg.show({  
+				        	    title:'系统提示',  
+				        	    msg: JSON.parse(json.message).message,  
+				        	    buttons: Ext.Msg.OK,  
+				        	    icon: Ext.Msg.WARNING
+				        	});
 						} else {
 							me.fireEvent('create', me);
 							Ext.getBody().mask('正在保存，请稍后...', 'x-mask-loading');
@@ -193,9 +202,26 @@
 								success: function(response) {
 									try{
 										if(me.operation=='add'){
-											Ext.MessageBox.alert("Success","添加成功!");
+								    		Ext.Msg.show({  
+								        	    title:'提示信息',  
+								        	    msg: '数据库连接添加成功!',  
+								        	    buttons: Ext.Msg.OK,  
+								        	    icon: Ext.Msg.INFO 
+								        	});
+											//Ext.MessageBox.alert("Success","添加成功!");
 										}else{
-											Ext.MessageBox.alert("Success","已保存!");
+											Ext.Msg.show({  
+								        	    title:'提示信息',  
+								        	    msg: '数据库连接已保存!',  
+								        	    buttons: Ext.Msg.OK,  
+								        	    icon: Ext.Msg.INFO 
+								        	});
+											//Ext.MessageBox.alert("Success","已保存!");
+										}
+										
+										var grid=Ext.getCmp("DatabaseConnGrid");
+										if(undefined != grid && grid != '' && grid != null){
+											grid.store.reload();
 										}
 									}finally{
 										Ext.getBody().unmask();
