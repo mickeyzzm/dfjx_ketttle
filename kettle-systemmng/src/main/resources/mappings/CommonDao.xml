@@ -73,25 +73,25 @@
 	<!-- 根据参数查下数据库 -->
 	<select id="selectDatabaseByParams" parameterType="org.seaboxdata.systemmng.entity.DatabaseConnEntity" resultType="org.seaboxdata.systemmng.entity.DatabaseConnEntity">
 		SELECT
-		    t.ID_DATABASE,
-		    t.NAME,
-		    t.ID_DATABASE_TYPE,
+		    t.ID_DATABASE      AS databaseId,
+		    t.NAME             AS name,
+		    t.ID_DATABASE_TYPE AS databaseType,
 		    t.ID_DATABASE_CONTYPE,
-		    t.HOST_NAME,
-		    t.DATABASE_NAME,
-		    t.PORT,
-		    t.USERNAME,
+		    t.HOST_NAME     AS hostName,
+		    t.DATABASE_NAME AS databaseName,
+		    t.PORT          AS port,
+		    t.USERNAME ,
 		    t.PASSWORD,
 		    t.SERVERNAME,
 		    t.DATA_TBS,
 		    t.INDEX_TBS,
-		    t.USER_GROUP
+		    t.USER_GROUP AS userGroup
 		FROM
 		    r_database t
 		WHERE
 		    t.NAME=#{name}
 		AND t.HOST_NAME=#{hostName}
-		AND t.DATABASE_NAME =#{databaseName}	
+		AND t.DATABASE_NAME =#{databaseName}
 	
 	</select>
 
