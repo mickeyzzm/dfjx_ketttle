@@ -90,8 +90,6 @@ DeleteDialog = Ext.extend(KettleDialog, {
 								databaseDialog.initTransDatabase(null);
 							});
 						}
-					}, {
-						xtype: 'button', text: '向导...'
 					}]
 				},{
 					fieldLabel: BaseMessages.getString(PKG, "DeleteDialog.TargetSchema.Label"),

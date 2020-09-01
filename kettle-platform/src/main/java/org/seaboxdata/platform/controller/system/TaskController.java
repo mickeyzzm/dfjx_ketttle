@@ -295,15 +295,22 @@ public class TaskController {
 			// 获取前台传递的查询参数转换名以及创建时间 如果两个参数为空则代表是查询全部
 			String transName = request.getParameter("name");
 			String createDate = request.getParameter("date");
-			String usergroup = request.getParameter("usergroup");
+			String selectGroup = request.getParameter("usergroup");
 			String username = request.getParameter("username");
 			// 获取当前用户所在的用户组
 			UserGroupAttributeEntity attr = (UserGroupAttributeEntity) request.getSession().getAttribute("userInfo");
 			String userGroupName = "";
-			if (null != attr && StringUtils.isEmpty(usergroup)) {
+			
+			if (null != attr) {
 				userGroupName = attr.getUserGroupName();
-			} else {
-				userGroupName = usergroup;
+				if("Pristin".equals(userGroupName)) {
+					userGroupName = selectGroup;
+				} else {
+					if(!StringUtils.isEmpty(selectGroup) && !userGroupName.equals(selectGroup)) {
+						//不查询数据
+						userGroupName = "!";
+					}
+				}
 			}
 
 			JSONObject result = transService.findTrans(start, limit, transName, createDate, userGroupName, username);

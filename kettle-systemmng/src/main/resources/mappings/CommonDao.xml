@@ -48,7 +48,9 @@
 		    d_task_group_member_attribute a
 		WHERE
 		    t.TASK_GROUP_NAME = a.TASK_GROUP_NAME
-		AND t.USER_GROUP_NAME = #{taskGroupName}
+		<if test='taskGroupName!="Pristin"'>
+			AND t.USER_GROUP_NAME = #{taskGroupName}
+        </if>		    
 		AND a.TYPE = #{type}
 		AND a.TASK_NAME = #{taskName}
 		AND a.ID_TASK = #{taskId}

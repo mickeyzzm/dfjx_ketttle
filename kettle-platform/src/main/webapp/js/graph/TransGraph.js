@@ -372,9 +372,9 @@ TransGraph = Ext.extend(BaseGraph, {
                 iconCls: 'stop', scope: this, disabled: true, tooltip: '停止这个转换', handler: this.stop
             }, {
                 iconCls: 'preview', scope: this, tooltip: '预览这个转换', handler: this.preview
-            }, {
+            }/*, {
                 iconCls: 'debug', scope: this, tooltip: '调试这个转换', handler: this.debug
-            }, '-', {
+            }*/, '-', {
                 iconCls: 'check', scope: this, tooltip: '校验这个转换', handler: this.check
             }, {
                 iconCls: 'SQLbutton', scope: this, tooltip: '产生需要运行这个转换的SQL', handler: this.getSQL
@@ -388,9 +388,9 @@ TransGraph = Ext.extend(BaseGraph, {
                 iconCls: 'show-results', scope: this, handler: this.showResultPanel
             },{
                 iconCls: 'databasesCls', scope: this, handler: this.databaseConn,tooltip: '数据库连接'
-            },{
+            }/*,{
                 iconCls: 'show-results', scope: this, handler: this.showHoopCluster
-            }];
+            }*/];
         }else if(this.Executable==true && this.readOnly==false){
             this.tbar = [{
                 iconCls: 'run', scope: this, tooltip: '运行这个转换', handler: this.run

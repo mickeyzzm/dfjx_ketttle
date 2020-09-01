@@ -20,6 +20,16 @@
 	}).load();	//字段值格式，如yyyy-MM-dd
 	
 	new Ext.data.JsonStore({
+		storeId: 'dataFormatStore',
+		fields: ['id', 'name'],
+		baseParams: {valueType: 'DATE'},
+		proxy: new Ext.data.HttpProxy({
+			url: 'system/valueFormat.do',
+			method: 'POST'
+		})
+	}).load();	//字段值格式，如yyyy-MM-dd	
+	
+	new Ext.data.JsonStore({
 		storeId: 'systemDataTypesStore',
 		fields: ['code', 'descrp'],
 		proxy: new Ext.data.HttpProxy({
@@ -174,13 +184,22 @@
 	}).load();
 	
 	new Ext.data.JsonStore({
-		storeId: 'successConditionStore',
+		storeId: 'successConditionForSimp',
     	fields: ['value', 'text'],
 		proxy: new Ext.data.HttpProxy({
 			url: GetUrl('system/successConditionForSimp.do'),
 			method: 'POST'
 		})
 	}).load();
+
+	new Ext.data.JsonStore({
+		storeId: 'successConditionStore',
+    	fields: ['value', 'text'],
+		proxy: new Ext.data.HttpProxy({
+			url: GetUrl('system/successCondition.do'),
+			method: 'POST'
+		})
+	}).load();	
 	
 	new Ext.data.JsonStore({
 		storeId: 'deleteFoldersSuccessConditionStore',

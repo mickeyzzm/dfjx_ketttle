@@ -9,7 +9,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.seaboxdata.systemmng.dao.JobSchedulerDao;
 import org.seaboxdata.systemmng.dao.SlaveDao;
 import org.seaboxdata.systemmng.dao.UserDao;
+import org.seaboxdata.systemmng.entity.JobEntity;
 import org.seaboxdata.systemmng.entity.JobTimeSchedulerEntity;
+import org.seaboxdata.ext.JobExecutor;
 import org.seaboxdata.systemmng.bean.PageforBean;
 import org.seaboxdata.systemmng.entity.SlaveEntity;
 import org.seaboxdata.systemmng.entity.UserEntity;
@@ -21,6 +23,8 @@ import org.seaboxdata.systemmng.utils.task.CarteTaskManager;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -207,8 +211,22 @@ public class SchedulerServiceImpl implements SchedulerService {
             scheduler.unscheduleJob(triggerKey);  //移除触发器
             scheduler.deleteJob(JobKey.jobKey(taskId,CarteTaskManager.JOB_TIMER_TASK_GROUP));   //删除作业
             //删除表中的定时作业记录
+            JobTimeSchedulerEntity thisJob= jobSchedulerDao.getSchedulerBytaskId(Long.valueOf(taskId));
             jobSchedulerDao.deleteScheduler(Long.valueOf(taskId));
+            
+            Hashtable<String,JobExecutor> table=JobExecutor.getExecutors();
+            Enumeration<String> keys=table.keys();
+            while (keys.hasMoreElements()){
+            	 String jobExecutorId=keys.nextElement();
+                 JobExecutor jobExecutor=table.get(jobExecutorId);
+                 if(thisJob.getJobName().equals(jobExecutor.getJobMeta().getName())){
+                	 table.remove(jobExecutorId);
+                	 jobExecutor.stop();
+                     jobExecutor.setIsClickStop(true);
+                 }
+            }
         }
+       
     }
 
     //分页形式获取所有的定时作业信息(包括查询功能)

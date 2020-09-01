@@ -27,6 +27,7 @@
                 AND TYPE="job"
             )
         </if>
+         ORDER BY j.CREATED_DATE DESC
          limit #{0},#{1}
     </select>
 

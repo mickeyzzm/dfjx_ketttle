@@ -121,6 +121,7 @@ public class SystemMainController{
 		final List<String> baseCategories = registry.getCategories(StepPluginType.class);
 		int i=0;
 		for (String baseCategory : baseCategories) {
+			
 			List<PluginInterface> sortedCat = new ArrayList<PluginInterface>();
 			for (PluginInterface baseStep : baseSteps) {
 				if (baseStep.getCategory().equalsIgnoreCase(baseCategory)) {
@@ -180,37 +181,31 @@ public class SystemMainController{
 			jsonObject.put("children", children);
 			jsonArray.add(jsonObject);
 		}
-		//big data
-		JSONObject jsonObject = new JSONObject();
-		jsonObject.put("id", "category" + i++);
-		jsonObject.put("text", "big data");
-		jsonObject.put("icon", SvgImageUrl.getUrl(BasePropertyHandler.getProperty( "Folder_image" )));
-		jsonObject.put("cls", "nav-node");
-		JSONArray children = new JSONArray();
-		//HadoopFileInput
-		JSONObject child1 = new JSONObject();
-		child1.put("id", "step" + i++);
-		child1.put("text", PluginFactory.containBean("HadoopFileInput") ? "Hadoop File Input" : "<font color='red'>" + "Hadoop File Input" + "</font>");
-		child1.put("pluginId", "HadoopFileInput");
-		child1.put("icon","ui/images/HDI.svg?scale=32");
-		child1.put("dragIcon","ui/images/HDI.svg?scale=32");
-		child1.put("cls", "nav");
-		child1.put("qtip","HadoopFileInputPlugin.Description");
-		child1.put("leaf", true);
-		children.add(child1);
-		//HadoopFileOutput
-		JSONObject child2 = new JSONObject();
-		child2.put("id", "step" + i++);
-		child2.put("text", PluginFactory.containBean("HadoopFileOutput") ? "Hadoop File Output" : "<font color='red'>" + "Hadoop File Output" + "</font>");
-		child2.put("pluginId", "HadoopFileOutput");
-		child2.put("icon","ui/images/HDO.svg?scale=32");
-		child2.put("dragIcon","ui/images/HDO.svg?scale=32");
-		child2.put("cls", "nav");
-		child2.put("qtip","i18n:org.pentaho.di.trans.step:BaseStep.TypeLongDesc.HadoopFileOutput");
-		child2.put("leaf", true);
-		children.add(child2);
-		jsonObject.put("children", children);
-		jsonArray.add(jsonObject);
+		/*
+		 * //big data JSONObject jsonObject = new JSONObject(); jsonObject.put("id",
+		 * "category" + i++); jsonObject.put("text", "big data"); jsonObject.put("icon",
+		 * SvgImageUrl.getUrl(BasePropertyHandler.getProperty( "Folder_image" )));
+		 * jsonObject.put("cls", "nav-node"); JSONArray children = new JSONArray();
+		 * //HadoopFileInput JSONObject child1 = new JSONObject(); child1.put("id",
+		 * "step" + i++); child1.put("text",
+		 * PluginFactory.containBean("HadoopFileInput") ? "Hadoop File Input" :
+		 * "<font color='red'>" + "Hadoop File Input" + "</font>");
+		 * child1.put("pluginId", "HadoopFileInput");
+		 * child1.put("icon","ui/images/HDI.svg?scale=32");
+		 * child1.put("dragIcon","ui/images/HDI.svg?scale=32"); child1.put("cls",
+		 * "nav"); child1.put("qtip","HadoopFileInputPlugin.Description");
+		 * child1.put("leaf", true); children.add(child1); //HadoopFileOutput JSONObject
+		 * child2 = new JSONObject(); child2.put("id", "step" + i++); child2.put("text",
+		 * PluginFactory.containBean("HadoopFileOutput") ? "Hadoop File Output" :
+		 * "<font color='red'>" + "Hadoop File Output" + "</font>");
+		 * child2.put("pluginId", "HadoopFileOutput");
+		 * child2.put("icon","ui/images/HDO.svg?scale=32");
+		 * child2.put("dragIcon","ui/images/HDO.svg?scale=32"); child2.put("cls",
+		 * "nav"); child2.put("qtip",
+		 * "i18n:org.pentaho.di.trans.step:BaseStep.TypeLongDesc.HadoopFileOutput");
+		 * child2.put("leaf", true); children.add(child2); jsonObject.put("children",
+		 * children); jsonArray.add(jsonObject);
+		 */
 
 		JsonUtils.response(jsonArray);
 	}
@@ -226,7 +221,10 @@ public class SystemMainController{
 
 		int i=0;
 		for (String baseCategory : baseCategories) {
-
+			System.out.println("===========" + baseCategory);
+			if(baseCategory.equals("文件传输")) {
+				continue;
+			}
 			List<PluginInterface> sortedCat = new ArrayList<PluginInterface>();
 			for (PluginInterface baseJobEntry : baseJobEntries) {
 				if ( baseJobEntry.getIds()[ 0 ].equals( JobMeta.STRING_SPECIAL ) )

@@ -88,12 +88,12 @@ JobEntryEvalTableContentDialog = Ext.extend(KettleDialog, {
 			store: Ext.StoreMgr.get('successConditionStore')
 			});
 		var wlimit = new Ext.form.TextField({fieldLabel: '数值',anchor: '-10', value: cell.getAttribute('limit')});
-		var wIscustomSQL = new Ext.form.Checkbox({fieldLabel: '自定义SQL',anchor: '-10', 
-			checked: cell.getAttribute('iscustomSQL') == 'Y',    
-			listeners:{
-				'check':function(checked){
-					if(checked.checked)
-				   {
+		var wIscustomSQL = new Ext.form.Checkbox({
+			fieldLabel : '自定义SQL',
+			anchor : '-10',
+			listeners : {
+				'check' : function(checked) {
+					if (checked.checked) {
 						wSchemaname.setDisabled(true);
 						wTablename.setDisabled(true);
 						wFindbutton.setDisabled(true);
@@ -102,7 +102,7 @@ JobEntryEvalTableContentDialog = Ext.extend(KettleDialog, {
 						wIsAddRowsResult.setDisabled(false);
 						wCustomSQL.setDisabled(false);
 						wCustomwGetSQLbutton.setDisabled(false);
-					}else{
+					} else {
 						wSchemaname.setDisabled(false);
 						wTablename.setDisabled(false);
 						wFindbutton.setDisabled(false);
@@ -111,9 +111,15 @@ JobEntryEvalTableContentDialog = Ext.extend(KettleDialog, {
 						wIsAddRowsResult.setDisabled(true);
 						wCustomSQL.setDisabled(true);
 						wCustomwGetSQLbutton.setDisabled(true);
-			        }
-			    }
-			 }});
+					}
+				}
+			}
+		});
+
+		this.on('afterrender', function() {
+			wIscustomSQL.setValue(cell.getAttribute('iscustomSQL') == 'Y' );
+		});
+		
 		var wIsUseVars = new Ext.form.Checkbox({fieldLabel: '使用变量替换',anchor: '-10',	disabled:true, checked: cell.getAttribute('isUseVars')== 'Y'});
 		var wIsClearResultList = new Ext.form.Checkbox({fieldLabel: '在执行前清空结果行列',anchor: '-10', disabled:true, checked: cell.getAttribute('isClearResultList')== 'Y'});
 		var wIsAddRowsResult = new Ext.form.Checkbox({fieldLabel: '在结果中添加行',anchor: '-10',disabled:true,  checked: cell.getAttribute('isAddRowsResult')== 'Y'});

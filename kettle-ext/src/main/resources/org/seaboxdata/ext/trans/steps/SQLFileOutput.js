@@ -120,8 +120,6 @@ SQLFileOutputDialog = Ext.extend(KettleTabDialog, {
 								databaseDialog.initTransDatabase(null);
 							});
 						}
-					}, {
-						xtype: 'button', text: '向导...'
 					}]
 				},{
 					fieldLabel: BaseMessages.getString(PKG, "SQLFileOutputDialog.TargetSchema.Label"),

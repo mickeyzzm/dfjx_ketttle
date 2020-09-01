@@ -651,6 +651,7 @@ function transUserGroupCombobox(userGroupName){
 	    displayField:"id",
 	    valueField:"name",
 	    mode:"remote",
+	    disabled: belongToUserGroup == 'Pristin' ? false : true,
 	    emptyText:"用户组选择",
 	    listeners:{
 	        //index是被选中的下拉项在整个列表中的下标 从0开始
@@ -660,10 +661,15 @@ function transUserGroupCombobox(userGroupName){
 	        }
 	    }
 	})
-	if(userGroupName!=undefined && userGroupName!=""){
-	    userGroupCom.setValue(userGroupName);
-	    userGroupCom.setRawValue(userGroupName);
-	}
+	  if(userGroupName!=undefined && userGroupName!=""){
+	      userGroupCom.setValue(userGroupName);
+	      userGroupCom.setRawValue(userGroupName);
+	  } else {
+		  if(belongToUserGroup != 'Pristin'){
+			  userGroupCom.setValue(belongToUserGroup);
+		      userGroupCom.setRawValue(belongToUserGroup);
+		  }
+	  }
 	
 	return userGroupCom;
 }

@@ -78,8 +78,6 @@ JobEntryColumnsExistDialog = Ext.extend(KettleDialog, {
 								databaseDialog.initTransDatabase(null);
 							});
 						}
-					}, {
-						xtype: 'button', text: '向导...'
 					}]
 				},{
 					fieldLabel: '目的模式',

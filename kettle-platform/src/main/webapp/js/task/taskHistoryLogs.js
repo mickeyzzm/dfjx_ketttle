@@ -51,9 +51,7 @@ function showHistoryLogPanel(secondGuidePanel){
         reader:reader,
         listeners: {
             "beforeload": function(store) {
-                store.baseParams = {
-                    search:JSON.stringify(getSearchParam())
-                }
+                store.baseParams = getSearchParam();
             }
         }
     });

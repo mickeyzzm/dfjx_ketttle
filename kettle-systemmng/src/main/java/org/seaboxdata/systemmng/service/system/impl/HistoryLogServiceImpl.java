@@ -16,7 +16,6 @@ import org.seaboxdata.systemmng.entity.TaskGroupEntity;
 import org.seaboxdata.systemmng.service.system.HistoryLogService;
 import org.seaboxdata.systemmng.utils.common.StringDateUtil;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -34,11 +33,6 @@ public class HistoryLogServiceImpl implements HistoryLogService{
 
     @Override
     public String getAllHistoryLog(int start, int limit,String statu,String type,String startDate,String taskName,String userGroupName) throws Exception{
-        if(!StringUtils.isEmpty(startDate)){
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Date dt = sdf.parse(startDate.substring(0,10));
-            startDate = DateUtils.formatDate(dt,"yyyy-MM-dd");
-        }
         List<ExecutionTraceEntity> traces=executionTraceDao.getAllLogByPage(start,limit,statu,type,startDate,taskName,userGroupName);
         for(ExecutionTraceEntity trace:traces){
             if(trace.getStatus().equals("成功")){

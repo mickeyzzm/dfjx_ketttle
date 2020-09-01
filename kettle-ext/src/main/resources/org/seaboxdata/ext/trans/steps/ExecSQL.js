@@ -113,9 +113,6 @@ ExecSQLDialog = Ext.extend(KettleTabDialog, {
 								databaseDialog.initTransDatabase(null);
 							});
 						}
-					}, {
-						xtype: 'button',
-						text: '向导...'
 					}]
 				}]
 			}, {

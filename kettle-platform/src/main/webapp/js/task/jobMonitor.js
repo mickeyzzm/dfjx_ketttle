@@ -69,8 +69,8 @@ function generateJobPanel(secondGuidePanel){
                 var usergroupTo="";
                 if(Ext.getCmp("userNameField"))
                     usernameTo=Ext.getCmp("userNameField").getValue();
-                if(Ext.getCmp("userGroupCombox"))
-                	usergroupTo=Ext.getCmp("userGroupCombox").getValue();
+                if(Ext.getCmp("jobUserGroupCombox"))
+                	usergroupTo=Ext.getCmp("jobUserGroupCombox").getValue();
                 
                 store.baseParams = {
                     name:jobName,
@@ -110,8 +110,8 @@ function generateJobPanel(secondGuidePanel){
     })
 
     var chooseUsergroup="";
-    if(Ext.getCmp("userGroupCombox"))
-        chooseUsergroup=Ext.getCmp("userGroupCombox").getValue();
+    if(Ext.getCmp("jobUserGroupCombox"))
+        chooseUsergroup=Ext.getCmp("jobUserGroupCombox").getValue();
     
     var userGroupCom=jobUserGroupCombobox(chooseUsergroup);
     
@@ -631,13 +631,14 @@ function jobUserGroupCombobox(userGroupName){
   });
 
   var userGroupCom=new Ext.form.ComboBox({
-      id:"userGroupCombox",
+      id:"jobUserGroupCombox",
       triggerAction:"all",
       store:store,
       displayField:"id",
       valueField:"name",
       mode:"remote",
       emptyText:"用户组选择",
+      disabled: belongToUserGroup == 'Pristin' ? false : true,
       listeners:{
           //index是被选中的下拉项在整个列表中的下标 从0开始
           'select':function(combo,record,index){
@@ -649,6 +650,11 @@ function jobUserGroupCombobox(userGroupName){
   if(userGroupName!=undefined && userGroupName!=""){
       userGroupCom.setValue(userGroupName);
       userGroupCom.setRawValue(userGroupName);
+  } else {
+	  if(belongToUserGroup != 'Pristin'){
+		  userGroupCom.setValue(belongToUserGroup);
+	      userGroupCom.setRawValue(belongToUserGroup);
+	  }
   }
 
   return userGroupCom;

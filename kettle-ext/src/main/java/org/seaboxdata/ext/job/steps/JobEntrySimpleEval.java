@@ -69,7 +69,7 @@ public class JobEntrySimpleEval extends AbstractJobEntry{
 //		else {
 //			jobEntrySimpleEval.successbooleancondition=jobEntrySimpleEval.SUCCESS_BOOLEAN_CONDITION_FALSE;
 //		}
-//		jobEntrySimpleEval.setSuccessWhenVarSet(cell.getAttribute("successWhenVarSet")=="Y");;
+		jobEntrySimpleEval.setSuccessWhenVarSet("Y".equals(cell.getAttribute("successwhenvarset")));
 	}
 
 	@Override

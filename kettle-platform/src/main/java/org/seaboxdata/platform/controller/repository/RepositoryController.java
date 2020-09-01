@@ -439,7 +439,7 @@ public class RepositoryController {
 				Repository appRepo = App.getInstance().getRepository();
 				appRepo.disconnect();
 				appRepo.init(App.getInstance().meta);
-				appRepo.connect("admin", "admin");
+				appRepo.connect("root", "root123456ABCD!@#");
 			}
 		}
 	}

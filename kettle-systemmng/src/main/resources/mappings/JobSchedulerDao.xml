@@ -20,7 +20,7 @@
             d.username as username,
             d.month
           from d_timerscheduler d WHERE 1=1
-        <if test='_parameter!=null and _parameter!=""'  >
+        <if test='_parameter!=null and _parameter!="" and _parameter!="Pristin"'  >
             and  d.JOB_NAME IN
             (
               select TASK_NAME from d_task_group_member_attribute

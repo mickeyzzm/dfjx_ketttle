@@ -22,7 +22,13 @@ GetVariableDialog = Ext.extend(KettleDialog, {
 	                grid.startEditing(0, 0);
 				}
 			},{
-				text: '删除字段'
+				text: '删除字段', handler: function(btn) {
+					var sm = btn.findParentByType('editorgrid').getSelectionModel();
+					if(sm.hasSelection()) {
+						var row = sm.getSelectedCell()[0];
+						store.removeAt(row);
+					}
+				}
 			},{
 				text: '获取变量'
 			}],

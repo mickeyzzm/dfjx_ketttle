@@ -172,15 +172,15 @@ function generateSchedulerTypeSelect(typeId){
         }
     })
     if(typeId!=undefined && typeId!=""){
-        if(typeId=="1"){
+        if(typeId=="间隔重复"){
             typeChooseCom.setValue("间隔重复");
-        }else if(typeId=="2"){
+        }else if(typeId=="每天执行"){
             typeChooseCom.setValue("每天执行");
-        }else if(typeId=="3"){
+        }else if(typeId=="每周执行"){
             typeChooseCom.setValue("每周执行");
-        }else if(typeId=="4"){
+        }else if(typeId=="每月执行"){
             typeChooseCom.setValue("每月执行");
-        }else if(typeId=="5"){
+        }else if(typeId=="每年执行"){
             typeChooseCom.setValue("每年执行");
         }
 

@@ -168,7 +168,7 @@ function assignedTaskGroupForUserGroup(){
                 items:[
                     taskGroupPanel
                 ],
-                tbar:new Ext.Toolbar({buttons:[
+                bbar:new Ext.Toolbar({buttons:['->',
                     {
                         text:"确认",
                         handler:function(){
@@ -186,7 +186,12 @@ function assignedTaskGroupForUserGroup(){
                                 url:"/userGroup/assignedTaskGroup.do",
                                 success:function(response,config){
                                     chooseTaskGroupWindow.close();
-                                    Ext.MessageBox.alert("success","任务组分配成功");
+                                    Ext.Msg.show({
+										title : '提示信息',
+										msg : '任务组分配成功!',
+										buttons : Ext.Msg.OK,
+										icon : Ext.Msg.INFO //注意此处为INFO  
+									});
                                 },
                                 failure:failureResponse,
                                 params:{userGroupName:userGroupName,taskGroupNameArray:taskGroupNameArray}
@@ -241,7 +246,12 @@ function assignedSlaveForUserGroup(){
                                 url:"/userGroup/assignedSlave.do",
                                 success:function(response,config){
                                     chooseSlaveWindow.close();
-                                    Ext.MessageBox.alert("success","节点分配成功!");
+                                    Ext.Msg.show({
+										title : '提示信息',
+										msg : '节点分配成功!',
+										buttons : Ext.Msg.OK,
+										icon : Ext.Msg.INFO //注意此处为INFO  
+									});
                                 },
                                 failure:failureResponse,
                                 params:{userGroupName:userGroupName,slaveIdArray:slaveIdArray}
@@ -288,17 +298,32 @@ function deleteUserGroup(){
                                     success:function(response,config){
                                     	var result=Ext.decode(response.responseText)
                                     	if(result.success){
-                                    		Ext.MessageBox.alert("success","移除用户组成功!");
+                                    		Ext.Msg.show({
+        										title : '提示信息',
+        										msg : '移除用户组成功!',
+        										buttons : Ext.Msg.OK,
+        										icon : Ext.Msg.INFO //注意此处为INFO  
+        									});
                                     		generateUserGroupPanel(secondGuidePanel);
                                     	} else {
-                                    		Ext.MessageBox.alert("success",result.msg);
+                                    		Ext.Msg.show({
+        										title : '提示信息',
+        										msg : result.msg,
+        										buttons : Ext.Msg.OK,
+        										icon : Ext.Msg.ERROR //注意此处为INFO  
+        									});
                                     	}
                                     },
                                     failure:failureResponse,
                                     params:{userGroupName:chooseUserGroupName, repeatPassword: repeatPassword, password: password}
                                 })
                             }else{
-                                Ext.MessageBox.alert("faile","两次密码输入不正确一致,验证失败!");
+                            	Ext.Msg.show({
+									title : '提示信息',
+									msg : '两次密码输入不正确一致,验证失败!',
+									buttons : Ext.Msg.OK,
+									icon : Ext.Msg.WARNING //注意此处为INFO  
+								});
                             }
                         }
                     });
@@ -388,24 +413,39 @@ function updateUserGroup(){
         items:[
             updateUserGroupForm
         ],
-        tbar:new Ext.Toolbar({buttons:[
+        bbar:new Ext.Toolbar({buttons:['->',
             {
                 text:"修改",
                 handler:function(){
                     var userGroupName=userGroupNameField.getValue();
                     var userGroupDesc=userGroupDescField.getValue();
                     if(userGroupName==undefined || userGroupName==""){
-                        Ext.MessageBox.alert("用户组名不能为空!");
+                        Ext.Msg.show({  
+    		        	    title:'提示信息',  
+    		        	    msg: '用户组名不能为空!！',  
+    		        	    buttons: Ext.Msg.OK,  
+    		        	    icon: Ext.Msg.INFO     //注意此处为INFO  
+    		        	});  
                         return;
                     }else{
                         Ext.Ajax.request({
                             url:"/userGroup/updateUserGroup.do",
                             success:function(response,config){
                                 if(response.responseText=="Y"){
-                                    Ext.MessageBox.alert("修改失败","该用户组名已存在!");
+                                	Ext.Msg.show({
+    									title : '提示信息',
+    									msg : '该用户组名已存在!',
+    									buttons : Ext.Msg.OK,
+    									icon : Ext.Msg.INFO //注意此处为INFO  
+    								});
                                     userGroupNameField.setValue("");
                                 }else{
-                                    Ext.MessageBox.alert("success","修改成功!");
+                                	Ext.Msg.show({
+    									title : '提示信息',
+    									msg : '修改成功!',
+    									buttons : Ext.Msg.OK,
+    									icon : Ext.Msg.INFO //注意此处为INFO  
+    								});
                                     updateUserGroupWindow.close();
                                     generateUserGroupPanel(Ext.getCmp("secondGuidePanel"));
                                 }
@@ -469,39 +509,55 @@ function fillInBeforeAdd(groupName,groupDesc,taskGroupNameArray,slaveIdArray){
         items:[
             addUserGroupForm
         ],
-        tbar:new Ext.Toolbar({buttons:[
-            {
-                text:"下一步",
-                handler:function(){
-                    var userGroupName=userGroupNameField.getValue();
-                    if(userGroupName==undefined || userGroupName==""){
-                        Ext.MessageBox.alert("用户组名不能为空!");
-                        return;
-                    }else{
-                        Ext.Ajax.request({
-                            url:"/userGroup/decideGroupNameExist.do",
-                            success:function(response,config){
-                                if(response.responseText=="Y"){
-                                    Ext.MessageBox.alert("该用户组名已存在!");
-                                    userGroupNameField.setValue("");
-                                }else{
-                                    var userGroupDesc=Ext.getCmp("userGroupDescField").getValue();
-                                    var userGroupName=Ext.getCmp("userGroupNameField").getValue();
-                                    addUserGroupWindow.close();
-                                    chooseVisualTaskGroup(taskGroupNameArray,userGroupName,userGroupDesc,slaveIdArray);
-                                }
-                            },
-                            failure:function(response){
-                                addUserGroupWindow.close();
-                                failureResponse(response);
-                            },
-                            params:{name:userGroupName}
-                        })
-                    }
-                }
-            }
-        ]})
-    });
+		bbar : new Ext.Toolbar({
+			buttons : [ '->',{
+				text : "下一步",
+				handler : function() {
+					var userGroupName = userGroupNameField.getValue();
+					if (userGroupName == undefined || userGroupName == "") {
+						Ext.Msg.show({
+							title : '提示信息',
+							msg : '用户组名不能为空!',
+							buttons : Ext.Msg.OK,
+							icon : Ext.Msg.WARNING //注意此处为INFO  
+						});
+						return;
+					} else {
+						Ext.Ajax.request({
+							url : "/userGroup/decideGroupNameExist.do",
+							success : function(response, config) {
+								if (response.responseText == "Y") {
+//									Ext.Msg.INFO（带叹号的图标），
+//									Ext.Msg.ERROR（带X号的红色图标），
+//									Ext.Msg.WARNING（带叹号的黄色图标），
+//									Ext.Msg.QUESTION（带？号的图标）
+									Ext.Msg.show({
+										title : '提示信息',
+										msg : '该用户组名已存在!',
+										buttons : Ext.Msg.OK,
+										icon : Ext.Msg.WARNING //注意此处为INFO  
+									});
+									userGroupNameField.setValue("");
+								} else {
+									var userGroupDesc = Ext.getCmp("userGroupDescField").getValue();
+									var userGroupName = Ext.getCmp("userGroupNameField").getValue();
+									addUserGroupWindow.close();
+									chooseVisualTaskGroup(taskGroupNameArray, userGroupName, userGroupDesc, slaveIdArray);
+								}
+							},
+							failure : function(response) {
+								addUserGroupWindow.close();
+								failureResponse(response);
+							},
+							params : {
+								name : userGroupName
+							}
+						})
+					}
+				}
+			}]
+		})
+	});
     addUserGroupWindow.show(userGroupPanel);
 }
 
@@ -522,44 +578,44 @@ function chooseVisualTaskGroup(taskGroupNameArray,userGroupName,userGroupDesc,sl
         items:[
             taskGroupPanel
         ],
-        tbar:new Ext.Toolbar({buttons:[
-            {
-                text:"下一步",
-                handler:function(){
-                    //获取被选中的任务组Id集合
-                    var taskGroupPanelForAdd=Ext.getCmp("taskGroupPanelForAdd");
-                    var taskGroupNameArray=new Array();
-                    var view=taskGroupPanelForAdd.getView();
-                    var rsm=taskGroupPanelForAdd.getSelectionModel();
-                    for(var i=0;i<view.getRows().length;i++) {
-                        if(rsm.isSelected(i)){
-                            var taskGroupName=taskGroupPanelForAdd.getStore().getAt(i).get("taskGroupName");
-                            taskGroupNameArray.push(taskGroupName);
-                        }
-                    }
-                    chooseVisualSlave(taskGroupNameArray,userGroupName,userGroupDesc,slaveIdArray);
-                }
-            },"-",
-            {
-                text:"上一步",
-                handler:function(){
-                    //获取被选中的任务组Id集合
-                    var taskGroupPanelForAdd=Ext.getCmp("taskGroupPanelForAdd");
-                    var taskGroupNameArray=new Array();
-                    var view=taskGroupPanelForAdd.getView();
-                    var rsm=taskGroupPanelForAdd.getSelectionModel();
-                    for(var i=0;i<view.getRows().length;i++) {
-                        if(rsm.isSelected(i)){
-                            var taskGroupName=taskGroupPanelForAdd.getStore().getAt(i).get("taskGroupName");
-                            taskGroupNameArray.push(taskGroupName);
-                        }
-                    }
-                    chooseTaskGroupWindow.close();
-                    fillInBeforeAdd(userGroupName,userGroupDesc,taskGroupNameArray,slaveIdArray);
-                }
-            }
-        ]})
-    });
+		bbar : new Ext.Toolbar({
+			buttons : [ '->', {
+				text : "上一步",
+				handler : function() {
+					//获取被选中的任务组Id集合
+					var taskGroupPanelForAdd = Ext.getCmp("taskGroupPanelForAdd");
+					var taskGroupNameArray = new Array();
+					var view = taskGroupPanelForAdd.getView();
+					var rsm = taskGroupPanelForAdd.getSelectionModel();
+					for (var i = 0; i < view.getRows().length; i++) {
+						if (rsm.isSelected(i)) {
+							var taskGroupName = taskGroupPanelForAdd.getStore().getAt(i).get("taskGroupName");
+							taskGroupNameArray.push(taskGroupName);
+						}
+					}
+					chooseTaskGroupWindow.close();
+					fillInBeforeAdd(userGroupName, userGroupDesc, taskGroupNameArray, slaveIdArray);
+				}
+			}, "-",
+			{
+				text : "下一步",
+				handler : function() {
+					//获取被选中的任务组Id集合
+					var taskGroupPanelForAdd = Ext.getCmp("taskGroupPanelForAdd");
+					var taskGroupNameArray = new Array();
+					var view = taskGroupPanelForAdd.getView();
+					var rsm = taskGroupPanelForAdd.getSelectionModel();
+					for (var i = 0; i < view.getRows().length; i++) {
+						if (rsm.isSelected(i)) {
+							var taskGroupName = taskGroupPanelForAdd.getStore().getAt(i).get("taskGroupName");
+							taskGroupNameArray.push(taskGroupName);
+						}
+					}
+					chooseVisualSlave(taskGroupNameArray, userGroupName, userGroupDesc, slaveIdArray);
+				}
+			}]
+		})
+	});
     chooseTaskGroupWindow.show(userGroupPanel);
 }
 
@@ -580,69 +636,84 @@ function chooseVisualSlave(taskGroupNameArray,userGroupName,userGroupDesc,slaveI
         items:[
             slavePanel
         ],
-        tbar:new Ext.Toolbar({buttons:[
-            {
-                text:"确认",
-                handler:function(){
-                	clikcNum+=1;
-                	if(clikcNum!=1){
-                		 Ext.MessageBox.alert("提示","请不要双击，或者重复确认!");
-                		 clikcNum = 0;
-                		 return;
-                	}
-                    Ext.MessageBox.confirm("提示","确认创建?",function(btn){
-                        if(btn=="yes"){
-                            //获取被选中的节点Id集合
-                            var slaveIdArray=new Array();
-                            var view=slavePanel.getView();
-                            var rsm=slavePanel.getSelectionModel();
-                            for(var i=0;i<view.getRows().length;i++) {
-                                if(rsm.isSelected(i)){
-                                    var slaveId=slavePanel.getStore().getAt(i).get("slaveId");
-                                    slaveIdArray.push(slaveId);
-                                }
-                            };
+		bbar : new Ext.Toolbar({
+			buttons : ['->',{
+				text : "上一步",
+				handler : function() {
+					//获取被选中的节点Id集合
+					var slaveIdArray = new Array();
+					var view = slavePanel.getView();
+					var rsm = slavePanel.getSelectionModel();
+					for (var i = 0; i < view.getRows().length; i++) {
+						if (rsm.isSelected(i)) {
+							var slaveId = slavePanel.getStore().getAt(i).get("slaveId");
+							slaveIdArray.push(slaveId);
+						}
+					}
+					chooseSlaveWindow.close();
+					chooseVisualTaskGroup(taskGroupNameArray, userGroupName, userGroupDesc, slaveIdArray);
+				}
+			}, "-",
+			{
+				text : "确认",
+				handler : function() {
+					clikcNum += 1;
+					if (clikcNum != 1) {
+						Ext.Msg.show({
+							title : '提示信息',
+							msg : '请不要双击，或者重复确认!',
+							buttons : Ext.Msg.OK,
+							icon : Ext.Msg.WARNING //注意此处为INFO  
+						});
+						clikcNum = 0;
+						return;
+					}
+					Ext.MessageBox.confirm("提示", "确认创建?", function(btn) {
+						if (btn == "yes") {
+							//获取被选中的节点Id集合
+							var slaveIdArray = new Array();
+							var view = slavePanel.getView();
+							var rsm = slavePanel.getSelectionModel();
+							for (var i = 0; i < view.getRows().length; i++) {
+								if (rsm.isSelected(i)) {
+									var slaveId = slavePanel.getStore().getAt(i).get("slaveId");
+									slaveIdArray.push(slaveId);
+								}
+							}
+							;
 
-                            Ext.Ajax.request({
-                                url:"/userGroup/addUserGroup.do",
-                                success:function(response,config){
-                                    Ext.MessageBox.alert("提示","用户组创建成功!");
-                                    chooseSlaveWindow.close();
-                                    generateUserGroupPanel(Ext.getCmp("secondGuidePanel"));
-                                },
-                                failure:function(response){
-                                    chooseSlaveWindow.close();
-                                    failureResponse(response);
-                                },
-                                params:{slaveIdArray:slaveIdArray,taskGroupNameArray:taskGroupNameArray,
-                                    userGroupName:userGroupName,userGroupDesc:userGroupDesc}
-                            })
-                        }else{
-                            return;
-                        }
-                        clikcNum = 0;
-                    })
-                }
-            },"-",
-            {
-                text:"上一步",
-                handler:function(){
-                    //获取被选中的节点Id集合
-                    var slaveIdArray=new Array();
-                    var view=slavePanel.getView();
-                    var rsm=slavePanel.getSelectionModel();
-                    for(var i=0;i<view.getRows().length;i++) {
-                        if(rsm.isSelected(i)){
-                            var slaveId=slavePanel.getStore().getAt(i).get("slaveId");
-                            slaveIdArray.push(slaveId);
-                        }
-                    }
-                    chooseSlaveWindow.close();
-                    chooseVisualTaskGroup(taskGroupNameArray,userGroupName,userGroupDesc,slaveIdArray);
-                }
-            }
-        ]})
-    });
+							Ext.Ajax.request({
+								url : "/userGroup/addUserGroup.do",
+								success : function(response, config) {
+									Ext.Msg.show({
+										title : '提示信息',
+										msg : '用户组创建成功!',
+										buttons : Ext.Msg.OK,
+										icon : Ext.Msg.INFO //注意此处为INFO  
+									});
+									chooseSlaveWindow.close();
+									generateUserGroupPanel(Ext.getCmp("secondGuidePanel"));
+								},
+								failure : function(response) {
+									chooseSlaveWindow.close();
+									failureResponse(response);
+								},
+								params : {
+									slaveIdArray : slaveIdArray,
+									taskGroupNameArray : taskGroupNameArray,
+									userGroupName : userGroupName,
+									userGroupDesc : userGroupDesc
+								}
+							})
+						} else {
+							return;
+						}
+						clikcNum = 0;
+					})
+				}
+			}]
+		})
+	});
     chooseSlaveWindow.show(userGroupPanel);
 }
 

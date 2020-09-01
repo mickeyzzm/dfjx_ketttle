@@ -5,6 +5,15 @@
 	<head>
 	  	<title>重庆市政务数据资源接入系统</title>
 	  	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/ext3/resources/css/ext-all.css" />
+		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/ext3/ux/ext-patch.css" />
+	    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/ext3/ux/treegrid/treegrid.css" />
+	    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/ext3/ux/fileupload/css/fileuploadfield.css" />
+	    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/ext3/ux/datetime/Spinner.css" />
+	    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/ext3/ux/datetime/datetime.css" />
+	  	
+	  	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/CodeMirror/codemirror.css" />
+	    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/ui/css/system.css2" />
+	  	
 	  	<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/ui/css/public.css" />
 		<link rel='shortcut icon' href='${pageContext.request.contextPath}/img/f1_logo_small.ico' type=‘image/x-ico’ />
 	</head>
@@ -27,7 +36,6 @@
 		<input type="hidden" id="slavePowerHidden" value="${sessionScope.userInfo.slavePremissonType}" />
 		<input type="hidden" id="taskGroupPowerHidden" value="${sessionScope.userInfo.taskPremissionType}" />
 		<input type="hidden" id="belongToUserGroup" value="${sessionScope.userInfo.userGroupName}" />
-		
 		
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/js/utils/crypto-js.js"></script>
 	    <script type="text/javascript">
@@ -89,33 +97,22 @@
 	    </script>
 		
 		<!-- javascript脚本编辑器框架加载 -->
-		<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/CodeMirror/codemirror.css" />
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/CodeMirror/codemirror.js"></script>
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/CodeMirror/javascript.js"></script>
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/CodeMirror/sql.js"></script>
 	    
-	    
-	    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/ext3/ux/ext-patch.css" />
-	    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/ext3/ux/treegrid/treegrid.css" />
-	    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/ui/css/system.css2" />
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/mxgraph2/js/mxClient3.js"></script>
+	   
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/ext3/adapter/ext/ext-base.js"></script>
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/ext3/ext-all-debug.js"></script>
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/ext3/ext-lang-zh_CN.js"></script>
-	    
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/ext3/ux/CheckColumn.js"></script>
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/ext3/ux/ListBox.js"></script>
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/ext3/ux/ConditionEditor.js"></script>
-	    
-	    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/ext3/ux/fileupload/css/fileuploadfield.css" />
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/ext3/ux/fileupload/FileUploadField.js"></script>
-	    
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/ext3/ux/DynamicEditorGrid.js"></script>
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/ext3/ux/treegrid/TreeGridNodeUI.js"></script>
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/ext3/ux/treegrid/TreeGrid.js"></script>
-	    
-	    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/ext3/ux/datetime/Spinner.css" />
-	    <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/ext3/ux/datetime/datetime.css" />
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/ext3/ux/datetime/Spinner.js"></script>
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/ext3/ux/datetime/SpinnerField.js"></script>
 	    <script type="text/javascript" src="${pageContext.request.contextPath}/ext3/ux/datetime/datetime.js"></script>

@@ -193,7 +193,7 @@ function updateUser(){
         items:[
             updateForm
         ],
-        tbar:new Ext.Toolbar({buttons:[
+        bbar:new Ext.Toolbar({buttons:['->',
             {
                 text:"提交",
                 handler:function(){
@@ -208,14 +208,24 @@ function updateUser(){
                     if(updateForm.getForm().isValid()){
                         updateForm.getForm().submit({
                             success:function(form,action){
-                                Ext.MessageBox.alert("成功","修改用户成功!");
+                            	 Ext.Msg.show({
+									title : '提示信息',
+									msg : '修改用户成功!',
+									buttons : Ext.Msg.OK,
+									icon : Ext.Msg.INFO //注意此处为INFO  
+								});
                                 updateUserWindow.close();
                                 showUserPanel(secondGuidePanel);
                             },
                             failure:failureResponse
                         })
                     }else{
-                        Ext.MessageBox.alert("提交失败","表单存在不规范填写,请再次确认后提交!");
+                   	 	Ext.Msg.show({
+							title : '提示信息',
+							msg : '表单存在不规范填写,请再次确认后提交!',
+							buttons : Ext.Msg.OK,
+							icon : Ext.Msg.WARNING //注意此处为INFO  
+						});
                     }
                 }
             }
@@ -324,7 +334,12 @@ function userAddFormByAdmin(userTypeValue,inputUserName,inputPassword,inputDesc,
                         userGroupChoose=Ext.getCmp("userGroupCombobox").getRawValue();
                         //判断是否选择了用户组
                         if(userGroupChoose==""){
-                            Ext.MessageBox.alert("faile","必须为该用户分配一个用户组!");
+                       	 	Ext.Msg.show({
+    							title : '提示信息',
+    							msg : '必须为该用户分配一个用户组!',
+    							buttons : Ext.Msg.OK,
+    							icon : Ext.Msg.WARNING
+    						});
                         }else{
                             Ext.Ajax.request({
                                 url:"/user/addUser.do",
@@ -332,11 +347,21 @@ function userAddFormByAdmin(userTypeValue,inputUserName,inputPassword,inputDesc,
                                     var result=Ext.decode(response.responseText);
                                     if(result.isSuccess){
                                         userInfoWindowForAdd.close();
-                                        Ext.MessageBox.alert("success","添加成功");
+                                        Ext.Msg.show({
+                							title : '提示信息',
+                							msg : '添加成功',
+                							buttons : Ext.Msg.OK,
+                							icon : Ext.Msg.INFO
+                						});
                                         var secondGuidePanel=Ext.getCmp("secondGuidePanel");
                                         showUserPanel(secondGuidePanel);
                                     }else{
-                                        Ext.MessageBox.alert("faile","该用户名已存在!");
+                                        Ext.Msg.show({
+                							title : '提示信息',
+                							msg : '该用户名已存在!',
+                							buttons : Ext.Msg.OK,
+                							icon : Ext.Msg.WARNING
+                						});
                                         f.getForm().findField("userLogin").setValue("");
                                     }
                                 },
@@ -759,38 +784,40 @@ function allotUserGroup(){
             }
         ]
     });
-    //窗口
-    var allotWindow=new Ext.Window({
-        title:"修改用户组",
-        modal:true,
-        bodyStyle:"background-color:white",
-        width:400,
-        height:200,
-        items:[
-            allotForm
-        ],
-        tbar:new Ext.Toolbar({buttons:[
-            {
-                text:"提交",
-                handler:function(){
-                    allotForm.baseParams=allotForm.getForm().getValues();
-                    if(allotForm.getForm().isValid()){
-                        allotForm.getForm().submit({
-                            success:function(form,action){
-                                Ext.MessageBox.alert("成功","分配用户组成功!");
-                                allotWindow.close();
-                                showUserPanel(secondGuidePanel);
-                            },
-                            failure:failureResponse
-                        })
-                    }else{
-                        Ext.MessageBox.alert("提交失败","表单存在不规范填写,请再次确认后提交!");
-                    }
-                }
-            }
-        ]})
-    });
-    allotWindow.show(grid);
+	//窗口
+	var allotWindow = new Ext.Window({
+		title : "修改用户组",
+		modal : true,
+		bodyStyle : "background-color:white",
+		width : 400,
+		height : 200,
+		items : [
+			allotForm
+		],
+		bbar : new Ext.Toolbar({
+			buttons : ['->',{
+				text : "提交",
+				handler : function() {
+					allotForm.baseParams = allotForm.getForm().getValues();
+					if (allotForm.getForm().isValid()) {
+						allotForm.getForm().submit({
+							success : function(form, action) {
+								Ext.MessageBox.alert("成功", "分配用户组成功!");
+								allotWindow.close();
+								showUserPanel(secondGuidePanel);
+							},
+							failure : function(form, action) {
+								Ext.MessageBox.alert("提交失败", "你不是管理员,无权操作!");
+							}
+						})
+					} else {
+						Ext.MessageBox.alert("提交失败", "表单存在不规范填写,请再次确认后提交!");
+					}
+				}
+			}]
+		})
+	});
+	allotWindow.show(grid);
     if(userType==1){
         grpSlavePower.hide();
         grpTaskGroupPower.hide();

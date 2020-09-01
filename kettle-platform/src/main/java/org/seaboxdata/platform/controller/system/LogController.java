@@ -28,34 +28,25 @@ public class LogController {
     @RequestMapping(value="/getAllHistoryLog")
     @ResponseBody
     protected void getAllHistoryLog(HttpServletResponse response,HttpServletRequest request) throws Exception{
-        try{
-            Integer start=Integer.valueOf(request.getParameter("start"));
-            Integer limit=Integer.valueOf(request.getParameter("limit"));
-            String statu="";
-            String type="";
-            String startTime="";
-            String taskName="";
+    	try{
+			Integer start = Integer.valueOf(request.getParameter("start"));
+			Integer limit = Integer.valueOf(request.getParameter("limit"));
+			String statu = request.getParameter("statu");
+			String type = request.getParameter("type");
+			String startTime = request.getParameter("startDate");
+			String taskName = request.getParameter("taskName");
+			if (StringUtils.isEmpty(startTime)) {
+				startTime = "";
+			} else {
+				startTime = startTime.substring(0,10);
+			}
             //获取当前用户所在的用户组
             UserGroupAttributeEntity attr=(UserGroupAttributeEntity)request.getSession().getAttribute("userInfo");
-            String userGroupName="";
+            String userGroupName = "";
             if(null!=attr){
                 userGroupName=attr.getUserGroupName();
             }
-
-            //获取查询参数
-            String search=request.getParameter("search");
-            if(null!=search && !search.equals("")){
-                JSONObject json=JSONObject.fromObject(search);
-                statu=(String)json.get("statu");
-                type=(String)json.get("type");
-                startTime=(String)json.get("startDate");
-                taskName=(String)json.get("taskName");
-                if(StringUtils.isEmpty(startTime)){
-                    startTime ="";
-                }else {
-                    startTime += " 00:00:00";
-                }
-            }
+            
             String result=logService.getAllHistoryLog(start,limit,statu,type,startTime,taskName,userGroupName);
             result=result.replaceAll("\n","<br/>");
             response.setContentType("text/html;charset=utf-8");

@@ -128,8 +128,6 @@ SequenceDialog = Ext.extend(KettleDialog, {
 										databaseDialog.initTransDatabase(null);
 									});
 								}
-							}, {
-								xtype: 'button', text: '向导...'
 							}]
 						},{
 							fieldLabel: BaseMessages.getString(PKG, "AddSequenceDialog.TargetSchema.Label"),

@@ -260,7 +260,6 @@ JobEntrySpecial = Ext.extend(Ext.Window, {
 			handler : function() {
 				try {
 					graph.getModel().beginUpdate();
-					alert(Ext.getComponent('specialFormId').isVisible());
 					
 					var data = {
 						repeat : wRepeat.getValue() ? 'Y' : 'N',

@@ -108,9 +108,6 @@ SynchronizeAfterMergeDialog = Ext.extend(KettleTabDialog, {
 								databaseDialog.initTransDatabase(null);
 							});
 						}
-					}, {
-						xtype: 'button',
-						text: '向导...'
 					}]
 				}, {
 					fieldLabel: '目的模式',
